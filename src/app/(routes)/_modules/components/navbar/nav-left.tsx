@@ -1,14 +1,17 @@
 import Link from "next/link";
-import NavGroup from "./nav-left/nav-group";
+
+import NavDesktop from "./nav-left/nav-desktop";
+import NavMobile from "./nav-left/nav-mobile";
 
 export default function NavLeft() {
   return (
     <div className="flex items-center gap-4">
-      <Link className="hidden sm:block" href="/">
+      <Link href="/">
         <h1 className="text-2xl font-bold">Fragrance</h1>
       </Link>
 
-      <NavGroup />
+      <NavDesktop />
+      <NavMobile />
     </div>
   );
 }
