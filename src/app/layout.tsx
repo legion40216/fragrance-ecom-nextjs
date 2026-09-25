@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${josefinSlab.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-full flex flex-col">
+      <body>
         {children}
       </body>
     </html>

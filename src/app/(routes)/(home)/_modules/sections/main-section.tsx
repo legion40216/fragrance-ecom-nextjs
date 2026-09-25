@@ -1,8 +1,14 @@
-import Image from "next/image";
+"use client"
+import React from 'react'
 
-export default function Home() {
+export default function MainSection({
+
+}: {
+
+}) {
+
   return (
-    <main className="p-10">
+    <div className="p-10">
       <h1 className="text-5xl">Fragrance Store</h1>
 
       <p className="mt-4 text-lg">
@@ -12,6 +18,6 @@ export default function Home() {
       <p className="mt-4 font-mono">
         productId: fragrance-001
       </p>
-    </main>
-  );
+    </div>
+  )
 }
