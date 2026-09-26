@@ -20,10 +20,8 @@ export default function NavMobile() {
   return (
     <div className="md:hidden">
       <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" aria-label="Open navigation">
+        <SheetTrigger>
             <Menu className="size-5" />
-          </Button>
         </SheetTrigger>
 
         <SheetContent side="left" className="p-3 [&>button]:hidden">
@@ -37,14 +35,8 @@ export default function NavMobile() {
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold">Fragrance</h2>
 
-                <SheetClose asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Close navigation"
-                  >
+                <SheetClose>
                     <X className="size-5" />
-                  </Button>
                 </SheetClose>
               </div>
 
