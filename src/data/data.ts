@@ -1,0 +1,42 @@
+// data.ts
+
+import { CategoriesType } from "@/types/types";
+
+export const categories: CategoriesType = [
+  {
+    id: "mens",
+    name: "Men's Fragrances",
+    slug: "mens-fragrances",
+    description: "Bold and refined fragrances for men",
+  },
+  {
+    id: "womens",
+    name: "Women's Fragrances",
+    slug: "womens-fragrances",
+    description: "Elegant and captivating fragrances for women",
+  },
+  {
+    id: "unisex",
+    name: "Unisex Fragrances",
+    slug: "unisex-fragrances",
+    description: "Versatile fragrances designed for everyone",
+  },
+  {
+    id: "attar",
+    name: "Attars",
+    slug: "attars",
+    description: "Traditional concentrated perfume oils",
+  },
+  {
+    id: "oud",
+    name: "Oud Collection",
+    slug: "oud",
+    description: "Rich and luxurious oud-based fragrances",
+  },
+  {
+    id: "gift-sets",
+    name: "Gift Sets",
+    slug: "gift-sets",
+    description: "Curated fragrance sets for special occasions",
+  }
+];
