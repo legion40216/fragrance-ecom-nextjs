@@ -1,7 +1,6 @@
 // data.ts
 
-import { CategoryType, ProductType,  } from "@/types/types";
-
+import type { CategoryType, ProductType } from "@/types/types";
 
 export const categories: CategoryType[] = [
   {
@@ -47,7 +46,7 @@ export const products: ProductType[] = [
       "A sophisticated fragrance with warm woods, spices, and a smooth amber finish.",
     price: 4999,
     size: "100ml",
-    image: "/images/products/noir-essence.jpg",
+    image: "/assets/product/images/noir-essence.svg",
     rating: 4.8,
     reviewCount: 124,
     stock: 18,
@@ -65,7 +64,7 @@ export const products: ProductType[] = [
       "A deep and luxurious oud fragrance balanced with amber and soft woods.",
     price: 6999,
     size: "100ml",
-    image: "/images/products/royal-oud.jpg",
+    image: "/assets/product/images/royal-oud.svg",
     rating: 4.9,
     reviewCount: 87,
     stock: 12,
@@ -83,7 +82,7 @@ export const products: ProductType[] = [
       "A floral fragrance with soft rose, jasmine, vanilla, and musk.",
     price: 4499,
     size: "80ml",
-    image: "/images/products/velvet-bloom.jpg",
+    image: "/assets/product/images/velvet-bloom.svg",
     rating: 4.7,
     reviewCount: 96,
     stock: 24,
@@ -101,7 +100,7 @@ export const products: ProductType[] = [
       "A fresh everyday fragrance combining citrus, green notes, and clean musk.",
     price: 3499,
     size: "100ml",
-    image: "/images/products/citrus-mist.jpg",
+    image: "/assets/product/images/citrus-mist.svg",
     rating: 4.6,
     reviewCount: 73,
     stock: 31,
@@ -119,7 +118,7 @@ export const products: ProductType[] = [
       "A warm evening fragrance built around amber, vanilla, and dark woods.",
     price: 5299,
     size: "100ml",
-    image: "/images/products/amber-night.jpg",
+    image: "/assets/product/images/amber-night.svg",
     rating: 4.8,
     reviewCount: 112,
     stock: 15,
@@ -137,7 +136,7 @@ export const products: ProductType[] = [
       "A concentrated rose attar with sweet floral and soft woody notes.",
     price: 1999,
     size: "12ml",
-    image: "/images/products/royal-rose-attar.jpg",
+    image: "/assets/product/images/royal-rose-attar.svg",
     rating: 4.7,
     reviewCount: 58,
     stock: 40,
