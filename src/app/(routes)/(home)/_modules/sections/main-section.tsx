@@ -1,23 +1,29 @@
-"use client"
-import React from 'react'
+import ProductList from "@/components/global-ui/product-list";
+import { products } from "@/data/data";
+import { CategorySlug } from "@/schema";
+import CategoriesBar from "../components/categories-bar";
+import HeadingState from "@/components/global-ui/heading-state";
 
 export default function MainSection({
-
+  categoryParam,
 }: {
-
+  categoryParam: CategorySlug;
 }) {
+  const filteredProducts = categoryParam
+    ? products.filter((product) => product.category === categoryParam)
+    : products;
 
   return (
-    <div className="p-10">
-      <h1 className="text-5xl">Fragrance Store</h1>
+    <section className="space-y-8">
+      <HeadingState
+        title="Fragrance Store"
+        subtitle="Discover your next signature scent."
+      />
 
-      <p className="mt-4 text-lg">
-        Discover your next signature fragrance.
-      </p>
-
-      <p className="mt-4 font-mono">
-        productId: fragrance-001
-      </p>
-    </div>
-  )
+      <div className="space-y-4">
+        <CategoriesBar categoryParam={categoryParam} />
+        <ProductList initialData={filteredProducts} />
+      </div>
+    </section>
+  );
 }

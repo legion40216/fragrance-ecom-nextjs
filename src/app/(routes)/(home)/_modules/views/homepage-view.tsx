@@ -1,14 +1,10 @@
-import React from 'react'
-import MainSection from '../sections/main-section';
+import MainSection from "../sections/main-section";
+import { CategorySlug } from "@/schema";
 
 export default function HomepageView({
-
+  categoryParam,
 }: {
-
+  categoryParam: CategorySlug;
 }) {
-  return (
-    <div>
-      <MainSection />
-    </div>
-  );
+  return <MainSection categoryParam={categoryParam} />;
 }
