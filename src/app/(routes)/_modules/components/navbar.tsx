@@ -6,7 +6,7 @@ export default function Navbar() {
     <div className="flex items-center justify-between">
       <NavLeft />
 
-      <Button>
+      <Button className="hidden md:inline-flex">
         Contact Us
       </Button>
     </div>
