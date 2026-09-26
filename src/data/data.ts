@@ -1,8 +1,9 @@
 // data.ts
 
-import { CategoriesType } from "@/types/types";
+import { CategoryType, ProductType,  } from "@/types/types";
 
-export const categories: CategoriesType = [
+
+export const categories: CategoryType[] = [
   {
     id: "mens",
     name: "Men's Fragrances",
@@ -22,21 +23,126 @@ export const categories: CategoriesType = [
     description: "Versatile fragrances designed for everyone",
   },
   {
+    id: "oud",
+    name: "Oud Collection",
+    slug: "oud-collection",
+    description: "Rich and luxurious oud fragrances",
+  },
+  {
     id: "attar",
     name: "Attars",
     slug: "attars",
     description: "Traditional concentrated perfume oils",
   },
+];
+
+export const products: ProductType[] = [
   {
-    id: "oud",
-    name: "Oud Collection",
-    slug: "oud",
-    description: "Rich and luxurious oud-based fragrances",
+    id: "noir-01",
+    name: "Noir Essence",
+    slug: "noir-essence",
+    brand: "Aurelia",
+    category: "mens-fragrances",
+    description:
+      "A sophisticated fragrance with warm woods, spices, and a smooth amber finish.",
+    price: 4999,
+    size: "100ml",
+    image: "/images/products/noir-essence.jpg",
+    rating: 4.8,
+    reviewCount: 124,
+    stock: 18,
+    isFeatured: true,
+    isNew: false,
+    isBestSeller: true,
   },
   {
-    id: "gift-sets",
-    name: "Gift Sets",
-    slug: "gift-sets",
-    description: "Curated fragrance sets for special occasions",
-  }
+    id: "royal-oud-01",
+    name: "Royal Oud",
+    slug: "royal-oud",
+    brand: "Aurelia",
+    category: "oud-collection",
+    description:
+      "A deep and luxurious oud fragrance balanced with amber and soft woods.",
+    price: 6999,
+    size: "100ml",
+    image: "/images/products/royal-oud.jpg",
+    rating: 4.9,
+    reviewCount: 87,
+    stock: 12,
+    isFeatured: true,
+    isNew: false,
+    isBestSeller: true,
+  },
+  {
+    id: "velvet-bloom-01",
+    name: "Velvet Bloom",
+    slug: "velvet-bloom",
+    brand: "Maison Velora",
+    category: "womens-fragrances",
+    description:
+      "A floral fragrance with soft rose, jasmine, vanilla, and musk.",
+    price: 4499,
+    size: "80ml",
+    image: "/images/products/velvet-bloom.jpg",
+    rating: 4.7,
+    reviewCount: 96,
+    stock: 24,
+    isFeatured: true,
+    isNew: true,
+    isBestSeller: false,
+  },
+  {
+    id: "citrus-mist-01",
+    name: "Citrus Mist",
+    slug: "citrus-mist",
+    brand: "Aurelia",
+    category: "unisex-fragrances",
+    description:
+      "A fresh everyday fragrance combining citrus, green notes, and clean musk.",
+    price: 3499,
+    size: "100ml",
+    image: "/images/products/citrus-mist.jpg",
+    rating: 4.6,
+    reviewCount: 73,
+    stock: 31,
+    isFeatured: false,
+    isNew: true,
+    isBestSeller: false,
+  },
+  {
+    id: "amber-night-01",
+    name: "Amber Night",
+    slug: "amber-night",
+    brand: "Maison Velora",
+    category: "mens-fragrances",
+    description:
+      "A warm evening fragrance built around amber, vanilla, and dark woods.",
+    price: 5299,
+    size: "100ml",
+    image: "/images/products/amber-night.jpg",
+    rating: 4.8,
+    reviewCount: 112,
+    stock: 15,
+    isFeatured: true,
+    isNew: false,
+    isBestSeller: true,
+  },
+  {
+    id: "rose-attar-01",
+    name: "Royal Rose Attar",
+    slug: "royal-rose-attar",
+    brand: "Aurelia",
+    category: "attars",
+    description:
+      "A concentrated rose attar with sweet floral and soft woody notes.",
+    price: 1999,
+    size: "12ml",
+    image: "/images/products/royal-rose-attar.jpg",
+    rating: 4.7,
+    reviewCount: 58,
+    stock: 40,
+    isFeatured: false,
+    isNew: false,
+    isBestSeller: true,
+  },
 ];
