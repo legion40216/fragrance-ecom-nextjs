@@ -1,6 +1,7 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Menu } from "lucide-react";
 
 import NavLinks from "@/components/global-ui/nav-links";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,15 @@ import { useNavRoutes } from "./nav-routes";
 
 export default function NavMobile() {
   const routes = useNavRoutes();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
 
   return (
     <div className="md:hidden">
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger>
           <Menu className="size-5" />
         </SheetTrigger>
@@ -45,6 +51,7 @@ export default function NavMobile() {
                     className="border-b py-3"
                     activeClassName="font-semibold"
                     inactiveClassName="text-muted-foreground"
+                    onClick={handleLinkClick}
                   />
                 ))}
               </nav>

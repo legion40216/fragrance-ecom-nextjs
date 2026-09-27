@@ -13,6 +13,7 @@ interface NavLinksProps {
   activeClassName?: string;
   inactiveClassName?: string;
   newTab?: boolean;
+  onClick?: () => void;
 }
 
 export default function NavLinks({
@@ -24,12 +25,14 @@ export default function NavLinks({
   activeClassName = "",
   inactiveClassName = "",
   newTab = false,
+  onClick,
 }: NavLinksProps) {
   return (
     <Link
       href={routeHref}
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noopener noreferrer" : undefined}
+      onClick={onClick}
       className={cn(
         "transition-colors",
         routeActive ? activeClassName : inactiveClassName,
