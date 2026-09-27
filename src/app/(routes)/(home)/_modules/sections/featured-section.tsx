@@ -5,13 +5,12 @@ import ProductCard from "@/components/global-ui/product-card";
 
 export default function FeaturedSection() {
   const featured = products.filter((product) => product.isFeatured).slice(0, 4);
+
   return (
     <section>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] 
-            text-muted-foreground"
-          >
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
             Handpicked for you
           </p>
 
@@ -41,8 +40,7 @@ export default function FeaturedSection() {
 
       <Link
         href="/products"
-        className="mt-6 flex items-center justify-center gap-2 text-sm 
-        font-medium sm:hidden"
+        className="mt-6 flex items-center justify-center gap-2 text-sm font-medium sm:hidden"
       >
         Shop all fragrances <ArrowRight className="size-4" />
       </Link>
