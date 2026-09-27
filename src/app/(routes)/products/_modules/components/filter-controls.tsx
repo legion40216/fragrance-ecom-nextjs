@@ -20,7 +20,7 @@ export interface FilterControlsProps {
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
-  /** Called after any filter change -- lets FilterSheet close itself. */
+  showCategoryFilter?: boolean;
   onChange?: () => void;
 }
 
@@ -30,6 +30,7 @@ export default function FilterControls({
   maxPrice,
   brandParam,
   inStockParam,
+  showCategoryFilter = true,
   onChange,
 }: FilterControlsProps) {
   const router = useRouter();
@@ -93,7 +94,7 @@ export default function FilterControls({
   };
 
   const hasActiveFilters =
-    !!categoryParam ||
+    (showCategoryFilter && !!categoryParam) ||
     minPrice !== PRICE_BOUNDS.min ||
     maxPrice !== PRICE_BOUNDS.max ||
     brandParam.length > 0 ||
@@ -105,35 +106,35 @@ export default function FilterControls({
         <h2 className="font-medium">Filters</h2>
       </div>
 
-      {/* Category */}
-      <div className="space-y-3">
-        <Label className="text-sm font-medium">Category</Label>
-        <RadioGroup
-          value={categoryParam ?? "all"}
-          onValueChange={handleCategoryChange}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="all" id="cat-all" />
-            <Label htmlFor="cat-all" className="font-normal cursor-pointer">
-              All
-            </Label>
-          </div>
-
-          {categories.map((category) => (
-            <div key={category.id} className="flex items-center space-x-2">
-              <RadioGroupItem value={category.slug} id={`cat-${category.id}`} />
-              <Label
-                htmlFor={`cat-${category.id}`}
-                className="font-normal cursor-pointer"
-              >
-                {category.name}
+      {showCategoryFilter && (
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Category</Label>
+          <RadioGroup
+            value={categoryParam ?? "all"}
+            onValueChange={handleCategoryChange}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="all" id="cat-all" />
+              <Label htmlFor="cat-all" className="font-normal cursor-pointer">
+                All
               </Label>
             </div>
-          ))}
-        </RadioGroup>
-      </div>
 
-      {/* Price */}
+            {categories.map((category) => (
+              <div key={category.id} className="flex items-center space-x-2">
+                <RadioGroupItem value={category.slug} id={`cat-${category.id}`} />
+                <Label
+                  htmlFor={`cat-${category.id}`}
+                  className="font-normal cursor-pointer"
+                >
+                  {category.name}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </div>
+      )}
+
       <div className="space-y-3">
         <Label className="text-sm font-medium">Price</Label>
         <Slider
@@ -151,7 +152,6 @@ export default function FilterControls({
         </div>
       </div>
 
-      {/* Brand */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">Brand</Label>
         <div className="space-y-2">
@@ -173,7 +173,6 @@ export default function FilterControls({
         </div>
       </div>
 
-      {/* In stock */}
       <div className="flex items-center space-x-3">
         <Checkbox
           id="in-stock"
