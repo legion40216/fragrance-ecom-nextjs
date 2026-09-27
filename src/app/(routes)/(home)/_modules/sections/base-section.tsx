@@ -4,7 +4,7 @@ import { products } from "@/data/data";
 import { formatter } from "@/utils/formatters";
 
 export default function BaseSection() {
-  const spotlight = products.find((p) => p.id === "rose-attar-01") ?? products[products.length - 1];
+  const spotlight = products.find((p) => p.id === "royal-rose-attar-01") ?? products[products.length - 1];
 
   return (
     <section id="base" className="bg-[#21121B] px-6 py-24 text-[#F3ECE2] sm:px-10 lg:px-24 lg:pl-40">
