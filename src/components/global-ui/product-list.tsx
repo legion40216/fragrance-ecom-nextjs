@@ -108,7 +108,7 @@ export default function ProductList({
               aria-label={label}
               title={label}
               onClick={() => handleGridChange(value)}
-              className="h-8 w-8"
+              className={`h-8 w-8 ${value === 3 ? "hidden sm:inline-flex" : ""}`}
             >
               <ColumnsIcon columns={value} />
             </Button>
