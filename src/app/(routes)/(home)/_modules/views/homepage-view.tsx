@@ -6,7 +6,7 @@ import HeroSection from "../sections/hero-section";
 
 export default function HomepageView() {
   return (
-    <div className="space-y-20 pb-16 md:space-y-28 md:pb-24">
+    <div className="space-y-20 py-10 md:space-y-28 ">
       <HeroSection />
       <CategorySection />
       <FeaturedSection />
