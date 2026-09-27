@@ -1,10 +1,10 @@
 import React from 'react'
 import Section1 from '../sections/section-1';
 
-export default function CategoriesView() {
+export default function CheckoutView() {
   return (
     <div>
-        <h1>CategoriesView</h1>
+        <h1>CheckoutView</h1>
         <Section1 />
     </div>
   )
