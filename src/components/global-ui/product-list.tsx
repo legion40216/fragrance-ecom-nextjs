@@ -13,7 +13,7 @@ const STORAGE_KEY = "product-grid-columns";
 const gridClasses: Record<GridColumns, string> = {
   1: "grid-cols-1",
   2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
+  3: "grid-cols-2 md:grid-cols-3",
 };
 
 const columnOptions: { value: GridColumns; label: string }[] = [
