@@ -13,7 +13,7 @@ const STORAGE_KEY = "product-grid-columns";
 const gridClasses: Record<GridColumns, string> = {
   1: "grid-cols-1",
   2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
 };
 
 const columnOptions: { value: GridColumns; label: string }[] = [
@@ -26,12 +26,10 @@ function isGridColumns(value: string | null): value is `${GridColumns}` {
   return value === "1" || value === "2" || value === "3";
 }
 
-/** Small bar icon that visually represents the column count, so the
- * control reads at a glance instead of relying on a "3 × 3" label
- * that misdescribes a column count as a grid shape. */
 function ColumnsIcon({ columns }: { columns: GridColumns }) {
   const gap = 2;
   const width = (16 - gap * (columns - 1)) / columns;
+
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
       {Array.from({ length: columns }).map((_, i) => (
@@ -57,24 +55,24 @@ export default function ProductList({
   const [columns, setColumns] = useState<GridColumns>(3);
 
   useEffect(() => {
-    // localStorage can throw (private browsing, storage disabled by the
-    // user or an embedding iframe), so this must not crash the page.
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
+
       if (isGridColumns(saved)) {
         setColumns(Number(saved) as GridColumns);
       }
     } catch {
-      // Ignore and keep the default column count.
+      // Ignore storage errors and keep the default.
     }
   }, []);
 
   const handleGridChange = (value: GridColumns) => {
     setColumns(value);
+
     try {
       window.localStorage.setItem(STORAGE_KEY, String(value));
     } catch {
-      // Preference just won't persist this session; the UI still works.
+      // Preference just won't persist this session.
     }
   };
 
@@ -91,7 +89,8 @@ export default function ProductList({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {initialData.length} {initialData.length === 1 ? "product" : "products"}
+          {initialData.length}{" "}
+          {initialData.length === 1 ? "product" : "products"}
         </p>
 
         <div
