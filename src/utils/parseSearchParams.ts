@@ -28,5 +28,5 @@ export function getValidatedSearchParams(
   const result = searchParamsSchema.safeParse(normalized);
 
   // Invalid or unknown category -> treat as "no filter" rather than erroring
-  return result.success ? result.data : {};
+  return result.success ? result.data : searchParamsSchema.parse({});
 }

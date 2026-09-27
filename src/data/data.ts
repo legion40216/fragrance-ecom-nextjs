@@ -1,4 +1,3 @@
-// data.ts
 
 import type { CategoryType, ProductType } from "@/types/types";
 
@@ -53,7 +52,9 @@ export const products: ProductType[] = [
     isFeatured: true,
     isNew: false,
     isBestSeller: true,
+    createdAt: "2024-01-15",
   },
+
   {
     id: "royal-oud-01",
     name: "Royal Oud",
@@ -71,7 +72,9 @@ export const products: ProductType[] = [
     isFeatured: true,
     isNew: false,
     isBestSeller: true,
+    createdAt: "2024-02-10",
   },
+
   {
     id: "velvet-bloom-01",
     name: "Velvet Bloom",
@@ -89,7 +92,9 @@ export const products: ProductType[] = [
     isFeatured: true,
     isNew: true,
     isBestSeller: false,
+    createdAt: "2024-06-01",
   },
+
   {
     id: "citrus-mist-01",
     name: "Citrus Mist",
@@ -107,7 +112,9 @@ export const products: ProductType[] = [
     isFeatured: false,
     isNew: true,
     isBestSeller: false,
+    createdAt: "2024-06-15",
   },
+
   {
     id: "amber-night-01",
     name: "Amber Night",
@@ -125,7 +132,9 @@ export const products: ProductType[] = [
     isFeatured: true,
     isNew: false,
     isBestSeller: true,
+    createdAt: "2024-03-20",
   },
+
   {
     id: "rose-attar-01",
     name: "Royal Rose Attar",
@@ -143,5 +152,12 @@ export const products: ProductType[] = [
     isFeatured: false,
     isNew: false,
     isBestSeller: true,
+    createdAt: "2023-11-05",
   },
 ];
+
+// Derived from products so the brand list can never drift out of sync
+export const brands: string[] = Array.from(
+  new Set(products.map((product) => product.brand)),
+);
+

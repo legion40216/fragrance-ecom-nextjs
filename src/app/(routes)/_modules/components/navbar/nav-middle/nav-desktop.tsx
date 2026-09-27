@@ -1,7 +1,7 @@
 "use client";
 
 import NavLinks from "@/components/global-ui/nav-links";
-import { useNavRoutes } from "./nav-routes";
+import { useNavRoutes } from "../nav-routes";
 
 export default function NavDesktop() {
   const routes = useNavRoutes();
@@ -14,7 +14,7 @@ export default function NavDesktop() {
           routeActive={route.active}
           routeHref={route.href}
           routeLabel={route.label}
-          activeClassName="font-medium"
+          activeClassName="font-medium underline underline-offset-10 decoration-2 decoration-foreground"
           inactiveClassName="text-muted-foreground hover:text-foreground"
         />
       ))}

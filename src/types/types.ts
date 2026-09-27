@@ -25,6 +25,7 @@ export type ProductType = {
   isFeatured: boolean;
   isNew: boolean;
   isBestSeller: boolean;
+  createdAt: string; // ISO date string, used for "newest" / "oldest" sort
 };
 
 export type ProductsType = ProductType[];
