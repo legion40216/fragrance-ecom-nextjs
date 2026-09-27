@@ -8,13 +8,46 @@ import { Button } from "@/components/ui/button";
 
 type GridColumns = 1 | 2 | 3;
 
+const STORAGE_KEY = "product-grid-columns";
+
 const gridClasses: Record<GridColumns, string> = {
   1: "grid-cols-1",
   2: "grid-cols-1 sm:grid-cols-2",
   3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
 };
 
-const gridOptions: GridColumns[] = [1, 2, 3];
+const columnOptions: { value: GridColumns; label: string }[] = [
+  { value: 1, label: "Single column" },
+  { value: 2, label: "Two columns" },
+  { value: 3, label: "Three columns" },
+];
+
+function isGridColumns(value: string | null): value is `${GridColumns}` {
+  return value === "1" || value === "2" || value === "3";
+}
+
+/** Small bar icon that visually represents the column count, so the
+ * control reads at a glance instead of relying on a "3 × 3" label
+ * that misdescribes a column count as a grid shape. */
+function ColumnsIcon({ columns }: { columns: GridColumns }) {
+  const gap = 2;
+  const width = (16 - gap * (columns - 1)) / columns;
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      {Array.from({ length: columns }).map((_, i) => (
+        <rect
+          key={i}
+          x={i * (width + gap)}
+          y={2}
+          width={width}
+          height={12}
+          rx={1.5}
+          fill="currentColor"
+        />
+      ))}
+    </svg>
+  );
+}
 
 export default function ProductList({
   initialData,
@@ -24,16 +57,25 @@ export default function ProductList({
   const [columns, setColumns] = useState<GridColumns>(3);
 
   useEffect(() => {
-    const savedColumns = window.localStorage.getItem("product-grid-columns");
-
-    if (savedColumns === "1" || savedColumns === "2" || savedColumns === "3") {
-      setColumns(Number(savedColumns) as GridColumns);
+    // localStorage can throw (private browsing, storage disabled by the
+    // user or an embedding iframe), so this must not crash the page.
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (isGridColumns(saved)) {
+        setColumns(Number(saved) as GridColumns);
+      }
+    } catch {
+      // Ignore and keep the default column count.
     }
   }, []);
 
   const handleGridChange = (value: GridColumns) => {
     setColumns(value);
-    window.localStorage.setItem("product-grid-columns", String(value));
+    try {
+      window.localStorage.setItem(STORAGE_KEY, String(value));
+    } catch {
+      // Preference just won't persist this session; the UI still works.
+    }
   };
 
   if (initialData.length === 0) {
@@ -47,30 +89,37 @@ export default function ProductList({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {initialData.length} {initialData.length === 1 ? "product" : "products"}
+        </p>
+
         <div
-          className="flex items-center gap-1 rounded-lg border p-1"
+          className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1"
           role="group"
           aria-label="Product grid layout"
         >
-          {gridOptions.map((value) => (
+          {columnOptions.map(({ value, label }) => (
             <Button
               key={value}
               type="button"
-              size="sm"
+              size="icon"
               variant={columns === value ? "secondary" : "ghost"}
               aria-pressed={columns === value}
-              aria-label={`${value} by ${value} product grid`}
-              title={`${value} by ${value} product grid`}
+              aria-label={label}
+              title={label}
               onClick={() => handleGridChange(value)}
+              className="h-8 w-8"
             >
-              {value} × {value}
+              <ColumnsIcon columns={value} />
             </Button>
           ))}
         </div>
       </div>
 
-      <div className={`grid gap-4 ${gridClasses[columns]}`}>
+      <div
+        className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out ${gridClasses[columns]}`}
+      >
         {initialData.map((product) => (
           <ProductCard key={product.id} {...product} />
         ))}
