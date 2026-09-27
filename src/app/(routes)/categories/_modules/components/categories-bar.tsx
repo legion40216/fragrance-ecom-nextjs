@@ -1,7 +1,7 @@
 "use client";
 
 import { categories } from "@/data/data";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { CategorySlug } from "@/schema";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ export default function CategoriesBar({
   categoryParam: CategorySlug;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleSelect = (slug?: string) => {
@@ -24,7 +25,7 @@ export default function CategoriesBar({
     }
 
     const query = params.toString();
-    router.replace(query ? `/?${query}` : "/");
+    router.replace(query ? `${pathname}?${query}` : pathname);
   };
 
   return (
