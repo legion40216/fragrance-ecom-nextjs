@@ -15,6 +15,8 @@ export default function ProductSection({
   maxPrice,
   brandParam,
   inStockParam,
+  showCategoryFilter = true,
+  headingTitle = "Collections",
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
@@ -22,6 +24,8 @@ export default function ProductSection({
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  showCategoryFilter?: boolean;
+  headingTitle?: string;
 }) {
   const filtered = products.filter((product) => {
     if (categoryParam && product.category !== categoryParam) return false;
@@ -40,17 +44,16 @@ export default function ProductSection({
     maxPrice,
     brandParam,
     inStockParam,
+    showCategoryFilter,
   };
 
   return (
     <section className="space-y-6">
       <HeadingState
-        title="Collections"
+        title={headingTitle}
         subtitle="Discover your next signature scent."
       />
 
-      {/* Mobile: sheet trigger replaces the old category pills, since the
-          sheet's own category radio group now covers that */}
       <div className="flex flex-col gap-6 md:flex-row">
         <FilterSidebar {...filterProps} />
 
