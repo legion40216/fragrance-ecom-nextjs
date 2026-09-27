@@ -4,8 +4,8 @@ import { ArrowRight } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden border-b">
-      <div className="grid min-h-[560px] items-center gap-10 py-12 md:grid-cols-[1.05fr_0.95fr] md:py-16 lg:min-h-[620px]">
+    <section className="relative w-full overflow-hidden border-b">
+      <div className="mx-auto grid min-h-[560px] w-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">\n        <div className="contents" items-center gap-10 py-12 md:grid-cols-[1.05fr_0.95fr] md:py-16 lg:min-h-[620px]">
         <div className="relative z-10 max-w-2xl">
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
             The art of fragrance
