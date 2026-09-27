@@ -1,63 +1,18 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function BrandSection() {
   return (
-    <section className="overflow-hidden rounded-[2rem] border 
-      bg-foreground text-background"
-    >
-      <div className="grid items-center gap-10 p-7 sm:p-10 
-        md:grid-cols-[1.2fr_0.8fr] md:p-14"
-      >
+    <section className="bg-[#151515] px-[6%] py-16 text-background md:py-20">
+      <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
         <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full
-            border border-background/20 px-3 py-1.5 text-xs 
-            uppercase tracking-[0.2em] text-background/70"
-           >
-            <Sparkles className="size-3.5" /> Your signature, your story
-          </div>
-
-          <h2 className="max-w-2xl font-serif text-4xl leading-tight sm:text-5xl
-            md:text-6xl"
-           >
-            Fragrance is more than a scent.
-          </h2>
-
-          <p className="mt-5 max-w-xl leading-7 text-background/65">
-            It is the detail people remember. Explore warm ouds, fresh everyday
-            scents, elegant florals, and concentrated attars made for moments
-            worth remembering.
-          </p>
-          <Link
-            href="/products"
-            className="mt-8 inline-flex items-center gap-2 rounded-full 
-              bg-background px-6 py-3 text-sm font-medium text-foreground 
-              transition-transform hover:-translate-y-0.5"
-          >
-            Find your fragrance <ArrowRight className="size-4" />
-          </Link>
+          <h2 className="font-serif text-3xl">FRAGRANCE STORE</h2>
+          <p className="mt-4 max-w-sm text-sm leading-6 text-background/50">Premium fragrances and carefully selected scents for every occasion.</p>
         </div>
-        
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          {[
-            ["01", "Everyday", "Fresh, clean, effortless"],
-            ["02", "Evening", "Warm, deep, memorable"],
-            ["03", "Luxury", "Rich oud & amber"],
-            ["04", "Traditional", "Classic concentrated attars"],
-          ].map(([number, title, description]) => (
-            <div
-              key={number}
-              className="rounded-2xl border border-background/15 p-5"
-            >
-              <span className="text-xs text-background/45">{number}</span>
-              <p className="mt-8 font-medium">{title}</p>
-              <p className="mt-1 text-xs leading-5 text-background/55">
-                {description}
-              </p>
-            </div>
-          ))}
-        </div>
+        <div><h3 className="text-[10px] font-semibold uppercase tracking-[0.16em]">Need help?</h3><Link className="mt-4 block text-xs text-background/55" href="/contact">Contact</Link><Link className="mt-2 block text-xs text-background/55" href="/about">About</Link></div>
+        <div><h3 className="text-[10px] font-semibold uppercase tracking-[0.16em]">Shop</h3><Link className="mt-4 block text-xs text-background/55" href="/products">All fragrances</Link><Link className="mt-2 block text-xs text-background/55" href="/categories">Collections</Link></div>
+        <div><h3 className="text-[10px] font-semibold uppercase tracking-[0.16em]">Information</h3><p className="mt-4 text-xs leading-5 text-background/55">Simple ordering.<br />Clear product details.</p></div>
       </div>
+      <div className="mx-auto mt-12 max-w-6xl border-t border-background/10 pt-5 text-[10px] text-background/35">© 2026 Fragrance Store. All rights reserved.</div>
     </section>
   );
 }
