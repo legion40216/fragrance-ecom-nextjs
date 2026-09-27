@@ -6,7 +6,6 @@ import NavLinks from "@/components/global-ui/nav-links";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetTitle,
@@ -21,10 +20,10 @@ export default function NavMobile() {
     <div className="md:hidden">
       <Sheet>
         <SheetTrigger>
-            <Menu className="size-5" />
+          <Menu className="size-5" />
         </SheetTrigger>
 
-        <SheetContent side="left" className="p-3 [&>button]:hidden">
+        <SheetContent side="left" className="overflow-y-auto p-4">
           <SheetTitle className="sr-only">Fragrance Navigation</SheetTitle>
           <SheetDescription className="sr-only">
             Navigation menu for Fragrance
@@ -32,12 +31,8 @@ export default function NavMobile() {
 
           <div className="flex h-full flex-col justify-between">
             <div className="grid gap-6">
-              <div className="flex items-center justify-between">
+              <div>
                 <h2 className="text-xl font-bold">Fragrance</h2>
-
-                <SheetClose>
-                    <X className="size-5" />
-                </SheetClose>
               </div>
 
               <nav className="flex flex-col gap-2">
