@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { categories } from "@/data/data";
 
 export default function CategorySection() {
@@ -7,7 +7,8 @@ export default function CategorySection() {
     <section>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] 
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.25em] 
             text-muted-foreground"
           >
             Find your signature
@@ -32,9 +33,10 @@ export default function CategorySection() {
             className="group relative min-h-48 overflow-hidden rounded-2xl 
               border bg-muted p-5 transition-transform hover:-translate-y-1"
           >
-            <div className="absolute -right-8 -top-8 size-28 rounded-full 
+            <div
+              className="absolute -right-8 -top-8 size-28 rounded-full 
               border border-foreground/10 transition-transform duration-500 
-              group-hover:scale-150" 
+              group-hover:scale-150"
             />
             <div className="relative flex h-full flex-col justify-between">
               <span className="text-xs font-medium text-muted-foreground">
@@ -47,7 +49,7 @@ export default function CategorySection() {
                 <p className="mt-2 text-sm leading-5 text-muted-foreground">
                   {category.description}
                 </p>
-                
+
                 <span className="mt-4 inline-flex text-sm font-medium">
                   Explore <ArrowUpRight className="ml-1 size-4" />
                 </span>
