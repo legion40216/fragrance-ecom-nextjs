@@ -2,7 +2,7 @@
 
 import type { FilterValue } from "@/schema";
 import { sortOptions } from "@/data/constants";
-import { useUpdateSearchParams } from "../hooks/use-update-search-params";
+import { useUpdateSearchParams } from "@/features/product-listing/hooks/use-update-search-params";
 import {
   NativeSelect,
   NativeSelectOption,
