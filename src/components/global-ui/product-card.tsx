@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
-import { ProductType } from "@/types/types";
+import Link from "next/link";
+import type { ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 
 interface ProductCardProps
@@ -40,6 +40,7 @@ export default function ProductCard({
           src={image}
           alt={name}
           fill
+          sizes="(min-width: 768px) 33vw, 50vw"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
