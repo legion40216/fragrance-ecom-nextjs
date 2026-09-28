@@ -1,4 +1,4 @@
-import FilterControls, { FilterControlsProps } from "./filter-controls";
+import FilterControls, { type FilterControlsProps } from "./filter-controls";
 
 export default function FilterSidebar(props: FilterControlsProps) {
   return (
