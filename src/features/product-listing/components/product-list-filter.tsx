@@ -1,25 +1,22 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { FilterValue } from "@/schema";
 import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
+import { sortOptions } from "@/data/constants";
+import { useUpdateSearchParams } from "@/features/product-listing/hooks/use-update-search-params";
 
 export default function ProductListFilter({
   currentFilter,
 }: {
   currentFilter: FilterValue;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { updateParams, isPending } = useUpdateSearchParams();
 
   const handleFilterChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("filter", value);
-    router.replace(`${pathname}?${params.toString()}`);
+    updateParams({ filter: value });
   };
 
   return (
