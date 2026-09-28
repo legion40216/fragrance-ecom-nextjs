@@ -1,7 +1,7 @@
 "use client";
 
 import { categories } from "@/data/data";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import { CategorySlug } from "@/schema";
 
 import { Button } from "@/components/ui/button";
@@ -11,25 +11,17 @@ export default function CategoriesBar({
 }: {
   categoryParam: CategorySlug;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { update, isPending } = useUpdateSearchParams();
 
   const handleSelect = (slug?: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (slug) {
-      params.set("category", slug);
-    } else {
-      params.delete("category");
-    }
-
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname);
+    update({ category: slug ?? null });
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div
+      className="flex flex-wrap gap-2 transition-opacity aria-busy:opacity-60"
+      aria-busy={isPending}
+    >
       <Button
         variant={!categoryParam ? "default" : "outline"}
         size="sm"

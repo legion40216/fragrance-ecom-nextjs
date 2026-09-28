@@ -1,7 +1,8 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { FilterValue } from "@/schema";
+import { sortOptions } from "@/data/constants";
+import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import {
   NativeSelect,
   NativeSelectOption,
@@ -12,29 +13,20 @@ export default function ProductListFilter({
 }: {
   currentFilter: FilterValue;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const handleFilterChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("filter", value);
-    router.replace(`${pathname}?${params.toString()}`);
-  };
+  const { update, isPending } = useUpdateSearchParams();
 
   return (
     <NativeSelect
       value={currentFilter}
-      onChange={(event) => handleFilterChange(event.target.value)}
+      aria-busy={isPending}
+      className="transition-opacity aria-busy:opacity-60"
+      onChange={(event) => update({ filter: event.target.value })}
     >
-      <NativeSelectOption value="newest">Newest</NativeSelectOption>
-      <NativeSelectOption value="oldest">Oldest</NativeSelectOption>
-      <NativeSelectOption value="price_low_high">
-        Price: Low to High
-      </NativeSelectOption>
-      <NativeSelectOption value="price_high_low">
-        Price: High to Low
-      </NativeSelectOption>
+      {sortOptions.map(({ label, value }) => (
+        <NativeSelectOption key={value} value={value}>
+          {label}
+        </NativeSelectOption>
+      ))}
     </NativeSelect>
   );
 }

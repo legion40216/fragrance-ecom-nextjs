@@ -2,8 +2,7 @@
 
 import { searchParamsSchema, SearchParamsValues } from "@/schema";
 
-
-type RawSearchParams = Record<string, string | string[] | undefined>;
+export type RawSearchParams = Record<string, string | string[] | undefined>;
 
 function normalizeSearchParams(
   searchParams: RawSearchParams

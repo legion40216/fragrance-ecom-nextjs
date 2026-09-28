@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { products } from "@/data/data";
 import { CategorySlug, FilterValue } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
@@ -8,8 +9,9 @@ import HeadingState from "@/components/global-ui/heading-state";
 import ProductListFilter from "./components/product-list-filter";
 import FilterSidebar from "./components/filter-sidebar";
 import FilterSheet from "./components/filter-sheet";
+import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
 
-export default function ProductSection({
+export default async function ProductSection({
   categoryParam,
   filterParam,
   minPrice,
@@ -28,6 +30,12 @@ export default function ProductSection({
   showCategoryFilter?: boolean;
   headingTitle?: string;
 }) {
+  // Read on the server so the first paint already uses the saved layout.
+  const cookieStore = await cookies();
+  const initialColumns = parseGridColumns(
+    cookieStore.get(GRID_COLUMNS_COOKIE)?.value,
+  );
+
   const filterProps = {
     categoryParam,
     minPrice,
@@ -63,7 +71,10 @@ export default function ProductSection({
             </div>
           </div>
 
-          <ProductList initialData={filteredAndSorted} />
+          <ProductList
+            initialData={filteredAndSorted}
+            initialColumns={initialColumns}
+          />
         </div>
       </div>
     </section>

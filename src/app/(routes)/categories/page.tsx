@@ -1,21 +1,14 @@
-import { getValidatedSearchParams } from "@/utils/parseSearchParams";
-import { redirect } from "next/navigation";
+import { resolveListingParams } from "@/utils/resolve-listing-params";
 import CategoriesView from "./_modules/views/categories-view";
 
 export default async function Categories(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const rawSearchParams = await props.searchParams;
-  const validatedParams = getValidatedSearchParams(rawSearchParams);
-
-  const rawCategory =
-    typeof rawSearchParams.category === "string"
-      ? rawSearchParams.category
-      : undefined;
-
-  if (rawCategory && rawCategory !== validatedParams.category) {
-    redirect("/categories");
-  }
+  // Bad/unknown category in the URL -> redirect to a clean /categories
+  const validatedParams = await resolveListingParams(
+    props.searchParams,
+    "/categories",
+  );
 
   return (
     <CategoriesView

@@ -1,4 +1,5 @@
 // types/types.ts
+import type { ProductCategorySlug } from "@/data/categories";
 
 export type CategoryType = {
   id: string;
@@ -14,7 +15,7 @@ export type ProductType = {
   name: string;
   slug: string;
   brand: string;
-  category: string;
+  category: ProductCategorySlug;
   description: string;
   price: number;
   size: string;
