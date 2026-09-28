@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { ProductsType } from "@/types/types";
+import { useSyncExternalStore } from "react";
 import ProductCard from "@/components/global-ui/product-card";
 import EmptyState from "@/components/global-ui/empty-state";
 import { Button } from "@/components/ui/button";
+import type { ProductsType } from "@/types/types";
 
 type GridColumns = 1 | 2 | 3;
 
@@ -25,6 +25,34 @@ const columnOptions: { value: GridColumns; label: string }[] = [
 
 function isGridColumns(value: string | null): value is `${GridColumns}` {
   return value === "1" || value === "2" || value === "3";
+}
+
+const GRID_EVENT = "product-grid-columns-change";
+
+function subscribeToGridColumns(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener(GRID_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(GRID_EVENT, callback);
+  };
+}
+
+function readGridColumns(): GridColumns {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (isGridColumns(saved)) return Number(saved) as GridColumns;
+  } catch {}
+  return 3;
+}
+
+function useGridColumns() {
+  const columns = useSyncExternalStore<GridColumns>(subscribeToGridColumns, readGridColumns, () => 3);
+  const setColumns = (value: GridColumns) => {
+    try { window.localStorage.setItem(STORAGE_KEY, String(value)); } catch {}
+    window.dispatchEvent(new Event(GRID_EVENT));
+  };
+  return [columns, setColumns] as const;
 }
 
 function useMediaQuery(query: string) {
@@ -66,7 +94,7 @@ export default function ProductList({
   initialData: ProductsType;
 }) {
   // Saved preference. Never overwritten by viewport changes.
-  const [columns, setColumns] = useState<GridColumns>(3);
+  const [columns, setColumns] = useGridColumns();
 
   // Matches Tailwind's `md` breakpoint.
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -74,33 +102,15 @@ export default function ProductList({
   // What is actually shown, so the highlighted button matches the real grid.
   const activeColumns: GridColumns = columns === 3 && !isDesktop ? 2 : columns;
 
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
 
-      if (isGridColumns(saved)) {
-        setColumns(Number(saved) as GridColumns);
-      }
-    } catch {
-      // Ignore storage errors and keep the default.
-    }
-  }, []);
 
-  const handleGridChange = (value: GridColumns) => {
-    setColumns(value);
-
-    try {
-      window.localStorage.setItem(STORAGE_KEY, String(value));
-    } catch {
-      // Preference just won't persist this session.
-    }
-  };
+  const handleGridChange = (value: GridColumns) => setColumns(value);
 
   if (initialData.length === 0) {
     return (
       <EmptyState
         title="No fragrances found"
-        subtitle="Try a different category."
+        subtitle="Try adjusting or clearing your filters."
       />
     );
   }
@@ -113,11 +123,8 @@ export default function ProductList({
           {initialData.length === 1 ? "product" : "products"}
         </p>
 
-        <div
-          className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1"
-          role="group"
-          aria-label="Product grid layout"
-        >
+        <fieldset className="m-0 flex min-w-0 items-center gap-1 rounded-lg border bg-muted/40 p-1">
+          <legend className="sr-only">Product grid layout</legend>
           {columnOptions.map(({ value, label }) => (
             <Button
               key={value}
@@ -133,7 +140,7 @@ export default function ProductList({
               <ColumnsIcon columns={value} />
             </Button>
           ))}
-        </div>
+        </fieldset>
       </div>
 
       <div
