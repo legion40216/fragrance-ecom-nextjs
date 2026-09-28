@@ -1,12 +1,12 @@
-// utils/parseSearchParams.ts
+import { searchParamsSchema, type SearchParamsValues } from "@/schema";
 
-import { searchParamsSchema, SearchParamsValues } from "@/schema";
-
-
-type RawSearchParams = Record<string, string | string[] | undefined>;
+export type RawSearchParams = Record<
+  string,
+  string | string[] | undefined
+>;
 
 function normalizeSearchParams(
-  searchParams: RawSearchParams
+  searchParams: RawSearchParams,
 ): Record<string, string> {
   const result: Record<string, string> = {};
 
@@ -22,11 +22,19 @@ function normalizeSearchParams(
 }
 
 export function getValidatedSearchParams(
-  searchParams: RawSearchParams
+  searchParams: RawSearchParams,
 ): SearchParamsValues {
-  const normalized = normalizeSearchParams(searchParams);
-  const result = searchParamsSchema.safeParse(normalized);
+  const parsed = searchParamsSchema.parse(
+    normalizeSearchParams(searchParams),
+  );
 
-  // Invalid or unknown category -> treat as "no filter" rather than erroring
-  return result.success ? result.data : {};
+  if (parsed.minPrice > parsed.maxPrice) {
+    return {
+      ...parsed,
+      minPrice: parsed.maxPrice,
+      maxPrice: parsed.minPrice,
+    };
+  }
+
+  return parsed;
 }
