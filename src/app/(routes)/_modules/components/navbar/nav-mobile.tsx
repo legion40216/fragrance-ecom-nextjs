@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Menu } from "lucide-react";
+import { useState } from "react";
 
 import NavLinks from "@/components/global-ui/nav-links";
 import { Button } from "@/components/ui/button";
