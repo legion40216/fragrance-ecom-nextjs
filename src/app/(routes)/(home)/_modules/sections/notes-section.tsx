@@ -1,0 +1,50 @@
+import Link from "next/link";
+import { categories, products } from "@/data/data";
+import ProductCard from "@/components/global-ui/product-card";
+
+const NOTE_ACCENTS: Record<string, string> = {
+  "mens-fragrances": "#5B4636",
+  "womens-fragrances": "#8C4B4A",
+  "unisex-fragrances": "#7C7263",
+  "oud-collection": "#21121B",
+  attars: "#A9834C",
+};
+
+export default function NotesSection() {
+  const featured = products.filter((p) => p.isFeatured).slice(0, 4);
+
+  return (
+    <section id="heart" className="bg-[#F3ECE2] px-6 py-20 text-[#241A16] sm:px-10 lg:px-24 lg:pl-40">
+      <div className="mb-12 max-w-md">
+        <p className="text-sm leading-6 text-[#241A16]/60">
+          Underneath every top note is the heart — the part that decides whether a fragrance belongs to you.
+        </p>
+        <h2 className="mt-4 font-serif text-4xl sm:text-5xl">Five collections, one shelf.</h2>
+      </div>
+
+      <div className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {categories.map((category, index) => (
+          <Link
+            key={category.id}
+            href={`/products?category=${category.slug}`}
+            className="group relative w-44 shrink-0 overflow-hidden rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5"
+            style={{ height: index % 2 === 0 ? "17rem" : "20rem" }}
+          >
+            <span className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: NOTE_ACCENTS[category.slug] }} />
+            <div className="flex h-full flex-col justify-between pt-4">
+              <h3 className="font-serif text-xl leading-tight">{category.name}</h3>
+              <p className="text-xs leading-5 text-[#241A16]/60">{category.description}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="mt-20">
+        <h3 className="font-serif text-3xl sm:text-4xl">Selected for you</h3>
+        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {featured.map((product) => <ProductCard key={product.id} {...product} />)}
+        </div>
+      </div>
+    </section>
+  );
+}

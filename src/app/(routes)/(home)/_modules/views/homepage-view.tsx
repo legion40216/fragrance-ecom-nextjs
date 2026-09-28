@@ -1,16 +1,15 @@
-import BrandSection from "../sections/brand-section";
-import CategorySection from "../sections/category-section";
-import FeaturedSection from "../sections/featured-section";
 import HeroSection from "../sections/hero-section";
-
+import NotesSection from "../sections/notes-section";
+import BaseSection from "../sections/base-section";
+import ScentRail from "../components/scent-rail";
 
 export default function HomepageView() {
   return (
-    <div className="space-y-20 py-10 md:space-y-28 ">
+    <div className="relative">
+      <ScentRail />
       <HeroSection />
-      <CategorySection />
-      <FeaturedSection />
-      <BrandSection />
+      <NotesSection />
+      <BaseSection />
     </div>
   );
 }
