@@ -5,11 +5,11 @@ import type { ProductCategorySlug } from "@/data/categories";
 
 const validCategorySlugs = categories.map(
   (category) => category.slug,
-) as [string, ...string[]];
+) as [ProductCategorySlug, ...ProductCategorySlug[]];
 
 const validFilterValues = sortOptions.map(
   (option) => option.value,
-) as [string, ...string[]];
+) as [SortValue, ...SortValue[]];
 
 export type SearchParamsValues = {
   category?: ProductCategorySlug;
