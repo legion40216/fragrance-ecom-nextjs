@@ -1,63 +1,43 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+
+const stages = [
+  ["Top", "Citrus, green notes", "You notice these first. They fade within the hour."],
+  ["Heart", "Rose, jasmine", "They arrive as the top fades and carry the scent for hours."],
+  ["Base", "Oud, amber, vanilla, musk", "What is left on your skin at the end of the day."],
+];
 
 export default function BrandSection() {
   return (
-    <section className="overflow-hidden rounded-[2rem] border 
-      bg-foreground text-background"
-    >
-      <div className="grid items-center gap-10 p-7 sm:p-10 
-        md:grid-cols-[1.2fr_0.8fr] md:p-14"
-      >
-        <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full
-            border border-background/20 px-3 py-1.5 text-xs 
-            uppercase tracking-[0.2em] text-background/70"
-           >
-            <Sparkles className="size-3.5" /> Your signature, your story
+    <section className="bg-[linear-gradient(to_bottom,#E7CFC8,#241813_10rem)] px-6 pb-24 pt-40 text-[#F1E2CF] md:px-14">
+      <p className="mb-8 text-sm text-[#F1E2CF]/60">Base</p>
+
+      <h2 className="max-w-2xl font-[family-name:var(--font-display)] text-4xl sm:text-5xl md:text-6xl">
+        What lingers is what people remember.
+      </h2>
+
+      <p className="mt-6 max-w-xl leading-7 text-[#F1E2CF]/70">
+        Every bottle here opens light, settles into flowers or woods, and dries
+        down to oud, amber or musk. Check the notes before you choose.
+      </p>
+
+      <dl className="mt-14 grid gap-8 border-t border-[#F1E2CF]/20 pt-8 md:grid-cols-3">
+        {stages.map(([stage, notes, text]) => (
+          <div key={stage}>
+            <dt className="font-[family-name:var(--font-display)] text-2xl text-[#D69A3A]">
+              {stage}
+            </dt>
+            <dd className="mt-2 font-medium">{notes}</dd>
+            <dd className="mt-1 text-sm leading-6 text-[#F1E2CF]/60">{text}</dd>
           </div>
+        ))}
+      </dl>
 
-          <h2 className="max-w-2xl font-serif text-4xl leading-tight sm:text-5xl
-            md:text-6xl"
-           >
-            Fragrance is more than a scent.
-          </h2>
-
-          <p className="mt-5 max-w-xl leading-7 text-background/65">
-            It is the detail people remember. Explore warm ouds, fresh everyday
-            scents, elegant florals, and concentrated attars made for moments
-            worth remembering.
-          </p>
-          <Link
-            href="/products"
-            className="mt-8 inline-flex items-center gap-2 rounded-full 
-              bg-background px-6 py-3 text-sm font-medium text-foreground 
-              transition-transform hover:-translate-y-0.5"
-          >
-            Find your fragrance <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          {[
-            ["01", "Everyday", "Fresh, clean, effortless"],
-            ["02", "Evening", "Warm, deep, memorable"],
-            ["03", "Luxury", "Rich oud & amber"],
-            ["04", "Traditional", "Classic concentrated attars"],
-          ].map(([number, title, description]) => (
-            <div
-              key={number}
-              className="rounded-2xl border border-background/15 p-5"
-            >
-              <span className="text-xs text-background/45">{number}</span>
-              <p className="mt-8 font-medium">{title}</p>
-              <p className="mt-1 text-xs leading-5 text-background/55">
-                {description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Link
+        href="/products"
+        className="mt-14 inline-block rounded-md bg-[#D69A3A] px-6 py-3 text-sm font-medium text-[#241813] transition-colors hover:bg-[#E3AE57]"
+      >
+        Shop all fragrances
+      </Link>
     </section>
   );
 }
