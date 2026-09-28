@@ -1,32 +1,18 @@
 "use client";
 
-import { categories } from "@/data/data";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { CategorySlug } from "@/schema";
-
 import { Button } from "@/components/ui/button";
+import { categories } from "@/data/data";
+import { useUpdateSearchParams } from "@/features/product-listing/hooks/use-update-search-params";
+import type { CategorySlug } from "@/schema";
 
 export default function CategoriesBar({
   categoryParam,
 }: {
   categoryParam: CategorySlug;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { update } = useUpdateSearchParams();
 
-  const handleSelect = (slug?: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (slug) {
-      params.set("category", slug);
-    } else {
-      params.delete("category");
-    }
-
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname);
-  };
+  const handleSelect = (slug?: string) => update({ category: slug ?? null });
 
   return (
     <div className="flex flex-wrap gap-2">
