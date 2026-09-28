@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { categories, brands } from "@/data/data";
-import { PRICE_BOUNDS } from "@/data/constants";
+import { PRICE_BOUNDS, PRICE_STEP } from "@/data/constants";
 import type { CategorySlug } from "@/schema";
 import { formatter } from "@/utils/formatters";
+import { useUpdateSearchParams } from "../hooks/use-update-search-params";
 
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -20,7 +20,6 @@ export interface FilterControlsProps {
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
-  /** Called after any filter change -- lets FilterSheet close itself. */
   onChange?: () => void;
 }
 
@@ -32,9 +31,7 @@ export default function FilterControls({
   inStockParam,
   onChange,
 }: FilterControlsProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { updateParams, clear, isPending } = useUpdateSearchParams();
 
   const [priceDraft, setPriceDraft] = useState<[number, number]>([
     minPrice,
@@ -45,31 +42,20 @@ export default function FilterControls({
     setPriceDraft([minPrice, maxPrice]);
   }, [minPrice, maxPrice]);
 
-  const updateParams = (updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null) {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname);
+  const handleUpdate = (updates: Record<string, string | null>) => {
+    updateParams(updates);
     onChange?.();
   };
 
   const handleCategoryChange = (slug: string) => {
-    updateParams({ category: slug === "all" ? null : slug });
+    handleUpdate({ category: slug === "all" ? null : slug });
   };
 
   const handlePriceCommit = (value: number | readonly number[]) => {
     if (typeof value === "number") return;
 
     const [min, max] = value;
-    updateParams({
+    handleUpdate({
       minPrice: min === PRICE_BOUNDS.min ? null : String(min),
       maxPrice: max === PRICE_BOUNDS.max ? null : String(max),
     });
@@ -77,18 +63,18 @@ export default function FilterControls({
 
   const handleBrandToggle = (brand: string) => {
     const next = brandParam.includes(brand)
-      ? brandParam.filter((b) => b !== brand)
+      ? brandParam.filter((item) => item !== brand)
       : [...brandParam, brand];
 
-    updateParams({ brand: next.length ? next.join(",") : null });
+    handleUpdate({ brand: next.length ? next.join(",") : null });
   };
 
   const handleInStockToggle = (checked: boolean) => {
-    updateParams({ inStock: checked ? "true" : null });
+    handleUpdate({ inStock: checked ? "true" : null });
   };
 
   const handleClearAll = () => {
-    router.replace(pathname);
+    clear();
     onChange?.();
   };
 
@@ -100,17 +86,17 @@ export default function FilterControls({
     inStockParam;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy={isPending}>
       <div>
         <h2 className="font-medium">Filters</h2>
       </div>
 
-      {/* Category */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">Category</Label>
         <RadioGroup
           value={categoryParam ?? "all"}
           onValueChange={handleCategoryChange}
+          disabled={isPending}
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="all" id="cat-all" />
@@ -133,17 +119,17 @@ export default function FilterControls({
         </RadioGroup>
       </div>
 
-      {/* Price */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">Price</Label>
         <Slider
           min={PRICE_BOUNDS.min}
           max={PRICE_BOUNDS.max}
-          step={100}
+          step={PRICE_STEP}
           value={priceDraft}
           onValueChange={(value) => setPriceDraft(value as [number, number])}
           onValueCommitted={handlePriceCommit}
           className="mt-2"
+          disabled={isPending}
         />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{formatter.format(priceDraft[0])}</span>
@@ -151,7 +137,6 @@ export default function FilterControls({
         </div>
       </div>
 
-      {/* Brand */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">Brand</Label>
         <div className="space-y-2">
@@ -161,6 +146,7 @@ export default function FilterControls({
                 id={`brand-${brand}`}
                 checked={brandParam.includes(brand)}
                 onCheckedChange={() => handleBrandToggle(brand)}
+                disabled={isPending}
               />
               <Label
                 htmlFor={`brand-${brand}`}
@@ -173,12 +159,12 @@ export default function FilterControls({
         </div>
       </div>
 
-      {/* In stock */}
       <div className="flex items-center space-x-3">
         <Checkbox
           id="in-stock"
           checked={inStockParam}
           onCheckedChange={(checked) => handleInStockToggle(!!checked)}
+          disabled={isPending}
         />
         <Label htmlFor="in-stock" className="font-normal cursor-pointer">
           In stock only
@@ -187,7 +173,7 @@ export default function FilterControls({
 
       <div className="flex justify-end">
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={handleClearAll}>
+          <Button variant="ghost" size="sm" onClick={handleClearAll} disabled={isPending}>
             Clear all
           </Button>
         )}
