@@ -1,9 +1,9 @@
-// types/types.ts
+import type { CategorySlugValue } from "@/data/category-slugs";
 
 export type CategoryType = {
   id: string;
   name: string;
-  slug: string;
+  slug: CategorySlugValue;
   description: string;
 };
 
@@ -14,7 +14,7 @@ export type ProductType = {
   name: string;
   slug: string;
   brand: string;
-  category: string;
+  category: CategorySlugValue;
   description: string;
   price: number;
   size: string;
@@ -25,7 +25,7 @@ export type ProductType = {
   isFeatured: boolean;
   isNew: boolean;
   isBestSeller: boolean;
-  createdAt: string; // ISO date string, used for "newest" / "oldest" sort
+  createdAt: string;
 };
 
 export type ProductsType = ProductType[];
