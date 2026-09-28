@@ -12,7 +12,7 @@ export const footerLinks = [
     links: [
       { href: "/", label: "Home" },
       { href: "/products", label: "Products" },
-      { href: "/rooms", label: "Rooms" },
+      { href: "/categories", label: "Categories" },
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
     ],
