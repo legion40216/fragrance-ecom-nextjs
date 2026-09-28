@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
+import { Geist_Mono, Josefin_Slab, Poppins } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -31,11 +31,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${josefinSlab.variable} ${geistMono.variable}`}
+      className={poppins.variable + " " + josefinSlab.variable + " " + geistMono.variable}
     >
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
