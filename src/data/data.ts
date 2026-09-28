@@ -1,7 +1,6 @@
-
 import type { CategoryType, ProductType } from "@/types/types";
 
-export const categories: CategoryType[] = [
+export const categories = [
   {
     id: "mens",
     name: "Men's Fragrances",
@@ -32,7 +31,9 @@ export const categories: CategoryType[] = [
     slug: "attars",
     description: "Traditional concentrated perfume oils",
   },
-];
+] as const satisfies readonly CategoryType[];
+
+export type CategorySlugValue = (typeof categories)[number]["slug"];
 
 export const products: ProductType[] = [
   {
@@ -160,4 +161,3 @@ export const products: ProductType[] = [
 export const brands: string[] = Array.from(
   new Set(products.map((product) => product.brand)),
 );
-
