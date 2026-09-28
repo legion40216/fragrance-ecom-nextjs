@@ -1,5 +1,5 @@
 import React from 'react'
-import CategoriesView from './_modules/views/categories-view';
+import CheckoutView from './_modules/views/checkout-view';
 
 export default function page() {
   return (
