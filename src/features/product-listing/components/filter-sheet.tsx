@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Filter } from "lucide-react";
-import FilterControls, { FilterControlsProps } from "./filter-controls";
+import FilterControls, { type FilterControlsProps } from "./filter-controls";
 import { PRICE_BOUNDS } from "@/data/constants";
 
 import { Button } from "@/components/ui/button";
