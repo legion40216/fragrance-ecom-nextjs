@@ -22,8 +22,9 @@ export function filterProducts(
   return products.filter((product) => {
     if (categoryParam && product.category !== categoryParam) return false;
     if (product.price < minPrice || product.price > maxPrice) return false;
-    if (brandParam.length > 0 && !brandParam.includes(product.brand)) return false;
-    if (inStockParam && !product.inStock) return false;
+    if (brandParam.length > 0 && !brandParam.includes(product.brand))
+      return false;
+    if (inStockParam && product.stock <= 0) return false;
     return true;
   });
 }
