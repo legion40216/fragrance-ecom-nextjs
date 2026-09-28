@@ -6,28 +6,14 @@
 
 @theme inline {
   --font-sans:
-    var(--font-poppins),
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
+    var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 
   --font-serif:
-    var(--font-josefin-slab),
-    Georgia,
-    "Times New Roman",
-    Times,
-    serif;
+    var(--font-josefin-slab), Georgia, "Times New Roman", Times, serif;
 
   --font-mono:
-    var(--font-geist-mono),
-    "SF Mono",
-    Monaco,
-    "Cascadia Code",
-    "Courier New",
+    var(--font-geist-mono), "SF Mono", Monaco, "Cascadia Code", "Courier New",
     monospace;
 
   /* =========================
@@ -37,7 +23,7 @@
   --breakpoint-sm: 375px;
   --breakpoint-xl: 1366px;
 
-/* =========================
+  /* =========================
   Text Sizes
   ========================= */
 
@@ -132,7 +118,7 @@
   /* =========================
      Text rendering
      ========================= */
-     
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -276,11 +262,5 @@
 .custom-button {
   -webkit-tap-highlight-color: transparent; /* keep this, no Tailwind equivalent */
 
-  @apply appearance-none bg-transparent border-0 p-0
-    cursor-pointer select-none
-    flex justify-center items-center
-    outline-none focus-visible:border-ring focus-visible:ring-ring/50 
-    focus-visible:ring-[3px]
-    disabled:opacity-50 disabled:cursor-not-allowed
-    transition-all duration-150;
+  @apply appearance-none bg-transparent border-0 p-0 cursor-pointer select-none flex justify-center items-center outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150;
 }
