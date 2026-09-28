@@ -1,43 +1,39 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import Link from "next/link";
 import { cn } from "cn";
+import Link from "next/link";
+import React, { type ReactNode } from "react";
 
 interface NavLinksProps {
   routeActive?: boolean;
   routeHref: string;
-  routeLabel?: string;
-  children?: ReactNode;
-  className?: string;
+  routeLabel: string;
   activeClassName?: string;
   inactiveClassName?: string;
-  newTab?: boolean;
+  className?: string;
+  children?: ReactNode;
   onClick?: () => void;
 }
 
 export default function NavLinks({
-  routeActive = false,
+  routeActive,
   routeHref,
   routeLabel,
-  children,
+  activeClassName,
+  inactiveClassName,
   className,
-  activeClassName = "",
-  inactiveClassName = "",
-  newTab = false,
+  children,
   onClick,
 }: NavLinksProps) {
   return (
     <Link
       href={routeHref}
-      target={newTab ? "_blank" : undefined}
-      rel={newTab ? "noopener noreferrer" : undefined}
-      onClick={onClick}
       className={cn(
         "transition-colors",
         routeActive ? activeClassName : inactiveClassName,
-        className
+        className,
       )}
+      onClick={onClick}
     >
       {children ?? routeLabel}
     </Link>
