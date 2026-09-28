@@ -1,7 +1,7 @@
-import NavLeft from "./navbar/nav-left/nav-left";
 import { Button } from "@/components/ui/button";
-import NavMobile from "./navbar/nav-mobile";
+import NavLeft from "./navbar/nav-left/nav-left";
 import NavMiddle from "./navbar/nav-middle";
+import NavMobile from "./navbar/nav-mobile";
 
 export default function Navbar() {
   return (
@@ -9,11 +9,9 @@ export default function Navbar() {
       <NavLeft />
 
       <NavMiddle />
-      
+
       <NavMobile />
-      <Button className="hidden md:inline-flex">
-        Contact Us
-      </Button>
+      <Button className="hidden md:inline-flex">Contact Us</Button>
     </div>
   );
 }
