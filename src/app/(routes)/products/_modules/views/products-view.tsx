@@ -2,7 +2,7 @@
 import type { CategorySlug, FilterValue } from "@/schema";
 import ProductSection from "@/features/product-listing/product-section";
 
-export default function ProductView({
+export default function ProductsView({
   categoryParam,
   filterParam,
   minPrice,
