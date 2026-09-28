@@ -1,28 +1,31 @@
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden border-b">
-      <div className="grid min-h-[560px] items-center gap-10 pb-12 
+      <div
+        className="grid min-h-[560px] items-center gap-10 pb-12 
         md:grid-cols-[1.05fr_0.95fr] md:pb-16 lg:min-h-[620px]"
       >
         <div className="relative z-10 max-w-2xl">
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] 
+          <p
+            className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] 
           text-muted-foreground"
           >
             The art of fragrance
           </p>
 
-          <h1 className="font-serif text-5xl leading-[0.95] tracking-tight 
+          <h1
+            className="font-serif text-5xl leading-[0.95] tracking-tight 
             sm:text-6xl lg:text-8xl"
           >
-            Leave a
-            <span className="block italic">lasting impression.</span>
+            Leave a<span className="block italic">lasting impression.</span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-base leading-7 text-muted-foreground 
+          <p
+            className="mt-7 max-w-xl text-base leading-7 text-muted-foreground 
             sm:text-lg"
           >
             Discover refined fragrances crafted for every mood, moment, and
@@ -30,7 +33,9 @@ export default function HeroSection() {
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <Link href="/products" className="inline-flex items-center gap-2 
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 
               rounded-full bg-foreground px-6 py-3 text-sm 
               font-medium text-background transition-transform 
               hover:-translate-y-0.5"
@@ -38,7 +43,9 @@ export default function HeroSection() {
               Shop fragrances <ArrowRight className="size-4" />
             </Link>
 
-            <Link href="/categories" className="inline-flex items-center 
+            <Link
+              href="/categories"
+              className="inline-flex items-center 
               rounded-full border px-6 py-3 text-sm font-medium transition-colors 
               hover:bg-muted"
             >
@@ -62,20 +69,21 @@ export default function HeroSection() {
         <div className="relative mx-auto w-full max-w-[520px]">
           <div className="absolute -inset-8 rounded-full bg-muted/70 blur-3xl" />
 
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] 
+          <div
+            className="relative aspect-[4/5] overflow-hidden rounded-[2rem] 
             bg-muted"
           >
-
-            <Image 
-            src="/assets/product/images/royal-oud.svg" 
-            alt="Royal Oud fragrance" 
-            fill 
-            priority 
-            className="object-contain p-10 transition-transform duration-700 
-            hover:scale-105" 
+            <Image
+              src="/assets/product/images/royal-oud.svg"
+              alt="Royal Oud fragrance"
+              fill
+              priority
+              className="object-contain p-10 transition-transform duration-700 
+            hover:scale-105"
             />
 
-            <div className="absolute inset-x-5 bottom-5 
+            <div
+              className="absolute inset-x-5 bottom-5 
               rounded-2xl border bg-background/90 p-4 backdrop-blur"
             >
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
