@@ -1,13 +1,13 @@
+import HeadingState from "@/components/global-ui/heading-state";
 import { products } from "@/data/data";
-import { CategorySlug, FilterValue } from "@/schema";
+import type { CategorySlug, FilterValue } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
 
-import ProductList from "./product-list";
-import HeadingState from "@/components/global-ui/heading-state";
-import ProductListFilter from "./components/product-list-filter";
-import FilterSidebar from "./components/filter-sidebar";
 import FilterSheet from "./components/filter-sheet";
+import FilterSidebar from "./components/filter-sidebar";
+import ProductListFilter from "./components/product-list-filter";
+import ProductList from "./product-list";
 
 export default function ProductSection({
   categoryParam,
