@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { ProductsType } from "@/types/types";
-import ProductCard from "./product-card";
-import EmptyState from "./empty-state";
+import ProductCard from "@/components/global-ui/product-card";
+import EmptyState from "@/components/global-ui/empty-state";
 import { Button } from "@/components/ui/button";
 
 type GridColumns = 1 | 2 | 3;
