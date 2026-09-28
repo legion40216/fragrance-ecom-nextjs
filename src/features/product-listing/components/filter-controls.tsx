@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-
 import { categories, brands } from "@/data/data";
 import { PRICE_BOUNDS, PRICE_STEP } from "@/data/constants";
 import type { CategorySlug } from "@/schema";
