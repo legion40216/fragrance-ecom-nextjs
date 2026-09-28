@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={poppins.variable + " " + josefinSlab.variable + " " + geistMono.variable}
+      className={`${poppins.variable} ${josefinSlab.variable} ${geistMono.variable}`}
     >
       <body>{children}</body>
     </html>
