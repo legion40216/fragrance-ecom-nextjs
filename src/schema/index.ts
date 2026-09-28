@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { categories, brands } from "@/data/data";
-import { PRICE_BOUNDS, sortOptions } from "@/data/constants";
+import { PRICE_BOUNDS, sortOptions, type SortValue } from "@/data/constants";
+import type { ProductCategorySlug } from "@/data/categories";
 
 const validCategorySlugs = categories.map(
   (category) => category.slug,
@@ -10,7 +11,16 @@ const validFilterValues = sortOptions.map(
   (option) => option.value,
 ) as [string, ...string[]];
 
-export const searchParamsSchema = z.object({
+export type SearchParamsValues = {
+  category?: ProductCategorySlug;
+  filter: SortValue;
+  minPrice: number;
+  maxPrice: number;
+  brand: string[];
+  inStock: boolean;
+};
+
+export const searchParamsSchema: z.ZodType<SearchParamsValues> = z.object({
   category: z.enum(validCategorySlugs).optional().catch(undefined),
 
   filter: z
@@ -50,6 +60,5 @@ export const searchParamsSchema = z.object({
     .transform((value) => value === "true"),
 });
 
-export type SearchParamsValues = z.infer<typeof searchParamsSchema>;
 export type CategorySlug = SearchParamsValues["category"];
 export type FilterValue = SearchParamsValues["filter"];
