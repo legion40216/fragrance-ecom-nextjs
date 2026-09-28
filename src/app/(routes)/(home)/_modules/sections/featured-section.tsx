@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { products } from "@/data/data";
+import Link from "next/link";
 import ProductCard from "@/components/global-ui/product-card";
+import { products } from "@/data/data";
 
 export default function FeaturedSection() {
   const featured = products.filter((product) => product.isFeatured).slice(0, 4);
@@ -9,7 +9,8 @@ export default function FeaturedSection() {
     <section>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] 
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.25em] 
             text-muted-foreground"
           >
             Handpicked for you
