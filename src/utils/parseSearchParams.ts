@@ -10,8 +10,11 @@ function normalizeSearchParams(
   const result: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(searchParams)) {
-    if (value === undefined) continue;
-    result[key] = Array.isArray(value) ? value[0] : value;
+    if (typeof value === "string") {
+      result[key] = value;
+    } else if (Array.isArray(value) && value.length > 0) {
+      result[key] = value[value.length - 1];
+    }
   }
 
   return result;
