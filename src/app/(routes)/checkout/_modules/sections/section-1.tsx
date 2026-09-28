@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Section1() {
-  return (
-    <div>Section1</div>
-  )
+  return <div>Section1</div>;
 }
