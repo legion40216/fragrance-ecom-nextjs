@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { categories, brands } from "@/data/data";
-import { PRICE_BOUNDS } from "@/data/constants";
+import { PRICE_BOUNDS, PRICE_STEP } from "@/data/constants";
 import type { CategorySlug } from "@/schema";
 import { formatter } from "@/utils/formatters";
 
@@ -13,6 +13,7 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
+import { useUpdateSearchParams } from "@/features/product-listing/hooks/use-update-search-params";
 
 export interface FilterControlsProps {
   categoryParam: CategorySlug;
@@ -33,9 +34,7 @@ export default function FilterControls({
   showCategoryFilter = true,
   onChange,
 }: FilterControlsProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { updateParams, clear, isPending } = useUpdateSearchParams();
 
   const [priceDraft, setPriceDraft] = useState<[number, number]>([
     minPrice,
@@ -45,22 +44,6 @@ export default function FilterControls({
   useEffect(() => {
     setPriceDraft([minPrice, maxPrice]);
   }, [minPrice, maxPrice]);
-
-  const updateParams = (updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null) {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname);
-    onChange?.();
-  };
 
   const handleCategoryChange = (slug: string) => {
     updateParams({ category: slug === "all" ? null : slug });
@@ -89,7 +72,7 @@ export default function FilterControls({
   };
 
   const handleClearAll = () => {
-    router.replace(pathname);
+    clear();
     onChange?.();
   };
 
@@ -101,7 +84,7 @@ export default function FilterControls({
     inStockParam;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy={isPending}>
       <div>
         <h2 className="font-medium">Filters</h2>
       </div>
@@ -110,6 +93,7 @@ export default function FilterControls({
         <div className="space-y-3">
           <Label className="text-sm font-medium">Category</Label>
           <RadioGroup
+            disabled={isPending}
             value={categoryParam ?? "all"}
             onValueChange={handleCategoryChange}
           >
@@ -138,9 +122,10 @@ export default function FilterControls({
       <div className="space-y-3">
         <Label className="text-sm font-medium">Price</Label>
         <Slider
+          disabled={isPending}
           min={PRICE_BOUNDS.min}
           max={PRICE_BOUNDS.max}
-          step={100}
+          step={PRICE_STEP}
           value={priceDraft}
           onValueChange={(value) => setPriceDraft(value as [number, number])}
           onValueCommitted={handlePriceCommit}
@@ -186,7 +171,7 @@ export default function FilterControls({
 
       <div className="flex justify-end">
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={handleClearAll}>
+          <Button variant="ghost" size="sm" onClick={handleClearAll} disabled={isPending}>
             Clear all
           </Button>
         )}
