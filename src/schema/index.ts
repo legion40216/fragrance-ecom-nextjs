@@ -1,18 +1,14 @@
-// schema/index.ts
 import { z } from "zod";
-import { categories, brands } from "@/data/data";
-import { sortOptions, PRICE_BOUNDS } from "@/data/constants";
-
-const validCategorySlugs = categories.map(
-  (category) => category.slug
-) as [string, ...string[]];
+import { brands } from "@/data/data";
+import { categorySlugs } from "@/data/category-slugs";
+import { PRICE_BOUNDS, sortOptions } from "@/data/constants";
 
 const validFilterValues = sortOptions.map(
-  (option) => option.value
+  (option) => option.value,
 ) as [string, ...string[]];
 
-export const searchParamsSchema = z.object({
-  category: z.enum(validCategorySlugs).optional().catch(undefined),
+const baseSearchParamsSchema = z.object({
+  category: z.enum(categorySlugs).optional().catch(undefined),
 
   filter: z
     .enum(validFilterValues)
@@ -36,13 +32,12 @@ export const searchParamsSchema = z.object({
     .catch(PRICE_BOUNDS.max)
     .default(PRICE_BOUNDS.max),
 
-  // Comma-separated list of brand names -> string[], unknown brands dropped
   brand: z
     .string()
     .optional()
     .catch(undefined)
     .transform((value) =>
-      value ? value.split(",").filter((b) => brands.includes(b)) : []
+      value ? value.split(",").filter((brand) => brands.includes(brand)) : [],
     ),
 
   inStock: z
@@ -51,6 +46,16 @@ export const searchParamsSchema = z.object({
     .catch(undefined)
     .transform((value) => value === "true"),
 });
+
+export const searchParamsSchema = baseSearchParamsSchema.transform((values) =>
+  values.minPrice > values.maxPrice
+    ? {
+        ...values,
+        minPrice: values.maxPrice,
+        maxPrice: values.minPrice,
+      }
+    : values,
+);
 
 export type SearchParamsValues = z.infer<typeof searchParamsSchema>;
 export type CategorySlug = SearchParamsValues["category"];
