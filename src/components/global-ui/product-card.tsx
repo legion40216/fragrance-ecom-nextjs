@@ -6,7 +6,7 @@ import { formatter } from "@/utils/formatters";
 interface ProductCardProps
   extends Pick<
     ProductType,
-    | "id"
+    | "slug"
     | "name"
     | "brand"
     | "price"
@@ -15,10 +15,14 @@ interface ProductCardProps
     | "isNew"
     | "isBestSeller"
     | "stock"
-  > {}
+  > {
+  // Rendered width hint for next/image; the default suits a 2-up mobile /
+  // 4-up desktop grid.
+  sizes?: string;
+}
 
 export default function ProductCard({
-  id,
+  slug,
   name,
   brand,
   price,
@@ -27,12 +31,13 @@ export default function ProductCard({
   isNew,
   isBestSeller,
   stock,
+  sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
   const isOutOfStock = stock === 0;
 
   return (
     <Link
-      href={`/products/${id}`}
+      href={`/products/${slug}`}
       className="group block overflow-hidden rounded-lg border"
     >
       <div className="relative aspect-square bg-neutral-100">
@@ -40,6 +45,7 @@ export default function ProductCard({
           src={image}
           alt={name}
           fill
+          sizes={sizes}
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
 

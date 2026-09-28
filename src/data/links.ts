@@ -1,9 +1,9 @@
+// Only link to routes that exist. Add "/about" and "/contact" back here
+// (and to the footer) once those pages are created.
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
   { href: "/categories", label: "Categories" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 export const footerLinks = [
@@ -12,9 +12,7 @@ export const footerLinks = [
     links: [
       { href: "/", label: "Home" },
       { href: "/products", label: "Products" },
-      { href: "/rooms", label: "Rooms" },
-      { href: "/about", label: "About" },
-      { href: "/contact", label: "Contact" },
+      { href: "/categories", label: "Categories" },
     ],
   },
 ];

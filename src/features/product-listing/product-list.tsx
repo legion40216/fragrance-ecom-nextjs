@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ProductsType } from "@/types/types";
 import ProductCard from "@/components/global-ui/product-card";
 import EmptyState from "@/components/global-ui/empty-state";
 import { Button } from "@/components/ui/button";
-
-type GridColumns = 1 | 2 | 3;
-
-const STORAGE_KEY = "product-grid-columns";
+import { GRID_COLUMNS_COOKIE, type GridColumns } from "./grid-columns";
 
 // 3 columns is desktop-only, so on smaller screens it clamps to 2.
 const gridClasses: Record<GridColumns, string> = {
@@ -23,9 +20,15 @@ const columnOptions: { value: GridColumns; label: string }[] = [
   { value: 3, label: "Three columns" },
 ];
 
-function isGridColumns(value: string | null): value is `${GridColumns}` {
-  return value === "1" || value === "2" || value === "3";
-}
+// Tells the browser how wide each card renders so it fetches a suitably
+// sized image. Approximate on purpose (layout has a sidebar from `md`).
+const cardSizes: Record<GridColumns, string> = {
+  1: "(min-width: 768px) 75vw, 100vw",
+  2: "(min-width: 768px) 38vw, 50vw",
+  3: "(min-width: 768px) 25vw, 50vw",
+};
+
+const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
 function useMediaQuery(query: string) {
   return useSyncExternalStore(
@@ -62,11 +65,14 @@ function ColumnsIcon({ columns }: { columns: GridColumns }) {
 
 export default function ProductList({
   initialData,
+  initialColumns,
 }: {
   initialData: ProductsType;
+  initialColumns: GridColumns;
 }) {
-  // Saved preference. Never overwritten by viewport changes.
-  const [columns, setColumns] = useState<GridColumns>(3);
+  // Saved preference (read from a cookie on the server, so there is no
+  // first-paint jump). Never overwritten by viewport changes.
+  const [columns, setColumns] = useState<GridColumns>(initialColumns);
 
   // Matches Tailwind's `md` breakpoint.
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -74,26 +80,12 @@ export default function ProductList({
   // What is actually shown, so the highlighted button matches the real grid.
   const activeColumns: GridColumns = columns === 3 && !isDesktop ? 2 : columns;
 
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-
-      if (isGridColumns(saved)) {
-        setColumns(Number(saved) as GridColumns);
-      }
-    } catch {
-      // Ignore storage errors and keep the default.
-    }
-  }, []);
-
   const handleGridChange = (value: GridColumns) => {
     setColumns(value);
 
-    try {
-      window.localStorage.setItem(STORAGE_KEY, String(value));
-    } catch {
-      // Preference just won't persist this session.
-    }
+    // A cookie (not localStorage) so the server can render the saved layout.
+    // biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API isn't supported in all browsers yet
+    document.cookie = `${GRID_COLUMNS_COOKIE}=${value}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax`;
   };
 
   if (initialData.length === 0) {
@@ -140,7 +132,11 @@ export default function ProductList({
         className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out ${gridClasses[columns]}`}
       >
         {initialData.map((product) => (
-          <ProductCard key={product.id} {...product} />
+          <ProductCard
+            key={product.id}
+            {...product}
+            sizes={cardSizes[activeColumns]}
+          />
         ))}
       </div>
     </div>

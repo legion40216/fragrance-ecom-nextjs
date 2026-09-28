@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { categories, brands } from "@/data/data";
-import { PRICE_BOUNDS } from "@/data/constants";
+import { PRICE_BOUNDS, PRICE_STEP } from "@/data/constants";
+import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import type { CategorySlug } from "@/schema";
 import { formatter } from "@/utils/formatters";
 
@@ -33,9 +33,7 @@ export default function FilterControls({
   showCategoryFilter = true,
   onChange,
 }: FilterControlsProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { update, clear, isPending } = useUpdateSearchParams();
 
   const [priceDraft, setPriceDraft] = useState<[number, number]>([
     minPrice,
@@ -47,18 +45,7 @@ export default function FilterControls({
   }, [minPrice, maxPrice]);
 
   const updateParams = (updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null) {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname);
+    update(updates);
     onChange?.();
   };
 
@@ -89,7 +76,7 @@ export default function FilterControls({
   };
 
   const handleClearAll = () => {
-    router.replace(pathname);
+    clear();
     onChange?.();
   };
 
@@ -101,7 +88,10 @@ export default function FilterControls({
     inStockParam;
 
   return (
-    <div className="space-y-6">
+    <div
+      className="space-y-6 transition-opacity aria-busy:opacity-60"
+      aria-busy={isPending}
+    >
       <div>
         <h2 className="font-medium">Filters</h2>
       </div>
@@ -140,7 +130,7 @@ export default function FilterControls({
         <Slider
           min={PRICE_BOUNDS.min}
           max={PRICE_BOUNDS.max}
-          step={100}
+          step={PRICE_STEP}
           value={priceDraft}
           onValueChange={(value) => setPriceDraft(value as [number, number])}
           onValueCommitted={handlePriceCommit}

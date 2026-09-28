@@ -1,17 +1,20 @@
 // schema/index.ts
 import { z } from "zod";
 import { categories, brands } from "@/data/data";
-import { sortOptions, PRICE_BOUNDS } from "@/data/constants";
+import type { ProductCategorySlug } from "@/data/categories";
+import { sortOptions, PRICE_BOUNDS, type SortValue } from "@/data/constants";
 
-const validCategorySlugs = categories.map(
-  (category) => category.slug
-) as [string, ...string[]];
+const validCategorySlugs = categories.map((category) => category.slug) as [
+  ProductCategorySlug,
+  ...ProductCategorySlug[],
+];
 
-const validFilterValues = sortOptions.map(
-  (option) => option.value
-) as [string, ...string[]];
+const validFilterValues = sortOptions.map((option) => option.value) as [
+  SortValue,
+  ...SortValue[],
+];
 
-export const searchParamsSchema = z.object({
+const baseSearchParamsSchema = z.object({
   category: z.enum(validCategorySlugs).optional().catch(undefined),
 
   filter: z
@@ -51,6 +54,13 @@ export const searchParamsSchema = z.object({
     .catch(undefined)
     .transform((value) => value === "true"),
 });
+
+// ?minPrice=9000&maxPrice=1000 would match nothing, so swap an inverted range.
+export const searchParamsSchema = baseSearchParamsSchema.transform((params) =>
+  params.minPrice > params.maxPrice
+    ? { ...params, minPrice: params.maxPrice, maxPrice: params.minPrice }
+    : params
+);
 
 export type SearchParamsValues = z.infer<typeof searchParamsSchema>;
 export type CategorySlug = SearchParamsValues["category"];
