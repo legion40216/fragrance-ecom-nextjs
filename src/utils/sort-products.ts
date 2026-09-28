@@ -32,5 +32,3 @@ export function sortProducts(
       return sorted;
   }
 }
-
-export default sortProducts;
