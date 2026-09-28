@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { ProductsType } from "@/types/types";
 import ProductCard from "./product-card";
 import EmptyState from "./empty-state";
@@ -10,10 +10,11 @@ type GridColumns = 1 | 2 | 3;
 
 const STORAGE_KEY = "product-grid-columns";
 
+// 3 columns is desktop-only, so on smaller screens it clamps to 2.
 const gridClasses: Record<GridColumns, string> = {
   1: "grid-cols-1",
-  2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
+  2: "grid-cols-2",
+  3: "grid-cols-2 md:grid-cols-3",
 };
 
 const columnOptions: { value: GridColumns; label: string }[] = [
@@ -24,6 +25,18 @@ const columnOptions: { value: GridColumns; label: string }[] = [
 
 function isGridColumns(value: string | null): value is `${GridColumns}` {
   return value === "1" || value === "2" || value === "3";
+}
+
+function useMediaQuery(query: string) {
+  return useSyncExternalStore(
+    (callback) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", callback);
+      return () => mql.removeEventListener("change", callback);
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
 }
 
 function ColumnsIcon({ columns }: { columns: GridColumns }) {
@@ -52,7 +65,14 @@ export default function ProductList({
 }: {
   initialData: ProductsType;
 }) {
+  // Saved preference. Never overwritten by viewport changes.
   const [columns, setColumns] = useState<GridColumns>(3);
+
+  // Matches Tailwind's `md` breakpoint.
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  // What is actually shown, so the highlighted button matches the real grid.
+  const activeColumns: GridColumns = columns === 3 && !isDesktop ? 2 : columns;
 
   useEffect(() => {
     try {
@@ -103,8 +123,8 @@ export default function ProductList({
               key={value}
               type="button"
               size="icon"
-              variant={columns === value ? "secondary" : "ghost"}
-              aria-pressed={columns === value}
+              variant={activeColumns === value ? "secondary" : "ghost"}
+              aria-pressed={activeColumns === value}
               aria-label={label}
               title={label}
               onClick={() => handleGridChange(value)}
