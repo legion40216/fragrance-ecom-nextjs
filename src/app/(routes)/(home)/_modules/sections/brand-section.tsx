@@ -1,25 +1,29 @@
-import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function BrandSection() {
   return (
-    <section className="overflow-hidden rounded-[2rem] border 
+    <section
+      className="overflow-hidden rounded-[2rem] border 
       bg-foreground text-background"
     >
-      <div className="grid items-center gap-10 p-7 sm:p-10 
+      <div
+        className="grid items-center gap-10 p-7 sm:p-10 
         md:grid-cols-[1.2fr_0.8fr] md:p-14"
       >
         <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full
+          <div
+            className="mb-5 inline-flex items-center gap-2 rounded-full
             border border-background/20 px-3 py-1.5 text-xs 
             uppercase tracking-[0.2em] text-background/70"
-           >
+          >
             <Sparkles className="size-3.5" /> Your signature, your story
           </div>
 
-          <h2 className="max-w-2xl font-serif text-4xl leading-tight sm:text-5xl
+          <h2
+            className="max-w-2xl font-serif text-4xl leading-tight sm:text-5xl
             md:text-6xl"
-           >
+          >
             Fragrance is more than a scent.
           </h2>
 
@@ -37,7 +41,7 @@ export default function BrandSection() {
             Find your fragrance <ArrowRight className="size-4" />
           </Link>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-3 text-sm">
           {[
             ["01", "Everyday", "Fresh, clean, effortless"],
