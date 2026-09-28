@@ -1,5 +1,6 @@
-import type { CategorySlug, FilterValue } from "@/schema";
+import { categories } from "@/data/data";
 import ProductSection from "@/features/product-listing/product-section";
+import type { CategorySlug, FilterValue } from "@/schema";
 import CategoriesBar from "../components/categories-bar";
 
 export default function CategoriesView({
