@@ -1,14 +1,13 @@
-// schema/index.ts
 import { z } from "zod";
 import { categories, brands } from "@/data/data";
-import { sortOptions, PRICE_BOUNDS } from "@/data/constants";
+import { PRICE_BOUNDS, sortOptions } from "@/data/constants";
 
 const validCategorySlugs = categories.map(
-  (category) => category.slug
+  (category) => category.slug,
 ) as [string, ...string[]];
 
 const validFilterValues = sortOptions.map(
-  (option) => option.value
+  (option) => option.value,
 ) as [string, ...string[]];
 
 export const searchParamsSchema = z.object({
@@ -36,13 +35,12 @@ export const searchParamsSchema = z.object({
     .catch(PRICE_BOUNDS.max)
     .default(PRICE_BOUNDS.max),
 
-  // Comma-separated list of brand names -> string[], unknown brands dropped
   brand: z
     .string()
     .optional()
     .catch(undefined)
     .transform((value) =>
-      value ? value.split(",").filter((b) => brands.includes(b)) : []
+      value ? value.split(",").filter((brand) => brands.includes(brand)) : [],
     ),
 
   inStock: z
