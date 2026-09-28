@@ -15,7 +15,7 @@ export default async function Products(props: {
 
   // Bad/unknown category in the URL -> send them to a clean URL
   if (rawCategory && rawCategory !== validatedParams.category) {
-    redirect("/");
+    redirect("/products");
   }
 
   return (
