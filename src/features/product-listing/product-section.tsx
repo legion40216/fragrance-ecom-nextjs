@@ -1,12 +1,13 @@
 import { products } from "@/data/data";
 import { CategorySlug, FilterValue } from "@/schema";
+import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
 
-import ProductList from "@/components/global-ui/product-list";
+import ProductList from "./product-list";
 import HeadingState from "@/components/global-ui/heading-state";
-import ProductListFilter from "../components/product-list-filter";
-import FilterSidebar from "../components/filter-sidebar";
-import FilterSheet from "../components/filter-sheet";
+import ProductListFilter from "./components/product-list-filter";
+import FilterSidebar from "./components/filter-sidebar";
+import FilterSheet from "./components/filter-sheet";
 
 export default function ProductSection({
   categoryParam,
@@ -27,17 +28,6 @@ export default function ProductSection({
   showCategoryFilter?: boolean;
   headingTitle?: string;
 }) {
-  const filtered = products.filter((product) => {
-    if (categoryParam && product.category !== categoryParam) return false;
-    if (product.price < minPrice || product.price > maxPrice) return false;
-    if (brandParam.length > 0 && !brandParam.includes(product.brand))
-      return false;
-    if (inStockParam && product.stock <= 0) return false;
-    return true;
-  });
-
-  const filteredAndSorted = sortProducts(filtered, filterParam);
-
   const filterProps = {
     categoryParam,
     minPrice,
@@ -46,6 +36,11 @@ export default function ProductSection({
     inStockParam,
     showCategoryFilter,
   };
+
+  const filteredAndSorted = sortProducts(
+    filterProducts(products, filterProps),
+    filterParam,
+  );
 
   return (
     <section className="space-y-6">
