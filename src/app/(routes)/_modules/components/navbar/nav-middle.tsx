@@ -1,10 +1,10 @@
-import React from 'react'
-import NavDesktop from './nav-middle/nav-desktop';
+import React from "react";
+import NavDesktop from "./nav-middle/nav-desktop";
 
 export default function NavMiddle() {
   return (
     <div>
-        <NavDesktop />
+      <NavDesktop />
     </div>
-  )
+  );
 }
