@@ -1,6 +1,7 @@
 // utils/parseSearchParams.ts
 
-import { searchParamsSchema, SearchParamsValues } from "@/schema";
+import { searchParamsSchema } from "@/schema";
+import type { SearchParamsValues } from "@/schema";
 
 
 type RawSearchParams = Record<string, string | string[] | undefined>;
@@ -27,6 +28,9 @@ export function getValidatedSearchParams(
   const normalized = normalizeSearchParams(searchParams);
   const result = searchParamsSchema.safeParse(normalized);
 
-  // Invalid or unknown category -> treat as "no filter" rather than erroring
-  return result.success ? result.data : {};
+  if (result.success) {
+    return result.data;
+  }
+
+  return searchParamsSchema.parse({});
 }
