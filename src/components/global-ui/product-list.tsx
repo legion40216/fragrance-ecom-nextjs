@@ -17,7 +17,7 @@ export default function ProductList({
   }
 
   return (
-    <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(min(220px,100%),1fr))]">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
       {initialData.map((product) => (
         <ProductCard key={product.id} {...product} />
       ))}
