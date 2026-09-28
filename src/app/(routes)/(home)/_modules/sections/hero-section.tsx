@@ -1,94 +1,59 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { products } from "@/data/data";
+import { formatter } from "@/utils/formatters";
 
 export default function HeroSection() {
-  return (
-    <section className="relative overflow-hidden border-b">
-      <div className="grid min-h-[560px] items-center gap-10 pb-12 
-        md:grid-cols-[1.05fr_0.95fr] md:pb-16 lg:min-h-[620px]"
-      >
-        <div className="relative z-10 max-w-2xl">
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] 
-          text-muted-foreground"
-          >
-            The art of fragrance
-          </p>
+  const hero = products.find((product) => product.id === "royal-oud-01");
 
-          <h1 className="font-serif text-5xl leading-[0.95] tracking-tight 
-            sm:text-6xl lg:text-8xl"
-          >
-            Leave a
-            <span className="block italic">lasting impression.</span>
+  return (
+    <section className="bg-[#E9EEEA] px-6 pb-20 pt-14 md:px-14 md:pt-20">
+      <p className="mb-8 text-sm text-[#1F1712]/60">Top note</p>
+
+      <div className="grid items-end gap-14 md:grid-cols-[1.25fr_0.75fr]">
+        <div>
+          <h1 className="max-w-2xl font-[family-name:var(--font-display)] text-5xl leading-[1.03] sm:text-6xl lg:text-7xl">
+            Scent that stays after you leave.
           </h1>
 
-          <p className="mt-7 max-w-xl text-base leading-7 text-muted-foreground 
-            sm:text-lg"
-          >
-            Discover refined fragrances crafted for every mood, moment, and
-            signature. Find the scent that becomes unmistakably yours.
+          <p className="mt-6 max-w-md leading-7 text-[#1F1712]/70">
+            Oud, amber, rose and musk, in full 100ml bottles and pocket-size
+            attars.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link href="/products" className="inline-flex items-center gap-2 
-              rounded-full bg-foreground px-6 py-3 text-sm 
-              font-medium text-background transition-transform 
-              hover:-translate-y-0.5"
+          <div className="mt-9 flex flex-wrap items-center gap-6">
+            <Link
+              href="/products"
+              className="rounded-md bg-[#1F1712] px-6 py-3 text-sm font-medium text-[#E9EEEA] transition-colors hover:bg-[#3A2A20]"
             >
-              Shop fragrances <ArrowRight className="size-4" />
+              Shop all fragrances
             </Link>
-
-            <Link href="/categories" className="inline-flex items-center 
-              rounded-full border px-6 py-3 text-sm font-medium transition-colors 
-              hover:bg-muted"
+            <Link
+              href="#collections"
+              className="text-sm font-medium underline underline-offset-4"
             >
-              Explore collections
+              Browse collections
             </Link>
-          </div>
-
-          <div className="mt-12 flex gap-8 border-t pt-6 text-sm">
-            <div>
-              <p className="font-semibold">Curated scents</p>
-              <p className="mt-1 text-muted-foreground">For every occasion</p>
-            </div>
-
-            <div>
-              <p className="font-semibold">Easy ordering</p>
-              <p className="mt-1 text-muted-foreground">Simple & secure</p>
-            </div>
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[520px]">
-          <div className="absolute -inset-8 rounded-full bg-muted/70 blur-3xl" />
-
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] 
-            bg-muted"
-          >
-
-            <Image 
-            src="/assets/product/images/royal-oud.svg" 
-            alt="Royal Oud fragrance" 
-            fill 
-            priority 
-            className="object-contain p-10 transition-transform duration-700 
-            hover:scale-105" 
+        <figure className="mx-auto w-full max-w-sm">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-t-full bg-[#D3DCD6]">
+            <Image
+              src="/assets/product/images/royal-oud.svg"
+              alt={hero?.name ?? "Featured fragrance"}
+              fill
+              priority
+              className="object-contain p-12"
             />
-
-            <div className="absolute inset-x-5 bottom-5 
-              rounded-2xl border bg-background/90 p-4 backdrop-blur"
-            >
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Featured scent
-              </p>
-
-              <div className="mt-1 flex items-end justify-between gap-4">
-                <p className="font-serif text-2xl">Royal Oud</p>
-                <p className="text-sm font-medium">Rs. 6,999</p>
-              </div>
-            </div>
           </div>
-        </div>
+          <figcaption className="mt-3 flex justify-between text-sm">
+            <span>{hero?.name ?? "Royal Oud"}</span>
+            <span className="text-[#1F1712]/60">
+              {hero ? formatter.format(hero.price) : ""}
+            </span>
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
