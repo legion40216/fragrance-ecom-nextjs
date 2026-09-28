@@ -7,33 +7,37 @@ import React, { type ReactNode } from "react";
 interface NavLinksProps {
   routeActive?: boolean;
   routeHref: string;
-  routeLabel: string;
+  routeLabel?: string;
+  children?: ReactNode;
+  className?: string;
   activeClassName?: string;
   inactiveClassName?: string;
-  className?: string;
-  children?: ReactNode;
+  newTab?: boolean;
   onClick?: () => void;
 }
 
 export default function NavLinks({
-  routeActive,
+  routeActive = false,
   routeHref,
   routeLabel,
-  activeClassName,
-  inactiveClassName,
-  className,
   children,
+  className,
+  activeClassName = "",
+  inactiveClassName = "",
+  newTab = false,
   onClick,
 }: NavLinksProps) {
   return (
     <Link
       href={routeHref}
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
+      onClick={onClick}
       className={cn(
         "transition-colors",
         routeActive ? activeClassName : inactiveClassName,
         className,
       )}
-      onClick={onClick}
     >
       {children ?? routeLabel}
     </Link>
