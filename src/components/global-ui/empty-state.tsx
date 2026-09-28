@@ -11,8 +11,8 @@ export default function EmptyState({
   children?: React.ReactNode;
 }) {
   return (
-    <div>
-      <div>
+    <div className="grid gap-2 place-content-center h-[60vh] space-y-4">
+      <div className="text-center">
         <p className="text-2xl font-bold">{title}</p>
         <p className="font-light text-neutral-500">{subtitle}</p>
       </div>
