@@ -6,7 +6,7 @@ import { categories, brands } from "@/data/data";
 import { PRICE_BOUNDS, PRICE_STEP } from "@/data/constants";
 import type { CategorySlug } from "@/schema";
 import { formatter } from "@/utils/formatters";
-import { useUpdateSearchParams } from "../hooks/use-update-search-params";
+import { useUpdateSearchParams } from "@/features/product-listing/hooks/use-update-search-params";
 
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
