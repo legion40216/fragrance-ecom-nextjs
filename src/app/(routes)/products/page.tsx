@@ -1,5 +1,6 @@
-import { getValidatedSearchParams } from "@/utils/parseSearchParams";
 import { redirect } from "next/navigation";
+import { hasInvalidCategory } from "@/utils/listing-params";
+import { getValidatedSearchParams } from "@/utils/parseSearchParams";
 import ProductsView from "./_modules/views/products-view";
 
 export default async function Products(props: {
@@ -8,14 +9,9 @@ export default async function Products(props: {
   const rawSearchParams = await props.searchParams;
   const validatedParams = getValidatedSearchParams(rawSearchParams);
 
-  const rawCategory =
-    typeof rawSearchParams.category === "string"
-      ? rawSearchParams.category
-      : undefined;
-
   // Bad/unknown category in the URL -> send them to a clean URL
-  if (rawCategory && rawCategory !== validatedParams.category) {
-    redirect("/");
+  if (hasInvalidCategory(rawSearchParams, validatedParams)) {
+    redirect("/products");
   }
 
   return (
