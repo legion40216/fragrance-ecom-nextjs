@@ -1,96 +1,99 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ShoppingBasket } from "lucide-react";
-import useCart from "@/hooks/useCartStore";
 
-import { Badge } from "@/components/ui/badge";
+import { ShoppingBasket } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import useCart from "@/hooks/useCartStore";
+import useHydrated from "@/hooks/useHydrated";
+import { formatter } from "@/utils/formatters";
+import CartItem from "./cart/cart-item";
 
 export default function Cart() {
-  // const { items, getTotalCount} = useCart();
-  const [totalCount, setTotalCount] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // useEffect(() => {
-  //   setTotalCount(getTotalCount());
-  // }, [getTotalCount, items]);
+  const items = useCart((state) => state.items);
+  const hydrated = useHydrated();
+
+  const visibleItems = hydrated ? items : [];
+  const totalCount = visibleItems.reduce((sum, item) => sum + item.count, 0);
+  const totalPrice = visibleItems.reduce(
+    (sum, item) => sum + item.price * item.count,
+    0,
+  );
 
   return (
-    //     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-    //   <SheetTrigger render={
-    //         <Button 
-    //   className="relative" 
-    //   variant="outline" 
-    //   size={"icon"}
-    // >
-    //   <Link href="/checkout" className="block">
-    //     <Badge className="absolute -top-2 -right-2 bg-red-500">
-    //       {/* {totalCount} */}
-    //     </Badge>
-    //     <ShoppingBasket className="size-6" />
-    //   </Link>
-    // </Button>
-    //   }/>
-      
-    //   <SheetContent side="right">
-    //     <SheetTitle className="hidden">Cart</SheetTitle>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            aria-label={`Open cart, ${totalCount} items`}
+          />
+        }
+      >
+        <ShoppingBasket className="size-5" />
 
-    //     <SheetDescription className="hidden">
-    //       Shopping cart items and checkout
-    //     </SheetDescription>
+        {totalCount > 0 && (
+          <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+            {totalCount > 9 ? "9+" : totalCount}
+          </span>
+        )}
+      </SheetTrigger>
 
-    //     <div className="flex flex-col justify-between h-full">
-    //       <div className="grid grid-rows-[min-content_1fr_min-content] h-full">
-    //         <div className="flex items-center justify-between p-3">
-    //           <p className="font-semibold text-lg uppercase">Cart</p>
-    //         </div>
+      <SheetContent side="right" className="w-full sm:max-w-sm">
+        <SheetHeader>
+          <SheetTitle className="uppercase">Cart</SheetTitle>
+          <SheetDescription className="sr-only">
+            Items in your shopping cart
+          </SheetDescription>
+        </SheetHeader>
 
-    //         {/* Cart Items or Empty State */}
-    //         {items.length === 0 ? (
-    //           <div className="h-full grid place-items-center place-content-center bg-secondary">
-    //             <div>
-    //               <ShoppingBasket className="size-6" />
-    //             </div>
-    //             <h3 className="text-lg uppercase">Your cart is empty</h3>
-    //           </div>
-    //         ) : (
-    //           <div className="flex-1 overflow-y-auto px-3">
-    //             {items.map((item) => (
-    //               <CartItem
-    //                 key={item.id}
-    //                 title={item.title}
-    //                 price={item.price}
-    //                 image={item.image}
-    //                 category={item.category}
-    //                 discount={item.discount}
-    //                 quantity={item.quantity}
-    //                 count={item.count}
-    //                 id={item.id}
-    //                 setOpen={setIsOpen}
-    //               />
-    //             ))}
-    //           </div>
-    //         )}
+        {visibleItems.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
+            <ShoppingBasket className="size-8" />
+            <p className="uppercase">Your cart is empty</p>
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto px-4">
+            {visibleItems.map((item) => (
+              <CartItem
+                key={item.id}
+                item={item}
+                onNavigate={() => setIsOpen(false)}
+              />
+            ))}
+          </div>
+        )}
 
-    //         <div className="space-y-4 p-3">
-    //           <div className="flex justify-between">
-    //             <span className="font-semibold text-lg uppercase">total</span>
-    //             <span className="font-semibold text-lg">
-    //               {formatter.format(totalPrice)}
-    //             </span>
-    //           </div>
+        <div className="space-y-4 border-t p-4">
+          <div className="flex justify-between text-lg font-semibold">
+            <span className="uppercase">Total</span>
+            <span>{formatter.format(totalPrice)}</span>
+          </div>
 
-    //           <Button asChild className="w-full" disabled={items.length === 0}>
-    //             <Link href="/checkout">
-    //               <ShoppingBasket className="size-6" />
-    //               <span className="uppercase">checkout</span>
-    //             </Link>
-    //           </Button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </SheetContent>
-    // </Sheet>
-    <></>
+          <Button
+            className="w-full"
+            disabled={visibleItems.length === 0}
+            nativeButton={false}
+            render={<Link href="/checkout" onClick={() => setIsOpen(false)} />}
+          >
+            <ShoppingBasket />
+            <span className="uppercase">Checkout</span>
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

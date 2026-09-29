@@ -1,11 +1,14 @@
-import Link from "next/link";
 import Image from "next/image";
-import { ProductType } from "@/types/types";
+import Link from "next/link";
+
+import AddToCartButton from "@/components/global-ui/add-to-cart-button";
+import type { ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 
 interface ProductCardProps
   extends Pick<
     ProductType,
+    | "id"
     | "slug"
     | "name"
     | "brand"
@@ -16,12 +19,11 @@ interface ProductCardProps
     | "isBestSeller"
     | "stock"
   > {
-  // Rendered width hint for next/image; the default suits a 2-up mobile /
-  // 4-up desktop grid.
   sizes?: string;
 }
 
 export default function ProductCard({
+  id,
   slug,
   name,
   brand,
@@ -36,59 +38,46 @@ export default function ProductCard({
   const isOutOfStock = stock === 0;
 
   return (
-    <Link
-      href={`/products/${slug}`}
-      className="group block overflow-hidden rounded-lg border"
-    >
-      <div className="relative aspect-square bg-neutral-100">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          sizes={sizes}
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+    <div className="group relative overflow-hidden rounded-lg border">
+      <Link href={`/products/${slug}`} className="block">
+        <div className="relative aspect-square bg-neutral-100">
+          <Image
+            src={image}
+            alt={name}
+            fill
+            sizes={sizes}
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
 
-        {(isNew || isBestSeller) && (
-          <span className="absolute left-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-medium">
-            {isNew ? "New" : "Bestseller"}
-          </span>
-        )}
+          {(isNew || isBestSeller) && (
+            <span className="absolute left-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-medium">
+              {isNew ? "New" : "Bestseller"}
+            </span>
+          )}
 
-        {isOutOfStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/70">
-            <span className="text-sm font-medium">Out of stock</span>
-          </div>
-        )}
-      </div>
-
-      <div className="space-y-1 p-3">
-        <p className="text-xs text-muted-foreground">{brand}</p>
-        <h3 className="font-serif text-lg leading-tight">{name}</h3>
-
-        <div className="flex items-baseline justify-between pt-1">
-          <span className="font-medium">{formatter.format(price)}</span>
-          <span className="text-xs text-muted-foreground">{size}</span>
+          {isOutOfStock && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+              <span className="text-sm font-medium">Out of stock</span>
+            </div>
+          )}
         </div>
 
-                {/* <div className="flex justify-end">
-          {isInCart ? (
-            <Button variant="outline" onClick={handleRemoveFromCart}>
-              <ShoppingCart className="size-5 mr-2" />
-              Remove from Cart
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              onClick={handleAddToCart}
-              disabled={activeVariant?.stock === 0}
-            >
-              <ShoppingCart className="size-5 mr-2" />
-              {activeVariant?.stock === 0 ? "Out of Stock" : "Add to Cart"}
-            </Button>
-          )}
-        </div> */}
+        <div className="space-y-1 p-3">
+          <p className="text-xs text-muted-foreground">{brand}</p>
+          <h3 className="font-serif text-lg leading-tight">{name}</h3>
+
+          <div className="flex items-baseline justify-between pt-1">
+            <span className="font-medium">{formatter.format(price)}</span>
+            <span className="text-xs text-muted-foreground">{size}</span>
+          </div>
+        </div>
+      </Link>
+
+      <div className="absolute right-2 top-2">
+        <AddToCartButton
+          product={{ id, slug, name, brand, price, size, image, stock }}
+        />
       </div>
-    </Link>
+    </div>
   );
 }

@@ -1,145 +1,89 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-// import { CartItemProps } from "@/types";
 import { toast } from "@/components/ui/toast";
+import type { CartItemType, CartProduct } from "@/types/cart";
 
-const useCart = create()
+interface CartState {
+  items: CartItemType[];
 
+  addItem: (product: CartProduct) => void;
+  removeItem: (id: string) => void;
+  updateItemCount: (id: string, newCount: number) => void;
+  clearCart: () => void;
 
-// // Define store state and actions
-// interface CartState {
-//   items: CartItemProps[];
+  isInCart: (id: string) => boolean;
+  getTotalCount: () => number;
+  getTotalPrice: () => number;
+}
 
-//   addItem: (data: Omit<CartItemProps, "count">, count?: number) => void;
+const useCart = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
 
-//   updateItemCount: (
-//     id: string | number,
-//     selectedSize: string,
-//     selectedColor: string,
-//     newCount: number
-//   ) => void;
+      addItem: (product) => {
+        if (product.stock === 0) {
+          toast.add({ title: "This item is out of stock.", type: "error" });
+          return;
+        }
 
-//   removeItem: (
-//     id: string | number,
-//     selectedSize: string,
-//     selectedColor: string
-//   ) => void;
+        if (get().items.some((item) => item.id === product.id)) return;
 
-//   getItemCount: (
-//     id: string | number,
-//     selectedSize: string,
-//     selectedColor: string
-//   ) => number;
-  
-//   getTotalCount: () => number;
+        set({ items: [...get().items, { ...product, count: 1 }] });
+        toast.add({ title: "Added to cart.", type: "success" });
+      },
 
-//   getTotalPrice: () => number;
+      removeItem: (id) => {
+        set({ items: get().items.filter((item) => item.id !== id) });
+        toast.add({ title: "Removed from cart.", type: "success" });
+      },
 
-//   clearCart: () => void;
-// }
+      updateItemCount: (id, newCount) => {
+        const item = get().items.find((currentItem) => currentItem.id === id);
+        if (!item) return;
 
-// // Zustand store with persistence
-// const useCart = create()(
-//   persist(
-//     (set, get) => ({
-//       items: [],
+        if (newCount < 1) return;
 
-//       addItem: (data, count = 1) => {
-//         const currentItems = get().items;
-        
-//         // Check if exact combination already exists (id + size + color)
-//         const existingItem = currentItems.find(
-//           (item) =>
-//             item.id === data.id && 
-//             item.selectedSize === data.selectedSize &&
-//             item.selectedColor === data.selectedColor
-//         );
+        if (newCount > item.stock) {
+          toast.add({
+            title: `Only ${item.stock} in stock.`,
+            type: "error",
+          });
+          return;
+        }
 
-//         if (existingItem) {
-//           // Update count instead of adding duplicate
-//           const updatedItems = currentItems.map((item) =>
-//             item.id === data.id && 
-//             item.selectedSize === data.selectedSize &&
-//             item.selectedColor === data.selectedColor
-//               ? { ...item, count: item.count + count }
-//               : item
-//           );
-//           set({ items: updatedItems });
-//           toast.success("Item quantity increased.");
-//           return;
-//         }
+        set({
+          items: get().items.map((currentItem) =>
+            currentItem.id === id
+              ? { ...currentItem, count: newCount }
+              : currentItem,
+          ),
+        });
+      },
 
-//         // Add new item
-//         set({ items: [...currentItems, { ...data, count }] });
-//         toast.success("Item added to cart.");
-//       },
+      clearCart: () => {
+        set({ items: [] });
+        toast.add({ title: "Cart cleared.", type: "success" });
+      },
 
-//       updateItemCount: (id, selectedSize, selectedColor, newCount) => {
-//         if (newCount <= 0) {
-//           get().removeItem(id, selectedSize, selectedColor);
-//           return;
-//         }
+      isInCart: (id) => get().items.some((item) => item.id === id),
 
-//         const updatedItems = get().items.map((item) =>
-//           item.id === id && 
-//           item.selectedSize === selectedSize &&
-//           item.selectedColor === selectedColor
-//             ? { ...item, count: newCount }
-//             : item
-//         );
-//         set({ items: updatedItems });
-//         toast.success("Cart updated.");
-//       },
+      getTotalCount: () =>
+        get().items.reduce((total, item) => total + item.count, 0),
 
-//       // This remove items by id, size, and color, if id matches but size/color differ, it won't remove
-//       removeItem: (id, selectedSize, selectedColor) => {
-//         set({
-//           items: get().items.filter(
-//             (item) => !(
-//               item.id === id && 
-//               item.selectedSize === selectedSize &&
-//               item.selectedColor === selectedColor
-//             )
-//           ),
-//         });
-//         toast.success("Item removed from the cart.");
-//       },
-
-//       getItemCount: (id, selectedSize, selectedColor) => {
-//         const item = get().items.find(
-//           (item) => 
-//             item.id === id && 
-//             item.selectedSize === selectedSize &&
-//             item.selectedColor === selectedColor
-//         );
-//         return item ? item.count : 0;
-//       },
-
-//       getTotalCount: () => {
-//         return get().items.reduce((total, item) => total + item.count, 0);
-//       },
-
-//       clearCart: () => {
-//         set({ items: [] });
-//         toast.success("Cart cleared");
-//       },
-
-//       getTotalPrice: () => {
-//         return get().items.reduce(
-//           (total, item) => {
-//             const finalPrice = item.price - item.discount;
-//             return total + (finalPrice * item.count);
-//           },
-//           0
-//         );
-//       },
-//     }),
-//     {
-//       name: "cart-storage",
-//       storage: createJSONStorage(() => localStorage),
-//     }
-//   )
-// );
+      getTotalPrice: () =>
+        get().items.reduce(
+          (total, item) => total + item.price * item.count,
+          0,
+        ),
+    }),
+    {
+      name: "cart-storage",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ items: state.items }),
+    },
+  ),
+);
 
 export default useCart;
