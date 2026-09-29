@@ -19,7 +19,7 @@ const sectionClasses = [
 
 // Collection card styles (same height + width for every card)
 const cardClasses = [
-  "group relative h-72 w-[75vw] max-w-72 shrink-0 overflow-hidden",
+  "group relative h-72 w-44 shrink-0 overflow-hidden",
   "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5",
 ].join(" ");
 
