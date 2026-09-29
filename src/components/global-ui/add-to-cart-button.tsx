@@ -10,7 +10,12 @@ import type { CartProduct } from "@/types/cart";
 export default function AddToCartButton({
   product,
   disabled = false,
+  onClick,
 }: {
+  product: CartProduct;
+  disabled?: boolean;
+  onClick?: () => void;
+}
   product: CartProduct;
   disabled?: boolean;
 }) {
@@ -37,7 +42,7 @@ export default function AddToCartButton({
             : `Add ${product.name} to cart`
       }
       aria-pressed={isInCart}
-      onClick={() => (isInCart ? removeItem(product.id) : addItem(product))}
+      onClick={onClick ?? (() => (isInCart ? removeItem(product.id) : addItem(product)))}
     >
       {isInCart ? <Check /> : <ShoppingCart />}
     </Button>
