@@ -74,7 +74,7 @@ export default function ProductCard({
         </div>
       </Link>
 
-      <div className="absolute right-2 top-2">
+      <div className="absolute right-2 top-10">
         <AddToCartButton
           product={{ id, slug, name, brand, price, size, image, stock }}
         />
