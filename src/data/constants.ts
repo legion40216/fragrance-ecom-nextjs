@@ -1,6 +1,6 @@
-// constants.ts
 import { getHighestPrice } from "@/utils/product-variants";
 import { products } from "./data";
+import type { CategorySlug, SizeFilter } from "@/schema";
 
 export const sortOptions = [
   { label: "Newest", value: "newest" },
@@ -11,20 +11,40 @@ export const sortOptions = [
 
 export type SortValue = (typeof sortOptions)[number]["value"];
 
-// ISO 4217 code used by the price formatter. Change it here (e.g. "PKR").
 export const CURRENCY = "USD";
 
-// Slider step; the max bound is rounded up to a multiple of it.
 export const PRICE_STEP = 100;
 
-// Derived from the catalogue so a product priced above a hard-coded ceiling
-// can never be silently hidden by the default (max) price filter.
-const highestPrice = products.reduce(
-  (max, p) => Math.max(max, getHighestPrice(p)),
-  0,
-);
+export function getPriceBounds({
+  category,
+  size,
+}: {
+  category?: CategorySlug;
+  size?: SizeFilter;
+}) {
+  const matchingProducts = products.filter((product) => {
+    if (category && product.category !== category) return false;
+    if (size && !product.variants.some((variant) => variant.size === size)) {
+      return false;
+    }
+    return true;
+  });
 
-export const PRICE_BOUNDS = {
-  min: 0,
-  max: Math.max(PRICE_STEP, Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP),
-} as const;
+  const highestPrice = matchingProducts.reduce((max, product) => {
+    const variants = size
+      ? product.variants.filter((variant) => variant.size === size)
+      : product.variants;
+
+    return Math.max(max, getHighestPrice({ variants }));
+  }, 0);
+
+  return {
+    min: 0,
+    max: Math.max(
+      PRICE_STEP,
+      Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP,
+    ),
+  } as const;
+}
+
+export const PRICE_BOUNDS = getPriceBounds({});
