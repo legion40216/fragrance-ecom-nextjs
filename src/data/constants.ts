@@ -1,6 +1,7 @@
 import { getHighestPrice } from "@/utils/product-variants";
 import { products } from "./data";
-import type { CategorySlug, SizeFilter } from "@/schema";
+import type { ProductCategorySlug } from "./categories";
+import type { ProductSize } from "@/types/types";
 
 export const sortOptions = [
   { label: "Newest", value: "newest" },
@@ -19,9 +20,9 @@ export function getPriceBounds({
   category,
   size,
 }: {
-  category?: CategorySlug;
-  size?: SizeFilter;
-}) {
+  category?: ProductCategorySlug;
+  size?: ProductSize;
+}): { min: number; max: number } {
   const matchingProducts = products.filter((product) => {
     if (category && product.category !== category) return false;
     if (size && !product.variants.some((variant) => variant.size === size)) {
@@ -44,7 +45,7 @@ export function getPriceBounds({
       PRICE_STEP,
       Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP,
     ),
-  } as const;
+  };
 }
 
-export const PRICE_BOUNDS = getPriceBounds({});
+export const PRICE_BOUNDS: { min: number; max: number } = getPriceBounds({});
