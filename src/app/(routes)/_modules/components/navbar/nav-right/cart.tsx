@@ -1,0 +1,99 @@
+"use client";
+
+import { ShoppingBasket } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import useCart from "@/hooks/useCartStore";
+import useHydrated from "@/hooks/useHydrated";
+import { formatter } from "@/utils/formatters";
+import CartItem from "./cart/cart-item";
+
+export default function Cart() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const items = useCart((state) => state.items);
+  const hydrated = useHydrated();
+
+  const visibleItems = hydrated ? items : [];
+  const totalCount = visibleItems.reduce((sum, item) => sum + item.count, 0);
+  const totalPrice = visibleItems.reduce(
+    (sum, item) => sum + item.price * item.count,
+    0,
+  );
+
+  return (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            aria-label={`Open cart, ${totalCount} items`}
+          />
+        }
+      >
+        <ShoppingBasket className="size-5" />
+
+        {totalCount > 0 && (
+          <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+            {totalCount > 9 ? "9+" : totalCount}
+          </span>
+        )}
+      </SheetTrigger>
+
+      <SheetContent side="right" className="w-full sm:max-w-sm">
+        <SheetHeader>
+          <SheetTitle className="uppercase">Cart</SheetTitle>
+          <SheetDescription className="sr-only">
+            Items in your shopping cart
+          </SheetDescription>
+        </SheetHeader>
+
+        {visibleItems.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
+            <ShoppingBasket className="size-8" />
+            <p className="uppercase">Your cart is empty</p>
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto px-4">
+            {visibleItems.map((item) => (
+              <CartItem
+                key={item.id}
+                item={item}
+                onNavigate={() => setIsOpen(false)}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="space-y-4 border-t p-4">
+          <div className="flex justify-between text-lg font-semibold">
+            <span className="uppercase">Total</span>
+            <span>{formatter.format(totalPrice)}</span>
+          </div>
+
+          <Button
+            className="w-full"
+            disabled={visibleItems.length === 0}
+            nativeButton={false}
+            render={<Link href="/checkout" onClick={() => setIsOpen(false)} />}
+          >
+            <ShoppingBasket />
+            <span className="uppercase">Checkout</span>
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}

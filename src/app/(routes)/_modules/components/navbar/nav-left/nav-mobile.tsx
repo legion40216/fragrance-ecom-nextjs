@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useNavRoutes } from "./nav-routes";
+import { useNavRoutes } from "../nav-routes";
 
 export default function NavMobile() {
   const routes = useNavRoutes();
