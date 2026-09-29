@@ -64,6 +64,13 @@ export default function ProductCard({
     ? selectedVariant.stock === 0
     : !isProductInStock({ variants });
 
+  const priceLabel = selectedSize
+    ? formatter.format(selectedVariant.price)
+    : `${formatter.format(getLowestPrice({ variants }))} - ${formatter.format(getHighestPrice({ variants }))}`;
+  const sizeLabel = selectedSize
+    ? selectedVariant.size
+    : `${variants.map((variant) => variant.size.replace("ml", "")).join("/")}ml`;
+
   return (
     <div className="group relative overflow-hidden rounded-lg border">
       <Link href={`/products/${slug}`} className="block">
@@ -93,19 +100,10 @@ export default function ProductCard({
           <p className="text-[11px] text-muted-foreground sm:text-xs">{brand}</p>
           <h3 className="font-serif text-base leading-tight sm:text-lg">{name}</h3>
 
-          {selectedSize ? (
-            <p className="pt-0.5 text-sm font-medium sm:text-base">
-              {formatter.format(selectedVariant.price)} · {selectedVariant.size}
-            </p>
-          ) : (
-            <div className="pt-0.5 text-sm font-medium sm:text-base">
-              <p>
-                {formatter.format(getLowestPrice({ variants }))} -{" "}
-                {formatter.format(getHighestPrice({ variants }))}
-              </p>
-              <p>50/100ml</p>
-            </div>
-          )}
+          <div className="flex flex-wrap items-baseline justify-between gap-x-2 pt-1">
+            <span className="text-sm font-medium sm:text-base">{priceLabel}</span>
+            <span className="text-xs text-muted-foreground">{sizeLabel}</span>
+          </div>
         </div>
       </Link>
 
