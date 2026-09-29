@@ -8,7 +8,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <div className="min-h-screen grid grid-cols-1 grid-rows-[min-content_1fr_min-content]
          space-y-4"
        >
-        <header className="container mx-auto border-b py-2 px-2 md:px-0">
+        <header className="sticky top-0 z-50 container mx-auto border-b bg-background/95 py-2 px-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:px-0">
           <nav>
             <Navbar />
           </nav>
