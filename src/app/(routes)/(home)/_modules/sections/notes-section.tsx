@@ -19,7 +19,7 @@ const sectionClasses = [
 
 // Collection card styles (same height + width for every card)
 const cardClasses = [
-  "group relative h-72 w-44 overflow-hidden",
+  "group relative h-72 w-full overflow-hidden",
   "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5",
 ].join(" ");
 
@@ -27,7 +27,7 @@ export default function NotesSection() {
   const featured = products.filter((p) => p.isFeatured).slice(0, 4);
 
   return (
-    <section id="heart" className={`${sectionClasses} min-w-0 max-w-full overflow-hidden`}>
+    <section id="heart" className={sectionClasses}>
       {/* Intro text */}
       <div className="mb-12 max-w-md">
         <p className="text-sm leading-6 text-[#241A16]/60">
@@ -39,13 +39,13 @@ export default function NotesSection() {
         </h2>
       </div>
 
-      {/* Collection cards: horizontally scrollable on mobile, grid on large screens */}
-      <div className="flex w-full min-w-0 max-w-full gap-4 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5">
+      {/* Collection cards: equal width and equal height */}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         {categories.map((category) => (
           <Link
             key={category.id}
             href={`/products?category=${category.slug}`}
-            className="group relative w-44 shrink-0 overflow-hidden rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5"
+            className={cardClasses}
           >
             {/* Accent strip */}
             <span
