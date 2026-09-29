@@ -49,6 +49,7 @@ export default function ProductCard({
   const selectedVariant =
     (selectedSize &&
       variants.find((variant) => variant.size === selectedSize)) ??
+    variants.find((variant) => variant.size === "50ml") ??
     defaultVariant;
   const isOutOfStock = selectedSize
     ? selectedVariant.stock === 0
@@ -120,7 +121,7 @@ export default function ProductCard({
             { id, slug, name, brand, image },
             selectedVariant,
           )}
-          disabled={!hasSelectedSize}
+          disabled={selectedVariant.stock === 0}
         />
       </div>
     </div>
