@@ -49,12 +49,10 @@ export default function ProductCard({
   const selectedVariant =
     (selectedSize &&
       variants.find((variant) => variant.size === selectedSize)) ??
-    variants.find((variant) => variant.size === "50ml") ??
     defaultVariant;
   const isOutOfStock = selectedSize
     ? selectedVariant.stock === 0
     : !isProductInStock({ variants });
-  const hasSelectedSize = selectedSize !== undefined;
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
@@ -85,7 +83,7 @@ export default function ProductCard({
           <p className="text-[11px] text-muted-foreground sm:text-xs">{brand}</p>
           <h3 className="font-serif text-base leading-tight sm:text-lg">{name}</h3>
 
-          {hasSelectedSize ? (
+          {selectedSize ? (
             <p className="pt-0.5 text-sm font-medium sm:text-base">
               {formatter.format(selectedVariant.price)} · {selectedVariant.size}
             </p>
