@@ -11,10 +11,12 @@ export default function AddToCartButton({
   product,
   disabled = false,
   onClick,
+  isInCartOverride,
 }: {
   product: CartProduct;
   disabled?: boolean;
   onClick?: () => void;
+  isInCartOverride?: boolean;
 }) {
   const { addItem, removeItem } = useCart();
   const inCart = useCart((state) =>
@@ -22,7 +24,7 @@ export default function AddToCartButton({
   );
   const hydrated = useHydrated();
 
-  const isInCart = hydrated && inCart;
+  const isInCart = hydrated && (isInCartOverride ?? inCart);
   const isOutOfStock = product.stock === 0;
 
   return (
