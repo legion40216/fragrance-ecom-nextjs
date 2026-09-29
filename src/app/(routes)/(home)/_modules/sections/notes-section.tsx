@@ -40,9 +40,8 @@ export default function NotesSection() {
       </div>
 
       {/* Collection cards: horizontally scrollable on mobile, grid on large screens */}
-      <div className="w-full min-w-0 overflow-hidden">
-        <div className="flex w-max gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:w-auto lg:grid-cols-5">
-          {categories.map((category) => (
+      <div className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5">
+        {categories.map((category) => (
           <Link
             key={category.id}
             href={`/products?category=${category.slug}`}
