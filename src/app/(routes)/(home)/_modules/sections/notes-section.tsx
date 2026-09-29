@@ -27,7 +27,7 @@ export default function NotesSection() {
   const featured = products.filter((p) => p.isFeatured).slice(0, 4);
 
   return (
-    <section id="heart" className={sectionClasses}>
+    <section id="heart" className={`${sectionClasses} min-w-0 max-w-full overflow-hidden`}>
       {/* Intro text */}
       <div className="mb-12 max-w-md">
         <p className="text-sm leading-6 text-[#241A16]/60">
@@ -40,7 +40,7 @@ export default function NotesSection() {
       </div>
 
       {/* Collection cards: horizontally scrollable on mobile, grid on large screens */}
-      <div className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5">
+      <div className="flex w-full min-w-0 max-w-full gap-4 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5">
         {categories.map((category) => (
           <Link
             key={category.id}
