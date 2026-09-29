@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { products } from "@/data/data";
+import { getPriceBounds } from "@/data/constants";
 import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
@@ -38,6 +39,8 @@ export default async function ProductSection({
     cookieStore.get(GRID_COLUMNS_COOKIE)?.value,
   );
 
+  const priceBounds = getPriceBounds({ category: categoryParam, size: sizeParam });
+
   const filterProps = {
     categoryParam,
     minPrice,
@@ -45,6 +48,7 @@ export default async function ProductSection({
     brandParam,
     inStockParam,
     showCategoryFilter,
+    priceBounds,
   };
 
   const filteredAndSorted = sortProducts(
