@@ -53,6 +53,7 @@ export default function ProductCard({
   const cartHasProduct = useCart((state) =>
     state.items.some((item) => item.productId === id),
   );
+  const removeProduct = useCart((state) => state.removeProduct);
 
   const defaultVariant = getDefaultVariant({ variants });
   const selectedVariant =
@@ -131,7 +132,14 @@ export default function ProductCard({
             selectedVariant,
           )}
           disabled={selectedVariant.stock === 0}
-          onClick={selectedSize ? undefined : () => setQuickViewOpen(true)}
+          onClick={
+            selectedSize
+              ? undefined
+              : () =>
+                  cartHasProduct
+                    ? removeProduct(id)
+                    : setQuickViewOpen(true)
+          }
           isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
       </div>
