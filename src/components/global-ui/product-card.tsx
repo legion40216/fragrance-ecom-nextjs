@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
+import { Badge } from "@/components/ui/badge";
 import type { ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 
@@ -50,9 +51,9 @@ export default function ProductCard({
           />
 
           {(isNew || isBestSeller) && (
-            <span className="absolute left-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-medium">
+            <Badge className="absolute left-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-medium">
               {isNew ? "New" : "Bestseller"}
-            </span>
+            </Badge>
           )}
 
           {isOutOfStock && (
