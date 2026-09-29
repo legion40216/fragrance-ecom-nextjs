@@ -70,6 +70,24 @@ export default function ProductCard({
           <span className="font-medium">{formatter.format(price)}</span>
           <span className="text-xs text-muted-foreground">{size}</span>
         </div>
+
+                {/* <div className="flex justify-end">
+          {isInCart ? (
+            <Button variant="outline" onClick={handleRemoveFromCart}>
+              <ShoppingCart className="size-5 mr-2" />
+              Remove from Cart
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={handleAddToCart}
+              disabled={activeVariant?.stock === 0}
+            >
+              <ShoppingCart className="size-5 mr-2" />
+              {activeVariant?.stock === 0 ? "Out of Stock" : "Add to Cart"}
+            </Button>
+          )}
+        </div> */}
       </div>
     </Link>
   );

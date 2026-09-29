@@ -7,7 +7,7 @@ export default function NavDesktop() {
   const routes = useNavRoutes();
 
   return (
-    <nav className="hidden items-center gap-6 md:flex">
+    <nav className="flex items-center gap-6">
       {routes.map((route) => (
         <NavLinks
           key={route.href}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
       className={`${poppins.variable} ${josefinSlab.variable} ${geistMono.variable}`}
     >
       <body>
+        <Toaster />
         {children}
       </body>
     </html>
