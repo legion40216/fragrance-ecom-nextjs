@@ -15,9 +15,6 @@ export default function AddToCartButton({
   product: CartProduct;
   disabled?: boolean;
   onClick?: () => void;
-}
-  product: CartProduct;
-  disabled?: boolean;
 }) {
   const { addItem, removeItem } = useCart();
   const inCart = useCart((state) =>
@@ -42,7 +39,10 @@ export default function AddToCartButton({
             : `Add ${product.name} to cart`
       }
       aria-pressed={isInCart}
-      onClick={onClick ?? (() => (isInCart ? removeItem(product.id) : addItem(product)))}
+      onClick={
+        onClick ??
+        (() => (isInCart ? removeItem(product.id) : addItem(product)))
+      }
     >
       {isInCart ? <Check /> : <ShoppingCart />}
     </Button>
