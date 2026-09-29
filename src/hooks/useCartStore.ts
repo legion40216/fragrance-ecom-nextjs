@@ -9,6 +9,7 @@ interface CartState {
 
   addItem: (product: CartProduct, quantity?: number) => void;
   removeItem: (id: string) => void;
+  removeProduct: (productId: string) => void;
   updateItemCount: (id: string, newCount: number) => void;
   clearCart: () => void;
 
@@ -39,6 +40,13 @@ const useCart = create<CartState>()(
 
       removeItem: (id) => {
         set({ items: get().items.filter((item) => item.id !== id) });
+        toast.add({ title: "Removed from cart.", type: "success" });
+      },
+
+      removeProduct: (productId) => {
+        set({
+          items: get().items.filter((item) => item.productId !== productId),
+        });
         toast.add({ title: "Removed from cart.", type: "success" });
       },
 
