@@ -1,4 +1,5 @@
 // constants.ts
+import { getHighestPrice } from "@/utils/product-variants";
 import { products } from "./data";
 
 export const sortOptions = [
@@ -18,7 +19,10 @@ export const PRICE_STEP = 100;
 
 // Derived from the catalogue so a product priced above a hard-coded ceiling
 // can never be silently hidden by the default (max) price filter.
-const highestPrice = products.reduce((max, p) => Math.max(max, p.price), 0);
+const highestPrice = products.reduce(
+  (max, p) => Math.max(max, getHighestPrice(p)),
+  0,
+);
 
 export const PRICE_BOUNDS = {
   min: 0,

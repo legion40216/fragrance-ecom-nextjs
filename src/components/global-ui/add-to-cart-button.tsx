@@ -7,7 +7,13 @@ import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
 import type { CartProduct } from "@/types/cart";
 
-export default function AddToCartButton({ product }: { product: CartProduct }) {
+export default function AddToCartButton({
+  product,
+  disabled = false,
+}: {
+  product: CartProduct;
+  disabled?: boolean;
+}) {
   const { addItem, removeItem } = useCart();
   const inCart = useCart((state) =>
     state.items.some((item) => item.id === product.id),
@@ -22,11 +28,13 @@ export default function AddToCartButton({ product }: { product: CartProduct }) {
       variant={isInCart ? "default" : "secondary"}
       size="icon-sm"
       className="rounded-full shadow"
-      disabled={isOutOfStock}
+      disabled={isOutOfStock || disabled}
       aria-label={
         isInCart
           ? `Remove ${product.name} from cart`
-          : `Add ${product.name} to cart`
+          : disabled
+            ? `Select a size to add ${product.name} to cart`
+            : `Add ${product.name} to cart`
       }
       aria-pressed={isInCart}
       onClick={() => (isInCart ? removeItem(product.id) : addItem(product))}

@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
+import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
-import type { ProductType } from "@/types/types";
+import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
+import {
+  getDefaultVariant,
+  getLowestPrice,
+  isProductInStock,
+  toCartProduct,
+} from "@/utils/product-variants";
 
 interface ProductCardProps
   extends Pick<
@@ -13,13 +19,14 @@ interface ProductCardProps
     | "slug"
     | "name"
     | "brand"
-    | "price"
-    | "size"
+    | "variants"
     | "image"
     | "isNew"
     | "isBestSeller"
-    | "stock"
+    | "description"
+    | "category"
   > {
+  selectedSize?: ProductSize;
   sizes?: string;
 }
 
@@ -28,15 +35,24 @@ export default function ProductCard({
   slug,
   name,
   brand,
-  price,
-  size,
+  variants,
   image,
   isNew,
   isBestSeller,
-  stock,
+  description,
+  category,
+  selectedSize,
   sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
-  const isOutOfStock = stock === 0;
+  const defaultVariant = getDefaultVariant({ variants });
+  const selectedVariant =
+    (selectedSize &&
+      variants.find((variant) => variant.size === selectedSize)) ??
+    defaultVariant;
+  const isOutOfStock = selectedSize
+    ? selectedVariant.stock === 0
+    : !isProductInStock({ variants });
+  const hasSelectedSize = selectedSize !== undefined;
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
@@ -63,20 +79,39 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="space-y-1 p-3">
-          <p className="text-xs text-muted-foreground">{brand}</p>
-          <h3 className="font-serif text-lg leading-tight">{name}</h3>
+        <div className="space-y-1 p-2.5 sm:p-3">
+          <p className="text-[11px] text-muted-foreground sm:text-xs">{brand}</p>
+          <h3 className="font-serif text-base leading-tight sm:text-lg">{name}</h3>
 
-          <div className="flex items-baseline justify-between pt-1">
-            <span className="font-medium">{formatter.format(price)}</span>
-            <span className="text-xs text-muted-foreground">{size}</span>
-          </div>
+          <p className="pt-0.5 text-sm font-medium sm:text-base">
+            {hasSelectedSize
+              ? `${formatter.format(selectedVariant.price)} · ${selectedVariant.size}`
+              : `From ${formatter.format(getLowestPrice({ variants }))}`}
+          </p>
         </div>
       </Link>
 
-      <div className="absolute right-2 top-10">
+      <div className="absolute right-2 top-2 flex flex-col gap-1">
+        <QuickView
+          product={{
+            id,
+            slug,
+            name,
+            brand,
+            image,
+            description,
+            category,
+            variants,
+          }}
+          selectedSize={selectedSize}
+        />
+
         <AddToCartButton
-          product={{ id, slug, name, brand, price, size, image, stock }}
+          product={toCartProduct(
+            { id, slug, name, brand, image },
+            selectedVariant,
+          )}
+          disabled={!hasSelectedSize}
         />
       </div>
     </div>

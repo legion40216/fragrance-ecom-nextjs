@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { products } from "@/data/data";
-import { CategorySlug, FilterValue } from "@/schema";
+import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
 
@@ -14,6 +14,7 @@ import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
 export default async function ProductSection({
   categoryParam,
   filterParam,
+  sizeParam,
   minPrice,
   maxPrice,
   brandParam,
@@ -23,6 +24,7 @@ export default async function ProductSection({
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
+  sizeParam: SizeFilter;
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
@@ -46,8 +48,9 @@ export default async function ProductSection({
   };
 
   const filteredAndSorted = sortProducts(
-    filterProducts(products, filterProps),
+    filterProducts(products, { ...filterProps, sizeParam }),
     filterParam,
+    sizeParam,
   );
 
   return (
@@ -74,6 +77,7 @@ export default async function ProductSection({
           <ProductList
             initialData={filteredAndSorted}
             initialColumns={initialColumns}
+            selectedSize={sizeParam}
           />
         </div>
       </div>

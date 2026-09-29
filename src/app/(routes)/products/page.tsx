@@ -15,6 +15,7 @@ export default async function Products(props: {
       <ProductsView
         categoryParam={validatedParams.category}
         filterParam={validatedParams.filter}
+        sizeParam={validatedParams.size}
         minPrice={validatedParams.minPrice}
         maxPrice={validatedParams.maxPrice}
         brandParam={validatedParams.brand}

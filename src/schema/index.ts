@@ -23,6 +23,8 @@ const baseSearchParamsSchema = z.object({
     .catch("newest")
     .default("newest"),
 
+  size: z.enum(["50ml", "100ml"]).optional().catch(undefined),
+
   minPrice: z.coerce
     .number()
     .min(PRICE_BOUNDS.min)
@@ -65,3 +67,4 @@ export const searchParamsSchema = baseSearchParamsSchema.transform((params) =>
 export type SearchParamsValues = z.infer<typeof searchParamsSchema>;
 export type CategorySlug = SearchParamsValues["category"];
 export type FilterValue = SearchParamsValues["filter"];
+export type SizeFilter = SearchParamsValues["size"];
