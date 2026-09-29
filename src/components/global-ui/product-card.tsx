@@ -7,6 +7,7 @@ import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import {
   getDefaultVariant,
+  getHighestPrice,
   getLowestPrice,
   isProductInStock,
   toCartProduct,
@@ -83,11 +84,19 @@ export default function ProductCard({
           <p className="text-[11px] text-muted-foreground sm:text-xs">{brand}</p>
           <h3 className="font-serif text-base leading-tight sm:text-lg">{name}</h3>
 
-          <p className="pt-0.5 text-sm font-medium sm:text-base">
-            {hasSelectedSize
-              ? `${formatter.format(selectedVariant.price)} · ${selectedVariant.size}`
-              : `From ${formatter.format(getLowestPrice({ variants }))}`}
-          </p>
+          {hasSelectedSize ? (
+            <p className="pt-0.5 text-sm font-medium sm:text-base">
+              {formatter.format(selectedVariant.price)} · {selectedVariant.size}
+            </p>
+          ) : (
+            <div className="pt-0.5 text-sm font-medium sm:text-base">
+              <p>
+                {formatter.format(getLowestPrice({ variants }))} -{" "}
+                {formatter.format(getHighestPrice({ variants }))}
+              </p>
+              <p>50/100ml</p>
+            </div>
+          )}
         </div>
       </Link>
 
