@@ -222,18 +222,16 @@ export default function QuickViewContent({
               </p>
             </div>
 
-            <div className={inCart ? "grid gap-2" : "grid gap-2 sm:grid-cols-2"}>
-              {!inCart && (
-                <Button
-                  type="button"
-                  variant="default"
-                  disabled={isSoldOut}
-                  onClick={addSelectedToCart}
-                >
-                  <ShoppingCart />
-                  Add to cart
-                </Button>
-              )}
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Button
+                type="button"
+                variant={inCart ? "outline" : "default"}
+                disabled={isSoldOut}
+                onClick={addSelectedToCart}
+              >
+                <ShoppingCart />
+                {inCart ? "Remove from cart" : "Add to cart"}
+              </Button>
               <Button
                 type="button"
                 variant="outline"
