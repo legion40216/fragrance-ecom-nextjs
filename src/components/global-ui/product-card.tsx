@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +48,8 @@ export default function ProductCard({
   selectedSize,
   sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
+
   const defaultVariant = getDefaultVariant({ variants });
   const selectedVariant =
     (selectedSize &&
@@ -112,6 +117,8 @@ export default function ProductCard({
             variants,
           }}
           selectedSize={selectedSize}
+          open={quickViewOpen}
+          onOpenChange={setQuickViewOpen}
         />
 
         <AddToCartButton
@@ -120,6 +127,7 @@ export default function ProductCard({
             selectedVariant,
           )}
           disabled={selectedVariant.stock === 0}
+          onClick={selectedSize ? undefined : () => setQuickViewOpen(true)}
         />
       </div>
     </div>
