@@ -39,13 +39,13 @@ export default function NotesSection() {
         </h2>
       </div>
 
-      {/* Collection cards: equal width and equal height */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+      {/* Collection cards: horizontally scrollable on mobile, grid on large screens */}
+      <div className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5">
         {categories.map((category) => (
           <Link
             key={category.id}
             href={`/products?category=${category.slug}`}
-            className={cardClasses}
+            className={`${cardClasses} shrink-0 lg:shrink`}
           >
             {/* Accent strip */}
             <span
