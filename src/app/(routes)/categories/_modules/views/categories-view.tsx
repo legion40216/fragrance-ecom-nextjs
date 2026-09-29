@@ -9,6 +9,7 @@ export default function CategoriesView({
   maxPrice,
   brandParam,
   inStockParam,
+  featuredParam,
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
@@ -16,6 +17,7 @@ export default function CategoriesView({
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  featuredParam: boolean;
 }) {
   return (
     <div className="space-y-6">
@@ -28,6 +30,7 @@ export default function CategoriesView({
         maxPrice={maxPrice}
         brandParam={brandParam}
         inStockParam={inStockParam}
+        featuredParam={featuredParam}
         showCategoryFilter={false}
         headingTitle="Categories"
       />

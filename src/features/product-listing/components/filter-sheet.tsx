@@ -23,14 +23,16 @@ export default function FilterSheet(props: FilterControlsProps) {
     maxPrice,
     brandParam,
     inStockParam,
+    featuredParam,
     showCategoryFilter = true,
   } = props;
 
-  const activeFiltersCount =
-    (showCategoryFilter && categoryParam ? 1 : 0) +
-    (minPrice !== PRICE_BOUNDS.min || maxPrice !== PRICE_BOUNDS.max ? 1 : 0) +
-    brandParam.length +
-    (inStockParam ? 1 : 0);
+ const activeFiltersCount =
+  (showCategoryFilter && categoryParam ? 1 : 0) +
+  (minPrice !== PRICE_BOUNDS.min || maxPrice !== PRICE_BOUNDS.max ? 1 : 0) +
+  brandParam.length +
+  (inStockParam ? 1 : 0) +
+  (featuredParam ? 1 : 0);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>

@@ -50,6 +50,12 @@ export const searchParamsSchema = z.object({
     .optional()
     .catch(undefined)
     .transform((value) => value === "true"),
+
+    featured: z
+  .enum(["true"])
+  .optional()
+  .catch(undefined)
+  .transform((value) => value === "true"),
 });
 
 export type SearchParamsValues = z.infer<typeof searchParamsSchema>;

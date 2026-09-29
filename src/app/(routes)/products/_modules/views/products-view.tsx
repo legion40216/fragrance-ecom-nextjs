@@ -9,6 +9,7 @@ export default function ProductsView({
   maxPrice,
   brandParam,
   inStockParam,
+  featuredParam,
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
@@ -16,6 +17,7 @@ export default function ProductsView({
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  featuredParam: boolean;
 }) {
   return (
     <ProductSection
@@ -25,6 +27,7 @@ export default function ProductsView({
       maxPrice={maxPrice}
       brandParam={brandParam}
       inStockParam={inStockParam}
+      featuredParam={featuredParam}
     />
   );
 }

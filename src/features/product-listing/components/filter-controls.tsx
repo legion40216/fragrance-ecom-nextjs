@@ -20,6 +20,7 @@ export interface FilterControlsProps {
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  featuredParam: boolean;
   showCategoryFilter?: boolean;
   onChange?: () => void;
 }
@@ -30,6 +31,7 @@ export default function FilterControls({
   maxPrice,
   brandParam,
   inStockParam,
+  featuredParam,
   showCategoryFilter = true,
   onChange,
 }: FilterControlsProps) {
@@ -88,17 +90,22 @@ export default function FilterControls({
     updateParams({ inStock: checked ? "true" : null });
   };
 
+  const handleFeaturedToggle = (checked: boolean) => {
+  updateParams({ featured: checked ? "true" : null });
+};
+
   const handleClearAll = () => {
     router.replace(pathname);
     onChange?.();
   };
 
-  const hasActiveFilters =
-    (showCategoryFilter && !!categoryParam) ||
-    minPrice !== PRICE_BOUNDS.min ||
-    maxPrice !== PRICE_BOUNDS.max ||
-    brandParam.length > 0 ||
-    inStockParam;
+const hasActiveFilters =
+  (showCategoryFilter && !!categoryParam) ||
+  minPrice !== PRICE_BOUNDS.min ||
+  maxPrice !== PRICE_BOUNDS.max ||
+  brandParam.length > 0 ||
+  inStockParam ||
+  featuredParam;
 
   return (
     <div className="space-y-6">
@@ -183,6 +190,17 @@ export default function FilterControls({
           In stock only
         </Label>
       </div>
+
+      <div className="flex items-center space-x-3">
+  <Checkbox
+    id="featured"
+    checked={featuredParam}
+    onCheckedChange={(checked) => handleFeaturedToggle(!!checked)}
+  />
+  <Label htmlFor="featured" className="font-normal cursor-pointer">
+    Featured & Best Sellers
+  </Label>
+</div>
 
       <div className="flex justify-end">
         {hasActiveFilters && (

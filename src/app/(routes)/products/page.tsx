@@ -20,14 +20,15 @@ export default async function Products(props: {
 
   return (
     <div>
-      <ProductsView
-        categoryParam={validatedParams.category}
-        filterParam={validatedParams.filter}
-        minPrice={validatedParams.minPrice}
-        maxPrice={validatedParams.maxPrice}
-        brandParam={validatedParams.brand}
-        inStockParam={validatedParams.inStock}
-      />
+  <ProductsView
+  categoryParam={validatedParams.category}
+  filterParam={validatedParams.filter}
+  minPrice={validatedParams.minPrice}
+  maxPrice={validatedParams.maxPrice}
+  brandParam={validatedParams.brand}
+  inStockParam={validatedParams.inStock}
+  featuredParam={validatedParams.featured}
+/>
     </div>
   );
 }

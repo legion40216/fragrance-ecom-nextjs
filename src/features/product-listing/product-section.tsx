@@ -16,6 +16,7 @@ export default function ProductSection({
   maxPrice,
   brandParam,
   inStockParam,
+  featuredParam,
   showCategoryFilter = true,
   headingTitle = "Collections",
 }: {
@@ -25,6 +26,7 @@ export default function ProductSection({
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  featuredParam: boolean;
   showCategoryFilter?: boolean;
   headingTitle?: string;
 }) {
@@ -34,6 +36,7 @@ export default function ProductSection({
     maxPrice,
     brandParam,
     inStockParam,
+    featuredParam,
     showCategoryFilter,
   };
 

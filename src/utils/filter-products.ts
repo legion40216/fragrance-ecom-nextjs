@@ -7,11 +7,19 @@ export interface ProductFilters {
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  featuredParam: boolean;
 }
 
 export function filterProducts(
   products: ProductType[],
-  { categoryParam, minPrice, maxPrice, brandParam, inStockParam }: ProductFilters,
+  {
+    categoryParam,
+    minPrice,
+    maxPrice,
+    brandParam,
+    inStockParam,
+    featuredParam,
+  }: ProductFilters,
 ): ProductType[] {
   return products.filter((product) => {
     if (categoryParam && product.category !== categoryParam) return false;
@@ -19,6 +27,13 @@ export function filterProducts(
     if (brandParam.length > 0 && !brandParam.includes(product.brand))
       return false;
     if (inStockParam && product.stock <= 0) return false;
+   if (
+  featuredParam &&
+  !product.isFeatured &&
+  !product.isBestSeller
+) {
+  return false;
+}
     return true;
   });
 }
