@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +50,9 @@ export default function ProductCard({
   sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const cartHasProduct = useCart((state) =>
+    state.items.some((item) => item.productId === id),
+  );
 
   const defaultVariant = getDefaultVariant({ variants });
   const selectedVariant =
@@ -128,6 +132,7 @@ export default function ProductCard({
           )}
           disabled={selectedVariant.stock === 0}
           onClick={selectedSize ? undefined : () => setQuickViewOpen(true)}
+          isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
       </div>
     </div>
