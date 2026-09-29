@@ -4,6 +4,7 @@ import { getPriceBounds } from "@/data/constants";
 import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
+import { clampPriceRange } from "@/utils/clamp-price-range";
 
 import ProductList from "./product-list";
 import HeadingState from "@/components/global-ui/heading-state";
@@ -40,11 +41,12 @@ export default async function ProductSection({
   );
 
   const priceBounds = getPriceBounds({ category: categoryParam, size: sizeParam });
+  const priceRange = clampPriceRange({ minPrice, maxPrice }, priceBounds);
 
   const filterProps = {
     categoryParam,
-    minPrice,
-    maxPrice,
+    minPrice: priceRange.minPrice,
+    maxPrice: priceRange.maxPrice,
     brandParam,
     inStockParam,
     showCategoryFilter,
