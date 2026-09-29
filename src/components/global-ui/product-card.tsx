@@ -51,7 +51,7 @@ export default function ProductCard({
           />
 
           {(isNew || isBestSeller) && (
-            <Badge className="absolute left-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-medium">
+            <Badge className="absolute left-2 top-2 h-auto rounded border-0 bg-white/90 px-2 py-1 text-xs font-medium text-foreground shadow-none">
               {isNew ? "New" : "Bestseller"}
             </Badge>
           )}
