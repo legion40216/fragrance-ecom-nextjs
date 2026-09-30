@@ -108,8 +108,9 @@ export default function ProductCard({
       </Link>
 
       <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
-        {!selectedSize && (
-          <Tooltip>
+        <div className="flex items-center gap-1">
+          {!selectedSize && (
+            <Tooltip>
             <TooltipTrigger
               render={
                 <span
@@ -131,13 +132,14 @@ export default function ProductCard({
             </TooltipTrigger>
             <TooltipContent>{stockTooltip}</TooltipContent>
           </Tooltip>
-        )}
-        <QuickView
+          )}
+          <QuickView
           product={{ id, slug, name, brand, image, description, category, variants }}
           selectedSize={selectedSize}
           open={quickViewOpen}
           onOpenChange={setQuickViewOpen}
         />
+        </div>
         <AddToCartButton
           product={toCartProduct({ id, slug, name, brand, image }, selectedVariant)}
           disabled={selectedVariant.stock === 0}
