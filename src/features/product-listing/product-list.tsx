@@ -99,15 +99,6 @@ export default function ProductList({
       "; samesite=lax";
   };
 
-  if (initialData.length === 0) {
-    return (
-      <EmptyState
-        title="No fragrances found"
-        subtitle="Try changing your filters."
-      />
-    );
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
@@ -169,18 +160,25 @@ export default function ProductList({
         </div>
       </div>
 
-      <div
-        className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out ${gridClasses[columns]}`}
-      >
-        {initialData.map((product) => (
-          <ProductCard
-            key={product.id}
-            {...product}
-            selectedSize={selectedSize}
-            sizes={cardSizes[activeColumns]}
-          />
-        ))}
-      </div>
+      {initialData.length === 0 ? (
+        <EmptyState
+          title="No fragrances found"
+          subtitle="Try changing your filters."
+        />
+      ) : (
+        <div
+          className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out ${gridClasses[columns]}`}
+        >
+          {initialData.map((product) => (
+            <ProductCard
+              key={product.id}
+              {...product}
+              selectedSize={selectedSize}
+              sizes={cardSizes[activeColumns]}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
