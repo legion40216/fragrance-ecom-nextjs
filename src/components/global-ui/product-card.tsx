@@ -31,6 +31,7 @@ export default function ProductCard({
   sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [stockTooltipOpen, setStockTooltipOpen] = useState(false);
   const cartHasProduct = useCart((state) =>
     state.items.some((item) => item.productId === id),
   );
@@ -110,28 +111,30 @@ export default function ProductCard({
       <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
         <div className="flex items-center gap-1">
           {!selectedSize && (
-            <Tooltip>
-            <TooltipTrigger
-              render={
-                <span
-                  className="flex size-7 items-center justify-center rounded-full bg-background/90 shadow"
-                  aria-label={stockTooltip}
-                />
-              }
-            >
-              <StockStatusIcon
-                className={
-                  stockStatus === "out"
-                    ? "size-3.5 text-destructive"
-                    : stockStatus === "partial"
-                      ? "size-3.5 text-amber-600"
-                      : "size-3.5 text-emerald-600"
+            <Tooltip open={stockTooltipOpen} onOpenChange={setStockTooltipOpen}>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    className="flex size-7 items-center justify-center rounded-full bg-background/90 shadow"
+                    aria-label={stockTooltip}
+                    onClick={() => setStockTooltipOpen((open) => !open)}
+                  />
                 }
-                aria-hidden="true"
-              />
-            </TooltipTrigger>
-            <TooltipContent>{stockTooltip}</TooltipContent>
-          </Tooltip>
+              >
+                <StockStatusIcon
+                  className={
+                    stockStatus === "out"
+                      ? "size-3.5 text-destructive"
+                      : stockStatus === "partial"
+                        ? "size-3.5 text-amber-600"
+                        : "size-3.5 text-emerald-600"
+                  }
+                  aria-hidden="true"
+                />
+              </TooltipTrigger>
+              <TooltipContent>{stockTooltip}</TooltipContent>
+            </Tooltip>
           )}
           <QuickView
           product={{ id, slug, name, brand, image, description, category, variants }}
