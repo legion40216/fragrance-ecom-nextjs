@@ -64,12 +64,14 @@ export default function ProductCard({
     ? selectedVariant.stock === 0
     : !isProductInStock({ variants });
 
+  const sortedVariants = [...variants].sort((a, b) => a.price - b.price);
+
   const priceLabel = selectedSize
     ? formatter.format(selectedVariant.price)
     : `${formatter.format(getLowestPrice({ variants }))} - ${formatter.format(getHighestPrice({ variants }))}`;
   const sizeLabel = selectedSize
     ? selectedVariant.size
-    : `${variants.map((variant) => variant.size.replace("ml", "")).join("/")}ml`;
+    : `${sortedVariants.map((variant) => variant.size.replace("ml", "")).join("/")}ml`;
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
