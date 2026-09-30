@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { CircleAlert, CircleCheck, CircleX } from "lucide-react";
 import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import {
@@ -47,6 +49,23 @@ export default function ProductCard({
     .filter((variant) => variant.stock === 0)
     .map((variant) => variant.size);
 
+  const stockStatus = unavailableSizes.length === 0
+    ? "available"
+    : unavailableSizes.length === variants.length
+      ? "out"
+      : "partial";
+  const stockTooltip = stockStatus === "available"
+    ? "All sizes available"
+    : stockStatus === "out"
+      ? "All sizes currently unavailable"
+      : `${unavailableSizes.join(", ")} currently unavailable`;
+
+  const StockStatusIcon = stockStatus === "available"
+    ? CircleCheck
+    : stockStatus === "out"
+      ? CircleX
+      : CircleAlert;
+
   const priceLabel = selectedSize
     ? formatter.format(selectedVariant.price)
     : formatter.format(getLowestPrice({ variants })) + " - " + formatter.format(getHighestPrice({ variants }));
@@ -84,15 +103,35 @@ export default function ProductCard({
             <span className="text-xs text-muted-foreground">{sizeLabel}</span>
           </div>
 
-          {unavailableSizes.length > 0 && !selectedSize && (
-            <p className="text-[11px] text-muted-foreground">
-              {unavailableSizes.join(", ")} currently unavailable
-            </p>
-          )}
+
         </div>
       </Link>
 
-      <div className="absolute right-2 top-2 flex flex-col gap-1">
+      <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+        {!selectedSize && (
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <span
+                  className="flex size-7 items-center justify-center rounded-full bg-background/90 shadow"
+                  aria-label={stockTooltip}
+                />
+              }
+            >
+              <StockStatusIcon
+                className={
+                  stockStatus === "out"
+                    ? "size-3.5 text-destructive"
+                    : stockStatus === "partial"
+                      ? "size-3.5 text-amber-600"
+                      : "size-3.5 text-emerald-600"
+                }
+                aria-hidden="true"
+              />
+            </TooltipTrigger>
+            <TooltipContent>{stockTooltip}</TooltipContent>
+          </Tooltip>
+        )}
         <QuickView
           product={{ id, slug, name, brand, image, description, category, variants }}
           selectedSize={selectedSize}
