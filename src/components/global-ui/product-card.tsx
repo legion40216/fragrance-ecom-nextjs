@@ -71,7 +71,7 @@ export default function ProductCard({
     : `${formatter.format(getLowestPrice({ variants }))} - ${formatter.format(getHighestPrice({ variants }))}`;
   const sizeLabel = selectedSize
     ? selectedVariant.size
-    : `${sortedVariants.map((variant) => variant.size.replace("ml", "")).join("/")}ml`;
+    : sortedVariants.map((variant) => variant.size).join("/");
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
