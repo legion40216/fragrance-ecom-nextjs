@@ -12,7 +12,7 @@ export const products: ProductType[] = [
     description:
       "A sophisticated fragrance with warm woods, spices, and a smooth amber finish.",
     variants: [
-      { size: "50ml", price: 5499, stock: 18 },
+      { size: "50ml", price: 2999, stock: 18 },
       { size: "100ml", price: 4999, stock: 18 },
     ],
     image: "/assets/product/images/noir-essence.svg",
@@ -54,7 +54,7 @@ export const products: ProductType[] = [
     description:
       "A floral fragrance with soft rose, jasmine, vanilla, and musk.",
     variants: [
-      { size: "50ml", price: 4799, stock: 24 },
+      { size: "50ml", price: 2699, stock: 24 },
       { size: "100ml", price: 4499, stock: 24 },
     ],
     image: "/assets/product/images/velvet-bloom.svg",
@@ -96,7 +96,7 @@ export const products: ProductType[] = [
     description:
       "A warm evening fragrance built around amber, vanilla, and dark woods.",
     variants: [
-      { size: "50ml", price: 5599, stock: 15 },
+      { size: "50ml", price: 3199, stock: 15 },
       { size: "100ml", price: 5299, stock: 15 },
     ],
     image: "/assets/product/images/amber-night.svg",
