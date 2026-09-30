@@ -1,4 +1,4 @@
-import { getHighestPrice } from "@/utils/product-variants";
+import { getHighestPrice, getLowestPrice } from "@/utils/product-variants";
 import { products } from "./data";
 import type { ProductCategorySlug } from "./categories";
 import type { ProductSize } from "@/types/types";
@@ -14,7 +14,7 @@ export type SortValue = (typeof sortOptions)[number]["value"];
 
 export const CURRENCY = "USD";
 
-export const PRICE_STEP = 100;
+export const PRICE_STEP = 500;
 
 export function getPriceBounds({
   category,
@@ -31,20 +31,31 @@ export function getPriceBounds({
     return true;
   });
 
-  const highestPrice = matchingProducts.reduce((max, product) => {
-    const variants = size
-      ? product.variants.filter((variant) => variant.size === size)
-      : product.variants;
+  const { lowestPrice, highestPrice } = matchingProducts.reduce(
+    (bounds, product) => {
+      const variants = size
+        ? product.variants.filter((variant) => variant.size === size)
+        : product.variants;
 
-    return Math.max(max, getHighestPrice({ variants }));
-  }, 0);
+      return {
+        lowestPrice: Math.min(
+          bounds.lowestPrice,
+          getLowestPrice({ variants }),
+        ),
+        highestPrice: Math.max(
+          bounds.highestPrice,
+          getHighestPrice({ variants }),
+        ),
+      };
+    },
+    { lowestPrice: Number.POSITIVE_INFINITY, highestPrice: 0 },
+  );
+
+  const min = Number.isFinite(lowestPrice) ? lowestPrice : 0;
 
   return {
-    min: 0,
-    max: Math.max(
-      PRICE_STEP,
-      Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP,
-    ),
+    min,
+    max: Math.max(PRICE_STEP, Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP),
   };
 }
 
