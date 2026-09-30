@@ -1,12 +1,13 @@
 "use client";
 
-import { ShoppingBasket } from "lucide-react";
+import { ShoppingBasket, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -22,6 +23,7 @@ export default function Cart() {
   const [isOpen, setIsOpen] = useState(false);
 
   const items = useCart((state) => state.items);
+  const clearCart = useCart((state) => state.clearCart);
   const hydrated = useHydrated();
 
   const visibleItems = hydrated ? items : [];
@@ -52,9 +54,26 @@ export default function Cart() {
         )}
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-full sm:max-w-sm">
-        <SheetHeader>
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-sm"
+        showCloseButton={false}
+      >
+        <SheetHeader className="flex-row items-center justify-between">
           <SheetTitle className="uppercase">Cart</SheetTitle>
+
+          {visibleItems.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="uppercase text-muted-foreground"
+              onClick={clearCart}
+            >
+              <Trash2 />
+              Clear cart
+            </Button>
+          )}
+
           <SheetDescription className="sr-only">
             Items in your shopping cart
           </SheetDescription>
@@ -64,6 +83,19 @@ export default function Cart() {
           <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
             <ShoppingBasket className="size-8" />
             <p className="uppercase">Your cart is empty</p>
+
+            <SheetClose
+              render={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2 sm:hidden"
+                />
+              }
+            >
+              <X />
+              Close
+            </SheetClose>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto px-4">
