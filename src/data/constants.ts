@@ -51,7 +51,9 @@ export function getPriceBounds({
     { lowestPrice: Number.POSITIVE_INFINITY, highestPrice: 0 },
   );
 
-  const min = Number.isFinite(lowestPrice) ? lowestPrice : 0;
+  const min = Number.isFinite(lowestPrice)
+    ? Math.floor(lowestPrice / PRICE_STEP) * PRICE_STEP
+    : 0;
 
   return {
     min,
