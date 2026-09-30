@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
+import { categories } from "@/data/categories";
 import type { ProductSize, ProductVariant } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
@@ -79,6 +80,7 @@ export default function QuickViewContent({
 
   const selectSize = (size: ProductSize) => {
     setSelectedSize(size);
+    setQuantity(1);
   };
 
   const changeQuantity = (next: number) => {
@@ -137,13 +139,16 @@ export default function QuickViewContent({
   };
 
   const isSoldOut = selectedVariant.stock === 0;
+  const categoryName =
+    categories.find((category) => category.slug === product.category)?.name ??
+    product.category;
 
   return (
     <DialogContent
       showCloseButton
-      className="max-h-[90vh] overflow-hidden p-0 sm:max-w-3xl"
+      className="max-h-[90dvh] overflow-hidden p-0 sm:max-w-3xl"
     >
-      <div className="max-h-[90vh] overflow-y-auto">
+      <div className="max-h-[90dvh] overflow-y-auto">
         <div className="grid md:grid-cols-2">
           <div className="relative aspect-square bg-neutral-100 md:sticky md:top-0 md:self-start">
             <Image
@@ -218,7 +223,11 @@ export default function QuickViewContent({
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                {isSoldOut ? "Sold out" : `${selectedVariant.stock} available`}
+                {isSoldOut
+                  ? "Sold out"
+                  : selectedVariant.stock <= 5
+                    ? `Only ${selectedVariant.stock} left`
+                    : `${selectedVariant.stock} available`}
               </p>
             </div>
 
@@ -242,6 +251,15 @@ export default function QuickViewContent({
               </Button>
             </div>
 
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full"
+              onClick={onClose}
+            >
+              Close
+            </Button>
+
             <div className="divide-y rounded-lg border text-sm">
               <div className="flex justify-between gap-4 p-3">
                 <span className="text-muted-foreground">Size</span>
@@ -253,11 +271,17 @@ export default function QuickViewContent({
               </div>
               <div className="flex justify-between gap-4 p-3">
                 <span className="text-muted-foreground">Availability</span>
-                <span>{isSoldOut ? "Sold out" : "In stock"}</span>
+                <span>
+                  {isSoldOut
+                    ? "Sold out"
+                    : selectedVariant.stock <= 5
+                      ? `Only ${selectedVariant.stock} left`
+                      : "In stock"}
+                </span>
               </div>
               <div className="flex justify-between gap-4 p-3">
                 <span className="text-muted-foreground">Category</span>
-                <span className="text-right">{product.category}</span>
+                <span className="text-right">{categoryName}</span>
               </div>
             </div>
 
