@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
 import { products } from "@/data/data";
-import { CategorySlug, FilterValue } from "@/schema";
+import { getPriceBounds } from "@/data/constants";
+import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
+import { clampPriceRange } from "@/utils/clamp-price-range";
 
 import ProductList from "./product-list";
 import HeadingState from "@/components/global-ui/heading-state";
@@ -14,6 +16,7 @@ import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
 export default async function ProductSection({
   categoryParam,
   filterParam,
+  sizeParam,
   minPrice,
   maxPrice,
   brandParam,
@@ -23,6 +26,7 @@ export default async function ProductSection({
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
+  sizeParam: SizeFilter;
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
@@ -36,18 +40,23 @@ export default async function ProductSection({
     cookieStore.get(GRID_COLUMNS_COOKIE)?.value,
   );
 
+  const priceBounds = getPriceBounds({ category: categoryParam, size: sizeParam });
+  const priceRange = clampPriceRange({ minPrice, maxPrice }, priceBounds);
+
   const filterProps = {
     categoryParam,
-    minPrice,
-    maxPrice,
+    minPrice: priceRange.minPrice,
+    maxPrice: priceRange.maxPrice,
     brandParam,
     inStockParam,
     showCategoryFilter,
+    priceBounds,
   };
 
   const filteredAndSorted = sortProducts(
-    filterProducts(products, filterProps),
+    filterProducts(products, { ...filterProps, sizeParam }),
     filterParam,
+    sizeParam,
   );
 
   return (
@@ -74,6 +83,7 @@ export default async function ProductSection({
           <ProductList
             initialData={filteredAndSorted}
             initialColumns={initialColumns}
+            selectedSize={sizeParam}
           />
         </div>
       </div>

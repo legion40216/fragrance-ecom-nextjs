@@ -1,10 +1,11 @@
 
-import type { CategorySlug, FilterValue } from "@/schema";
+import type { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import ProductSection from "@/features/product-listing/product-section";
 
 export default function ProductsView({
   categoryParam,
   filterParam,
+  sizeParam,
   minPrice,
   maxPrice,
   brandParam,
@@ -12,6 +13,7 @@ export default function ProductsView({
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
+  sizeParam: SizeFilter;
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
@@ -21,6 +23,7 @@ export default function ProductsView({
     <ProductSection
       categoryParam={categoryParam}
       filterParam={filterParam}
+      sizeParam={sizeParam}
       minPrice={minPrice}
       maxPrice={maxPrice}
       brandParam={brandParam}

@@ -1,8 +1,10 @@
+import type { CategorySlug, SizeFilter } from "@/schema";
 import type { ProductType } from "@/types/types";
-import type { CategorySlug } from "@/schema";
+import { getLowestPrice } from "@/utils/product-variants";
 
 export interface ProductFilters {
   categoryParam: CategorySlug;
+  sizeParam: SizeFilter;
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
@@ -11,14 +13,38 @@ export interface ProductFilters {
 
 export function filterProducts(
   products: ProductType[],
-  { categoryParam, minPrice, maxPrice, brandParam, inStockParam }: ProductFilters,
+  {
+    categoryParam,
+    sizeParam,
+    minPrice,
+    maxPrice,
+    brandParam,
+    inStockParam,
+  }: ProductFilters,
 ): ProductType[] {
   return products.filter((product) => {
     if (categoryParam && product.category !== categoryParam) return false;
-    if (product.price < minPrice || product.price > maxPrice) return false;
-    if (brandParam.length > 0 && !brandParam.includes(product.brand))
+
+    const variants = sizeParam
+      ? product.variants.filter((variant) => variant.size === sizeParam)
+      : product.variants;
+
+    if (variants.length === 0) return false;
+
+    const priceToFilter = sizeParam
+      ? variants[0].price
+      : getLowestPrice({ variants });
+
+    if (priceToFilter < minPrice || priceToFilter > maxPrice) return false;
+
+    if (brandParam.length > 0 && !brandParam.includes(product.brand)) {
       return false;
-    if (inStockParam && product.stock <= 0) return false;
+    }
+
+    if (inStockParam && !variants.some((variant) => variant.stock > 0)) {
+      return false;
+    }
+
     return true;
   });
 }

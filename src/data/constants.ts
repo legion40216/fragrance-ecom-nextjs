@@ -1,5 +1,7 @@
-// constants.ts
+import { getHighestPrice, getLowestPrice } from "@/utils/product-variants";
 import { products } from "./data";
+import type { ProductCategorySlug } from "./categories";
+import type { ProductSize } from "@/types/types";
 
 export const sortOptions = [
   { label: "Newest", value: "newest" },
@@ -10,17 +12,53 @@ export const sortOptions = [
 
 export type SortValue = (typeof sortOptions)[number]["value"];
 
-// ISO 4217 code used by the price formatter. Change it here (e.g. "PKR").
 export const CURRENCY = "USD";
 
-// Slider step; the max bound is rounded up to a multiple of it.
-export const PRICE_STEP = 100;
+export const PRICE_STEP = 500;
 
-// Derived from the catalogue so a product priced above a hard-coded ceiling
-// can never be silently hidden by the default (max) price filter.
-const highestPrice = products.reduce((max, p) => Math.max(max, p.price), 0);
+export function getPriceBounds({
+  category,
+  size,
+}: {
+  category?: ProductCategorySlug;
+  size?: ProductSize;
+}): { min: number; max: number } {
+  const matchingProducts = products.filter((product) => {
+    if (category && product.category !== category) return false;
+    if (size && !product.variants.some((variant) => variant.size === size)) {
+      return false;
+    }
+    return true;
+  });
 
-export const PRICE_BOUNDS = {
-  min: 0,
-  max: Math.max(PRICE_STEP, Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP),
-} as const;
+  const { lowestPrice, highestPrice } = matchingProducts.reduce(
+    (bounds, product) => {
+      const variants = size
+        ? product.variants.filter((variant) => variant.size === size)
+        : product.variants;
+
+      return {
+        lowestPrice: Math.min(
+          bounds.lowestPrice,
+          getLowestPrice({ variants }),
+        ),
+        highestPrice: Math.max(
+          bounds.highestPrice,
+          getHighestPrice({ variants }),
+        ),
+      };
+    },
+    { lowestPrice: Number.POSITIVE_INFINITY, highestPrice: 0 },
+  );
+
+  const min = Number.isFinite(lowestPrice)
+    ? Math.floor(lowestPrice / PRICE_STEP) * PRICE_STEP
+    : 0;
+
+  return {
+    min,
+    max: Math.max(PRICE_STEP, Math.ceil(highestPrice / PRICE_STEP) * PRICE_STEP),
+  };
+}
+
+export const PRICE_BOUNDS: { min: number; max: number } = getPriceBounds({});

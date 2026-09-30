@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { categories, brands } from "@/data/data";
-import { PRICE_BOUNDS, PRICE_STEP } from "@/data/constants";
+import { PRICE_STEP } from "@/data/constants";
 import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import type { CategorySlug } from "@/schema";
 import { formatter } from "@/utils/formatters";
@@ -22,6 +22,7 @@ export interface FilterControlsProps {
   inStockParam: boolean;
   showCategoryFilter?: boolean;
   onChange?: () => void;
+  priceBounds: { min: number; max: number };
 }
 
 export default function FilterControls({
@@ -32,6 +33,7 @@ export default function FilterControls({
   inStockParam,
   showCategoryFilter = true,
   onChange,
+  priceBounds,
 }: FilterControlsProps) {
   const { update, clear, isPending } = useUpdateSearchParams();
 
@@ -58,8 +60,8 @@ export default function FilterControls({
 
     const [min, max] = value;
     updateParams({
-      minPrice: min === PRICE_BOUNDS.min ? null : String(min),
-      maxPrice: max === PRICE_BOUNDS.max ? null : String(max),
+      minPrice: min === priceBounds.min ? null : String(min),
+      maxPrice: max === priceBounds.max ? null : String(max),
     });
   };
 
@@ -82,8 +84,8 @@ export default function FilterControls({
 
   const hasActiveFilters =
     (showCategoryFilter && !!categoryParam) ||
-    minPrice !== PRICE_BOUNDS.min ||
-    maxPrice !== PRICE_BOUNDS.max ||
+    minPrice !== priceBounds.min ||
+    maxPrice !== priceBounds.max ||
     brandParam.length > 0 ||
     inStockParam;
 
@@ -128,8 +130,8 @@ export default function FilterControls({
       <div className="space-y-3">
         <Label className="text-sm font-medium">Price</Label>
         <Slider
-          min={PRICE_BOUNDS.min}
-          max={PRICE_BOUNDS.max}
+          min={priceBounds.min}
+          max={priceBounds.max}
           step={PRICE_STEP}
           value={priceDraft}
           onValueChange={(value) => setPriceDraft(value as [number, number])}

@@ -24,11 +24,12 @@ export default function FilterSheet(props: FilterControlsProps) {
     brandParam,
     inStockParam,
     showCategoryFilter = true,
+    priceBounds,
   } = props;
 
   const activeFiltersCount =
     (showCategoryFilter && categoryParam ? 1 : 0) +
-    (minPrice !== PRICE_BOUNDS.min || maxPrice !== PRICE_BOUNDS.max ? 1 : 0) +
+    (minPrice !== priceBounds.min || maxPrice !== priceBounds.max ? 1 : 0) +
     brandParam.length +
     (inStockParam ? 1 : 0);
 

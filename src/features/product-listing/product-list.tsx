@@ -1,18 +1,24 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { ProductsType } from "@/types/types";
+import type { ProductSize, ProductsType } from "@/types/types";
 import ProductCard from "@/components/global-ui/product-card";
 import EmptyState from "@/components/global-ui/empty-state";
 import { Button } from "@/components/ui/button";
+import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import { GRID_COLUMNS_COOKIE, type GridColumns } from "./grid-columns";
 
-// 3 columns is desktop-only, so on smaller screens it clamps to 2.
 const gridClasses: Record<GridColumns, string> = {
   1: "grid-cols-1",
   2: "grid-cols-2",
   3: "grid-cols-2 md:grid-cols-3",
 };
+
+const sizeOptions: { value: ProductSize | null; label: string }[] = [
+  { value: null, label: "All sizes" },
+  { value: "50ml", label: "50ml" },
+  { value: "100ml", label: "100ml" },
+];
 
 const columnOptions: { value: GridColumns; label: string }[] = [
   { value: 1, label: "Single column" },
@@ -20,8 +26,6 @@ const columnOptions: { value: GridColumns; label: string }[] = [
   { value: 3, label: "Three columns" },
 ];
 
-// Tells the browser how wide each card renders so it fetches a suitably
-// sized image. Approximate on purpose (layout has a sidebar from `md`).
 const cardSizes: Record<GridColumns, string> = {
   1: "(min-width: 768px) 75vw, 100vw",
   2: "(min-width: 768px) 38vw, 50vw",
@@ -66,79 +70,115 @@ function ColumnsIcon({ columns }: { columns: GridColumns }) {
 export default function ProductList({
   initialData,
   initialColumns,
+  selectedSize,
 }: {
   initialData: ProductsType;
   initialColumns: GridColumns;
+  selectedSize: ProductSize | undefined;
 }) {
-  // Saved preference (read from a cookie on the server, so there is no
-  // first-paint jump). Never overwritten by viewport changes.
   const [columns, setColumns] = useState<GridColumns>(initialColumns);
-
-  // Matches Tailwind's `md` breakpoint.
+  const { update, isPending } = useUpdateSearchParams();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-
-  // What is actually shown, so the highlighted button matches the real grid.
   const activeColumns: GridColumns = columns === 3 && !isDesktop ? 2 : columns;
+
+  const handleSizeChange = (value: ProductSize | null) => {
+    update({ size: value });
+  };
 
   const handleGridChange = (value: GridColumns) => {
     setColumns(value);
 
     // A cookie (not localStorage) so the server can render the saved layout.
     // biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API isn't supported in all browsers yet
-    document.cookie = `${GRID_COLUMNS_COOKIE}=${value}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax`;
+    document.cookie =
+      GRID_COLUMNS_COOKIE +
+      "=" +
+      value +
+      "; path=/; max-age=" +
+      ONE_YEAR_SECONDS +
+      "; samesite=lax";
   };
-
-  if (initialData.length === 0) {
-    return (
-      <EmptyState
-        title="No fragrances found"
-        subtitle="Try a different category."
-      />
-    );
-  }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-muted-foreground">
           {initialData.length}{" "}
           {initialData.length === 1 ? "product" : "products"}
         </p>
 
-        <div
-          className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1"
-          role="group"
-          aria-label="Product grid layout"
-        >
-          {columnOptions.map(({ value, label }) => (
-            <Button
-              key={value}
-              type="button"
-              size="icon"
-              variant={activeColumns === value ? "secondary" : "ghost"}
-              aria-pressed={activeColumns === value}
-              aria-label={label}
-              title={label}
-              onClick={() => handleGridChange(value)}
-              className={`h-8 w-8 ${value === 3 ? "hidden md:inline-flex" : ""}`}
-            >
-              <ColumnsIcon columns={value} />
-            </Button>
-          ))}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1">
+            {columnOptions.map(({ value, label }) => (
+              <Button
+                key={value}
+                type="button"
+                size="icon"
+                variant={activeColumns === value ? "secondary" : "ghost"}
+                aria-pressed={activeColumns === value}
+                aria-label={label}
+                title={label}
+                onClick={() => handleGridChange(value)}
+                className={`h-8 w-8 ${value === 3 ? "hidden md:inline-flex" : ""}`}
+              >
+                <ColumnsIcon columns={value} />
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div
-        className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out ${gridClasses[columns]}`}
-      >
-        {initialData.map((product) => (
-          <ProductCard
-            key={product.id}
-            {...product}
-            sizes={cardSizes[activeColumns]}
-          />
-        ))}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm text-muted-foreground">Size:</span>
+
+        <div
+          className={`flex items-center gap-1 rounded-lg border bg-muted/40 p-1 transition-opacity ${isPending ? "opacity-60" : ""}`}
+          role="group"
+          aria-label="Filter products by size"
+        >
+          {sizeOptions.map(({ value, label }) => {
+            const isActive =
+              value === null
+                ? selectedSize === undefined
+                : selectedSize === value;
+
+            return (
+              <Button
+                key={label}
+                type="button"
+                size="sm"
+                variant={isActive ? "secondary" : "ghost"}
+                aria-pressed={isActive}
+                disabled={isPending}
+                onClick={() => handleSizeChange(value)}
+                className="h-8 rounded-md px-3"
+              >
+                {label}
+              </Button>
+            );
+          })}
+        </div>
       </div>
+
+      {initialData.length === 0 ? (
+        <EmptyState
+          title="No fragrances found"
+          subtitle="Try changing your filters."
+        />
+      ) : (
+        <div
+          className={`grid gap-4 transition-[grid-template-columns] duration-300 ease-out ${gridClasses[columns]}`}
+        >
+          {initialData.map((product) => (
+            <ProductCard
+              key={product.id}
+              {...product}
+              selectedSize={selectedSize}
+              sizes={cardSizes[activeColumns]}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

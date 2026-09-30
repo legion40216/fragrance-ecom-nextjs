@@ -7,8 +7,9 @@ import type { CartItemType, CartProduct } from "@/types/cart";
 interface CartState {
   items: CartItemType[];
 
-  addItem: (product: CartProduct) => void;
+  addItem: (product: CartProduct, quantity?: number) => void;
   removeItem: (id: string) => void;
+  removeProduct: (productId: string) => void;
   updateItemCount: (id: string, newCount: number) => void;
   clearCart: () => void;
 
@@ -22,7 +23,7 @@ const useCart = create<CartState>()(
     (set, get) => ({
       items: [],
 
-      addItem: (product) => {
+      addItem: (product, quantity = 1) => {
         if (product.stock === 0) {
           toast.add({ title: "This item is out of stock.", type: "error" });
           return;
@@ -30,12 +31,22 @@ const useCart = create<CartState>()(
 
         if (get().items.some((item) => item.id === product.id)) return;
 
-        set({ items: [...get().items, { ...product, count: 1 }] });
+        // Keep the quantity between 1 and what is in stock
+        const count = Math.min(Math.max(quantity, 1), product.stock);
+
+        set({ items: [...get().items, { ...product, count }] });
         toast.add({ title: "Added to cart.", type: "success" });
       },
 
       removeItem: (id) => {
         set({ items: get().items.filter((item) => item.id !== id) });
+        toast.add({ title: "Removed from cart.", type: "success" });
+      },
+
+      removeProduct: (productId) => {
+        set({
+          items: get().items.filter((item) => item.productId !== productId),
+        });
         toast.add({ title: "Removed from cart.", type: "success" });
       },
 
@@ -73,15 +84,15 @@ const useCart = create<CartState>()(
         get().items.reduce((total, item) => total + item.count, 0),
 
       getTotalPrice: () =>
-        get().items.reduce(
-          (total, item) => total + item.price * item.count,
-          0,
-        ),
+        get().items.reduce((total, item) => total + item.price * item.count, 0),
     }),
     {
       name: "cart-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ items: state.items }),
+      // Carts saved before sizes existed use the old shape, so start fresh
+      version: 2,
+      migrate: () => ({ items: [] }),
     },
   ),
 );

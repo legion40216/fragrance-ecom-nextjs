@@ -10,6 +10,15 @@ export type CategoryType = {
 
 export type CategoriesType = CategoryType[];
 
+export type ProductSize = "50ml" | "100ml";
+
+// Every product is sold in each size, with its own price and stock
+export type ProductVariant = {
+  size: ProductSize;
+  price: number;
+  stock: number;
+};
+
 export type ProductType = {
   id: string;
   name: string;
@@ -17,12 +26,10 @@ export type ProductType = {
   brand: string;
   category: ProductCategorySlug;
   description: string;
-  price: number;
-  size: string;
+  variants: ProductVariant[];
   image: string;
   rating: number;
   reviewCount: number;
-  stock: number;
   isFeatured: boolean;
   isNew: boolean;
   isBestSeller: boolean;

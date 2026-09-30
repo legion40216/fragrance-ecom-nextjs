@@ -1,10 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-
+import { useState } from "react";
+import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
+import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
-import type { ProductType } from "@/types/types";
+import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
+import {
+  getDefaultVariant,
+  getHighestPrice,
+  getLowestPrice,
+  isProductInStock,
+  toCartProduct,
+} from "@/utils/product-variants";
 
 interface ProductCardProps
   extends Pick<
@@ -13,13 +24,14 @@ interface ProductCardProps
     | "slug"
     | "name"
     | "brand"
-    | "price"
-    | "size"
+    | "variants"
     | "image"
     | "isNew"
     | "isBestSeller"
-    | "stock"
+    | "description"
+    | "category"
   > {
+  selectedSize?: ProductSize;
   sizes?: string;
 }
 
@@ -28,15 +40,38 @@ export default function ProductCard({
   slug,
   name,
   brand,
-  price,
-  size,
+  variants,
   image,
   isNew,
   isBestSeller,
-  stock,
+  description,
+  category,
+  selectedSize,
   sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
-  const isOutOfStock = stock === 0;
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const cartHasProduct = useCart((state) =>
+    state.items.some((item) => item.productId === id),
+  );
+  const removeProduct = useCart((state) => state.removeProduct);
+
+  const defaultVariant = getDefaultVariant({ variants });
+  const selectedVariant =
+    (selectedSize &&
+      variants.find((variant) => variant.size === selectedSize)) ??
+    defaultVariant;
+  const isOutOfStock = selectedSize
+    ? selectedVariant.stock === 0
+    : !isProductInStock({ variants });
+
+  const sortedVariants = [...variants].sort((a, b) => a.price - b.price);
+
+  const priceLabel = selectedSize
+    ? formatter.format(selectedVariant.price)
+    : `${formatter.format(getLowestPrice({ variants }))} - ${formatter.format(getHighestPrice({ variants }))}`;
+  const sizeLabel = selectedSize
+    ? selectedVariant.size
+    : sortedVariants.map((variant) => variant.size).join("/");
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
@@ -63,20 +98,49 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="space-y-1 p-3">
-          <p className="text-xs text-muted-foreground">{brand}</p>
-          <h3 className="font-serif text-lg leading-tight">{name}</h3>
+        <div className="space-y-1 p-2.5 sm:p-3">
+          <p className="text-[11px] text-muted-foreground sm:text-xs">{brand}</p>
+          <h3 className="font-serif text-base leading-tight sm:text-lg">{name}</h3>
 
-          <div className="flex items-baseline justify-between pt-1">
-            <span className="font-medium">{formatter.format(price)}</span>
-            <span className="text-xs text-muted-foreground">{size}</span>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-2 pt-1">
+            <span className="text-sm font-medium sm:text-base">{priceLabel}</span>
+            <span className="text-xs text-muted-foreground">{sizeLabel}</span>
           </div>
         </div>
       </Link>
 
-      <div className="absolute right-2 top-10">
+      <div className="absolute right-2 top-2 flex flex-col gap-1">
+        <QuickView
+          product={{
+            id,
+            slug,
+            name,
+            brand,
+            image,
+            description,
+            category,
+            variants,
+          }}
+          selectedSize={selectedSize}
+          open={quickViewOpen}
+          onOpenChange={setQuickViewOpen}
+        />
+
         <AddToCartButton
-          product={{ id, slug, name, brand, price, size, image, stock }}
+          product={toCartProduct(
+            { id, slug, name, brand, image },
+            selectedVariant,
+          )}
+          disabled={selectedVariant.stock === 0}
+          onClick={
+            selectedSize
+              ? undefined
+              : () =>
+                  cartHasProduct
+                    ? removeProduct(id)
+                    : setQuickViewOpen(true)
+          }
+          isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
       </div>
     </div>
