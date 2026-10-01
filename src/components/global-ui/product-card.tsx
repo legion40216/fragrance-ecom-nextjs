@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { CircleAlert, CircleX } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
@@ -97,14 +97,12 @@ export default function ProductCard({
             <span className="text-sm font-medium sm:text-base">{priceLabel}</span>
             <span className="text-xs text-muted-foreground">{sizeLabel}</span>
           </div>
-
-
         </div>
       </Link>
 
       <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
         <div className="flex items-center gap-1">
-          {!selectedSize && stockStatus !== "available" && (
+          {!selectedSize && stockStatus === "partial" && (
             <Tooltip open={stockTooltipOpen} onOpenChange={setStockTooltipOpen}>
               <TooltipTrigger
                 render={
@@ -116,14 +114,8 @@ export default function ProductCard({
                   />
                 }
               >
-                <StockStatusIcon
-                  className={
-                    stockStatus === "out"
-                      ? "size-3.5 text-destructive"
-                      : stockStatus === "partial"
-                        ? "size-3.5 text-amber-600"
-                        : "size-3.5 text-emerald-600"
-                  }
+                <CircleAlert
+                  className="size-3.5 text-amber-600"
                   aria-hidden="true"
                 />
               </TooltipTrigger>
@@ -131,11 +123,11 @@ export default function ProductCard({
             </Tooltip>
           )}
           <QuickView
-          product={{ id, slug, name, brand, image, description, category, variants }}
-          selectedSize={selectedSize}
-          open={quickViewOpen}
-          onOpenChange={setQuickViewOpen}
-        />
+            product={{ id, slug, name, brand, image, description, category, variants }}
+            selectedSize={selectedSize}
+            open={quickViewOpen}
+            onOpenChange={setQuickViewOpen}
+          />
         </div>
         <AddToCartButton
           product={toCartProduct({ id, slug, name, brand, image }, selectedVariant)}
