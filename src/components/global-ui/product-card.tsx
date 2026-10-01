@@ -3,10 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Info } from "lucide-react";
 import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import {
@@ -88,6 +94,22 @@ export default function ProductCard({
             <p className="text-[11px] text-muted-foreground">
               {unavailableSizes.join(", ")} currently unavailable
             </p>
+          )}
+
+          {!selectedSize && !isOutOfStock && selectedVariant.stock <= 5 && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground" />
+                }
+              >
+                <Info className="size-3.5" aria-hidden="true" />
+                Only {selectedVariant.stock} left
+              </TooltipTrigger>
+              <TooltipContent>
+                Only {selectedVariant.stock} left in stock
+              </TooltipContent>
+            </Tooltip>
           )}
         </div>
       </Link>
