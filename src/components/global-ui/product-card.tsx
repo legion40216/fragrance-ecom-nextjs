@@ -55,11 +55,23 @@ export default function ProductCard({
     : unavailableSizes.length === variants.length
       ? "out"
       : "partial";
-  const stockTooltip = stockStatus === "available"
-    ? "All sizes available"
-    : stockStatus === "out"
+  const lowStockVariants = sortedVariants.filter(
+    (variant) => variant.stock > 0 && variant.stock <= 5,
+  );
+  const lowStockTooltip = lowStockVariants
+    .map((variant) => `${variant.size}: Only ${variant.stock} left`)
+    .join(" • ");
+
+  const unavailableTooltip =
+    stockStatus === "out"
       ? "All sizes currently unavailable"
-      : `${unavailableSizes.join(", ")} currently unavailable`;
+      : stockStatus === "partial"
+        ? `${unavailableSizes.join(", ")} currently unavailable`
+        : "";
+
+  const stockTooltip = [lowStockTooltip, unavailableTooltip]
+    .filter(Boolean)
+    .join(" • ");
 
   const priceLabel = selectedSize
     ? formatter.format(selectedVariant.price)
@@ -102,7 +114,8 @@ export default function ProductCard({
 
       <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
         <div className="flex items-center gap-1">
-          {!selectedSize && stockStatus === "partial" && (
+          {!selectedSize &&
+            (stockStatus === "partial" || lowStockVariants.length > 0) && (
             <Tooltip open={stockTooltipOpen} onOpenChange={setStockTooltipOpen}>
               <TooltipTrigger
                 render={
