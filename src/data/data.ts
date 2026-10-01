@@ -4,6 +4,26 @@ export { categories } from "./categories";
 
 export const products: ProductType[] = [
   {
+    id: "desert-amber-01",
+    name: "Desert Amber",
+    slug: "desert-amber",
+    brand: "Aurelia",
+    category: "oud-collection",
+    description:
+      "A warm amber fragrance with smoky woods, saffron, and a rich resinous finish.",
+    variants: [
+      { size: "50ml", price: 3999, stock: 0 },
+      { size: "100ml", price: 5999, stock: 0 },
+    ],
+    image: "/assets/product/images/royal-oud.svg",
+    rating: 4.5,
+    reviewCount: 32,
+    isFeatured: false,
+    isNew: false,
+    isBestSeller: false,
+    createdAt: "2024-08-10",
+  },
+  {
     id: "noir-01",
     name: "Noir Essence",
     slug: "noir-essence",
