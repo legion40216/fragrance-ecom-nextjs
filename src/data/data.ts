@@ -4,6 +4,26 @@ export { categories } from "./categories";
 
 export const products: ProductType[] = [
   {
+    id: "desert-amber-01",
+    name: "Desert Amber",
+    slug: "desert-amber",
+    brand: "Aurelia",
+    category: "oud-collection",
+    description:
+      "A warm amber fragrance with smoky woods, saffron, and a rich resinous finish.",
+    variants: [
+      { size: "50ml", price: 3999, stock: 0 },
+      { size: "100ml", price: 5999, stock: 0 },
+    ],
+    image: "/assets/product/images/royal-oud.svg",
+    rating: 4.5,
+    reviewCount: 32,
+    isFeatured: false,
+    isNew: false,
+    isBestSeller: false,
+    createdAt: "2024-08-10",
+  },
+  {
     id: "noir-01",
     name: "Noir Essence",
     slug: "noir-essence",
@@ -12,8 +32,8 @@ export const products: ProductType[] = [
     description:
       "A sophisticated fragrance with warm woods, spices, and a smooth amber finish.",
     variants: [
-      { size: "50ml", price: 2999, stock: 18 },
-      { size: "100ml", price: 4999, stock: 18 },
+      { size: "50ml", price: 3299, stock: 7 },
+      { size: "100ml", price: 2899, stock: 3 },
     ],
     image: "/assets/product/images/noir-essence.svg",
     rating: 4.8,
@@ -23,7 +43,6 @@ export const products: ProductType[] = [
     isBestSeller: true,
     createdAt: "2024-01-15",
   },
-
   {
     id: "royal-oud-01",
     name: "Royal Oud",
@@ -33,7 +52,7 @@ export const products: ProductType[] = [
     description:
       "A deep and luxurious oud fragrance balanced with amber and soft woods.",
     variants: [
-      { size: "50ml", price: 3999, stock: 12 },
+      { size: "50ml", price: 4599, stock: 0 },
       { size: "100ml", price: 6999, stock: 12 },
     ],
     image: "/assets/product/images/royal-oud.svg",
@@ -44,7 +63,6 @@ export const products: ProductType[] = [
     isBestSeller: true,
     createdAt: "2024-02-10",
   },
-
   {
     id: "velvet-bloom-01",
     name: "Velvet Bloom",
@@ -54,8 +72,8 @@ export const products: ProductType[] = [
     description:
       "A floral fragrance with soft rose, jasmine, vanilla, and musk.",
     variants: [
-      { size: "50ml", price: 2699, stock: 24 },
-      { size: "100ml", price: 4499, stock: 24 },
+      { size: "50ml", price: 3099, stock: 0 },
+      { size: "100ml", price: 3899, stock: 5 },
     ],
     image: "/assets/product/images/velvet-bloom.svg",
     rating: 4.7,
@@ -65,7 +83,6 @@ export const products: ProductType[] = [
     isBestSeller: false,
     createdAt: "2024-06-01",
   },
-
   {
     id: "citrus-mist-01",
     name: "Citrus Mist",
@@ -86,7 +103,6 @@ export const products: ProductType[] = [
     isBestSeller: false,
     createdAt: "2024-06-15",
   },
-
   {
     id: "amber-night-01",
     name: "Amber Night",
@@ -96,8 +112,8 @@ export const products: ProductType[] = [
     description:
       "A warm evening fragrance built around amber, vanilla, and dark woods.",
     variants: [
-      { size: "50ml", price: 3199, stock: 15 },
-      { size: "100ml", price: 5299, stock: 15 },
+      { size: "50ml", price: 3199, stock: 9 },
+      { size: "100ml", price: 2799, stock: 1 },
     ],
     image: "/assets/product/images/amber-night.svg",
     rating: 4.8,
@@ -107,7 +123,6 @@ export const products: ProductType[] = [
     isBestSeller: true,
     createdAt: "2024-03-20",
   },
-
   {
     id: "rose-attar-01",
     name: "Royal Rose Attar",
@@ -127,6 +142,160 @@ export const products: ProductType[] = [
     isNew: false,
     isBestSeller: true,
     createdAt: "2023-11-05",
+  },
+  {
+    id: "midnight-saffron-01",
+    name: "Midnight Saffron",
+    slug: "midnight-saffron",
+    brand: "Aurelia",
+    category: "oud-collection",
+    description:
+      "A luminous saffron and oud fragrance with smoky resin and warm amber.",
+    variants: [
+      { size: "50ml", price: 4299, stock: 10 },
+      { size: "100ml", price: 7499, stock: 10 },
+    ],
+    image: "/assets/product/images/midnight-saffron.svg",
+    rating: 4.9,
+    reviewCount: 63,
+    isFeatured: true,
+    isNew: true,
+    isBestSeller: false,
+    createdAt: "2024-07-01",
+  },
+  {
+    id: "ocean-veil-01",
+    name: "Ocean Veil",
+    slug: "ocean-veil",
+    brand: "Maison Velora",
+    category: "unisex-fragrances",
+    description:
+      "A crisp aquatic fragrance with sea salt, bergamot, and airy white musk.",
+    variants: [
+      { size: "50ml", price: 2499, stock: 28 },
+      { size: "100ml", price: 3999, stock: 28 },
+    ],
+    image: "/assets/product/images/ocean-veil.svg",
+    rating: 4.6,
+    reviewCount: 51,
+    isFeatured: false,
+    isNew: true,
+    isBestSeller: false,
+    createdAt: "2024-07-05",
+  },
+  {
+    id: "jasmine-dusk-01",
+    name: "Jasmine Dusk",
+    slug: "jasmine-dusk",
+    brand: "Maison Velora",
+    category: "womens-fragrances",
+    description:
+      "A sensual floral blend of jasmine, plum, and creamy sandalwood.",
+    variants: [{ size: "50ml", price: 2799, stock: 4 }],
+    image: "/assets/product/images/jasmine-dusk.svg",
+    rating: 5,
+    reviewCount: 0,
+    isFeatured: true,
+    isNew: false,
+    isBestSeller: true,
+    createdAt: "2024-07-10",
+  },
+  {
+    id: "cedar-smoke-01",
+    name: "Cedar Smoke",
+    slug: "cedar-smoke",
+    brand: "Aurelia",
+    category: "mens-fragrances",
+    description:
+      "A rugged cedar fragrance layered with incense, leather, and dry vetiver.",
+    variants: [
+      { size: "50ml", price: 3299, stock: 16 },
+      { size: "100ml", price: 5499, stock: 0 },
+    ],
+    image: "/assets/product/images/cedar-smoke.svg",
+    rating: 4.8,
+    reviewCount: 77,
+    isFeatured: false,
+    isNew: false,
+    isBestSeller: true,
+    createdAt: "2024-04-20",
+  },
+  {
+    id: "golden-neroli-01",
+    name: "Golden Neroli",
+    slug: "golden-neroli",
+    brand: "Maison Velora",
+    category: "womens-fragrances",
+    description:
+      "A radiant citrus floral with neroli, orange blossom, and soft vanilla.",
+    variants: [
+      { size: "50ml", price: 2599, stock: 22 },
+      { size: "100ml", price: 4299, stock: 22 },
+    ],
+    image: "/assets/product/images/golden-neroli.svg",
+    rating: 4.6,
+    reviewCount: 44,
+    isFeatured: false,
+    isNew: true,
+    isBestSeller: false,
+    createdAt: "2024-07-15",
+  },
+  {
+    id: "moonlit-musk-01",
+    name: "Moonlit Musk",
+    slug: "moonlit-musk",
+    brand: "Aurelia",
+    category: "unisex-fragrances",
+    description:
+      "A clean and comforting musk softened by iris, pear, and cashmere woods.",
+    variants: [
+      { size: "50ml", price: 2999, stock: 25 },
+      { size: "100ml", price: 4599, stock: 25 },
+    ],
+    image: "/assets/product/images/moonlit-musk.svg",
+    rating: 4.7,
+    reviewCount: 57,
+    isFeatured: true,
+    isNew: false,
+    isBestSeller: false,
+    createdAt: "2024-05-12",
+  },
+  {
+    id: "sandalwood-attar-01",
+    name: "Sandalwood Attar",
+    slug: "sandalwood-attar",
+    brand: "Aurelia",
+    category: "attars",
+    description:
+      "A rich concentrated attar of creamy sandalwood, spice, and warm balsam.",
+    variants: [
+      { size: "50ml", price: 1399, stock: 34 },
+      { size: "100ml", price: 2299, stock: 34 },
+    ],
+    image: "/assets/product/images/sandalwood-attar.svg",
+    rating: 4.8,
+    reviewCount: 39,
+    isFeatured: false,
+    isNew: false,
+    isBestSeller: false,
+    createdAt: "2023-12-01",
+  },
+  {
+    id: "fig-leather-50ml",
+    name: "Fig & Leather",
+    slug: "fig-leather",
+    brand: "Atelier Nox",
+    category: "unisex-fragrances",
+    description:
+      "A distinctive fig and leather fragrance offered only in a 50ml bottle.",
+    variants: [{ size: "50ml", price: 3699, stock: 11 }],
+    image: "/assets/product/images/moonlit-musk.svg",
+    rating: 4,
+    reviewCount: 0,
+    isFeatured: false,
+    isNew: true,
+    isBestSeller: false,
+    createdAt: "2024-08-01",
   },
 ];
 
