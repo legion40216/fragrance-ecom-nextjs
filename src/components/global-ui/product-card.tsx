@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { CircleAlert, CircleCheck, CircleX } from "lucide-react";
+import { CircleAlert, CircleX } from "lucide-react";
 import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
@@ -61,12 +61,6 @@ export default function ProductCard({
       ? "All sizes currently unavailable"
       : `${unavailableSizes.join(", ")} currently unavailable`;
 
-  const StockStatusIcon = stockStatus === "available"
-    ? CircleCheck
-    : stockStatus === "out"
-      ? CircleX
-      : CircleAlert;
-
   const priceLabel = selectedSize
     ? formatter.format(selectedVariant.price)
     : formatter.format(getLowestPrice({ variants })) + " - " + formatter.format(getHighestPrice({ variants }));
@@ -110,7 +104,7 @@ export default function ProductCard({
 
       <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
         <div className="flex items-center gap-1">
-          {!selectedSize && (
+          {!selectedSize && stockStatus !== "available" && (
             <Tooltip open={stockTooltipOpen} onOpenChange={setStockTooltipOpen}>
               <TooltipTrigger
                 render={
