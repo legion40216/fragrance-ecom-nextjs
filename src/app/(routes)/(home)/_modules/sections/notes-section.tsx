@@ -11,13 +11,8 @@ const NOTE_ACCENTS: Record<string, string> = {
   attars: "#A9834C",
 };
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  "mens-fragrances": "/assets/product/images/noir-essence.svg",
-  "womens-fragrances": "/assets/product/images/velvet-bloom.svg",
-  "unisex-fragrances": "/assets/product/images/ocean-veil.svg",
-  "oud-collection": "/assets/product/images/royal-oud.svg",
-  attars: "/assets/product/images/royal-rose-attar.svg",
-};
+const CARD_BACKGROUND =
+  "/assets/product/images/Warm%20Brown%20Gradient%20with%20Soft%20Circles.png";
 
 // Section wrapper styles
 const sectionClasses = [
@@ -28,7 +23,8 @@ const sectionClasses = [
 // Collection card styles (same height + width for every card)
 const cardClasses = [
   "group relative h-72 w-44 shrink-0 overflow-hidden",
-  "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5",
+  "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5 shadow-md",
+  "transition-all duration-300 hover:-translate-y-2 hover:shadow-xl",
 ].join(" ");
 
 export default function NotesSection() {
@@ -56,11 +52,11 @@ export default function NotesSection() {
             className={`${cardClasses} lg:w-full lg:shrink`}
           >
             <img
-              src={CATEGORY_IMAGES[category.slug]}
+              src={CARD_BACKGROUND}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-32 w-32
-                -translate-x-1/2 -translate-y-1/2 object-contain"
+              className="pointer-events-none absolute inset-0 z-0 h-full w-full
+                object-cover"
             />
             {/* Accent strip */}
             <span
@@ -68,13 +64,18 @@ export default function NotesSection() {
               style={{ backgroundColor: NOTE_ACCENTS[category.slug] }}
             />
 
+            <span
+              className="absolute inset-x-0 bottom-0 h-1.5"
+              style={{ backgroundColor: NOTE_ACCENTS[category.slug] }}
+            />
+
             <div className="relative z-10 flex h-full flex-col justify-between pt-4">
-              <h3 className="font-serif text-xl leading-tight">
+              <h3 className="font-serif text-xl leading-tight text-white">
                 {category.name}
               </h3>
 
               {/* min-h keeps 2-line and 3-line descriptions aligned */}
-              <p className="min-h-15 text-xs leading-5 text-[#FFFFFF]/100">
+              <p className="min-h-15 text-xs leading-5 text-white">
                 {category.description}
               </p>
             </div>
