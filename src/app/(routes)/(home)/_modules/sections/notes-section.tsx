@@ -4,11 +4,19 @@ import ProductCard from "@/components/global-ui/product-card";
 
 // Colored strip shown at the top of each collection card
 const NOTE_ACCENTS: Record<string, string> = {
-  "mens-fragrances": "#feebeb",
-  "womens-fragrances": "#feebeb",
-  "unisex-fragrances": "#7C7263",
-  "oud-collection": "#21121B",
+  "mens-fragrances": "#A9834C",
+  "womens-fragrances": "#A9834C",
+  "unisex-fragrances": "#A9834C",
+  "oud-collection": "#A9834C",
   attars: "#A9834C",
+};
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  "mens-fragrances": "/assets/product/images/noir-essence.svg",
+  "womens-fragrances": "/assets/product/images/velvet-bloom.svg",
+  "unisex-fragrances": "/assets/product/images/ocean-veil.svg",
+  "oud-collection": "/assets/product/images/royal-oud.svg",
+  attars: "/assets/product/images/royal-rose-attar.svg",
 };
 
 // Section wrapper styles
@@ -47,19 +55,26 @@ export default function NotesSection() {
             href={`/products?category=${category.slug}`}
             className={`${cardClasses} lg:w-full lg:shrink`}
           >
+            <img
+              src={CATEGORY_IMAGES[category.slug]}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-32 w-32
+                -translate-x-1/2 -translate-y-1/2 object-contain"
+            />
             {/* Accent strip */}
             <span
               className="absolute inset-x-0 top-0 h-1.5"
               style={{ backgroundColor: NOTE_ACCENTS[category.slug] }}
             />
 
-            <div className="flex h-full flex-col justify-between pt-4">
+            <div className="relative z-10 flex h-full flex-col justify-between pt-4">
               <h3 className="font-serif text-xl leading-tight">
                 {category.name}
               </h3>
 
               {/* min-h keeps 2-line and 3-line descriptions aligned */}
-              <p className="min-h-15 text-xs leading-5 text-[#241A16]/60">
+              <p className="min-h-15 text-xs leading-5 text-[#FFFFFF]/100">
                 {category.description}
               </p>
             </div>
