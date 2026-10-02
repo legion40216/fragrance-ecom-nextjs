@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
+import { getProductPath } from "@/utils/product-url";
 import {
   getDefaultVariant,
   getHighestPrice,
@@ -83,7 +84,7 @@ export default function ProductCard({
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
-      <Link href={"/products/" + slug} className="block">
+      <Link href={getProductPath(slug, selectedSize)} className="block">
         <div className="relative aspect-square bg-neutral-100">
           <Image src={image} alt={name} fill sizes={sizes}
             className="object-cover transition-transform duration-300 group-hover:scale-105" />

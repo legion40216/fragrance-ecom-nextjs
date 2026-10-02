@@ -6,6 +6,7 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import ShareButton from "@/components/global-ui/share-button";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -17,6 +18,7 @@ import useHydrated from "@/hooks/useHydrated";
 import { categories } from "@/data/categories";
 import type { ProductSize, ProductVariant } from "@/types/types";
 import { formatter } from "@/utils/formatters";
+import { getProductPath } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
 export type QuickViewProduct = {
@@ -164,9 +166,17 @@ export default function QuickViewContent({
               <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
                 {product.brand}
               </p>
-              <DialogTitle className="font-serif text-2xl">
-                {product.name}
-              </DialogTitle>
+              <div className="flex items-start justify-between gap-3">
+                <DialogTitle className="font-serif text-2xl">
+                  {product.name}
+                </DialogTitle>
+                <ShareButton
+                  title={product.name}
+                  text={`${product.name} by ${product.brand}`}
+                  path={getProductPath(product.slug, selectedVariant.size)}
+                  className="shrink-0"
+                />
+              </div>
               <p className="text-lg font-medium">
                 {formatter.format(selectedVariant.price)}
               </p>
@@ -286,7 +296,7 @@ export default function QuickViewContent({
             </div>
 
             <Link
-              href={`/products/${product.slug}`}
+              href={getProductPath(product.slug, selectedVariant.size)}
               onClick={onClose}
               className="inline-flex text-sm font-medium underline underline-offset-4"
             >

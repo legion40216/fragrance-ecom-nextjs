@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { getProductPath } from "@/utils/product-url";
 import useCart from "@/hooks/useCartStore";
 import type { CartItemType } from "@/types/cart";
 import { formatter } from "@/utils/formatters";
@@ -33,7 +34,7 @@ export default function CartItem({ item, onNavigate }: CartItemProps) {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <Link
-              href={`/products/${item.slug}`}
+              href={getProductPath(item.slug, item.size)}
               onClick={onNavigate}
               className="block truncate font-medium hover:underline"
             >
