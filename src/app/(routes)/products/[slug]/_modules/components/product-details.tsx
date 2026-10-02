@@ -1,217 +1,231 @@
 "use client";
-import React from "react";
-import useCart from "@/hooks/useCartStore";
-import { ShoppingCart, Minus, Plus } from "lucide-react";
-import { formatter } from "@/utils/formatters";
+
+import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { categories } from "@/data/categories";
+import useCart from "@/hooks/useCartStore";
+import useHydrated from "@/hooks/useHydrated";
+import type { ProductSize, ProductType } from "@/types/types";
+import { formatter } from "@/utils/formatters";
+import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
-export default function ProductDetails({
+export default function ProductDetails({ product }: { product: ProductType }) {
+  const router = useRouter();
+  const hydrated = useHydrated();
+  const { addItem, removeItem, updateItemCount } = useCart();
 
-} {
-  const { addItem, removeItem, getItemCount, updateItemCount } = useCart();
-
-
-  const handleAddToCart = () => {
-
-
-    addItem({
-
-    });
-  };
-
-  const handleRemoveFromCart = () => {
-    removeItem();
-  };
-
-  const handleQuantityChange = (newQuantity: number) => {
-
-  };
-
-
-
-  const itemCountInCart = getItemCount(
-
+  const [selectedSize, setSelectedSize] = useState<ProductSize>(
+    () =>
+      product.variants.find((variant) => variant.stock > 0)?.size ??
+      product.variants[0].size,
   );
-  
-  const isInCart = itemCountInCart > 0;
-  const isOutOfStock = ;
+  const [quantity, setQuantity] = useState(1);
+
+  const selectedVariant = useMemo(
+    () =>
+      product.variants.find((variant) => variant.size === selectedSize) ??
+      product.variants[0],
+    [product.variants, selectedSize],
+  );
+
+  const cartLineId = getCartLineId(product.id, selectedVariant.size);
+  const cartItem = useCart((state) =>
+    state.items.find((item) => item.id === cartLineId),
+  );
+
+  const inCart = hydrated && Boolean(cartItem);
+  const maxQuantity = selectedVariant.stock;
+
+  useEffect(() => {
+    setQuantity(cartItem?.count ?? 1);
+  }, [cartItem]);
+
+  const selectSize = (size: ProductSize) => {
+    setSelectedSize(size);
+    setQuantity(1);
+  };
+
+  const changeQuantity = (next: number) => {
+    const safeQuantity = Math.min(Math.max(next, 1), maxQuantity);
+    setQuantity(safeQuantity);
+
+    if (cartItem) {
+      updateItemCount(cartLineId, safeQuantity);
+    }
+  };
+
+  const addSelectedToCart = () => {
+    if (selectedVariant.stock === 0) return;
+
+    if (cartItem) {
+      removeItem(cartLineId);
+      return;
+    }
+
+    addItem(
+      toCartProduct(
+        {
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
+          brand: product.brand,
+          image: product.image,
+        },
+        selectedVariant,
+      ),
+      quantity,
+    );
+  };
+
+  const buyNow = () => {
+    if (selectedVariant.stock === 0) return;
+
+    if (!cartItem) {
+      addItem(
+        toCartProduct(
+          {
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            brand: product.brand,
+            image: product.image,
+          },
+          selectedVariant,
+        ),
+        quantity,
+      );
+    }
+
+    router.push("/checkout");
+  };
+
+  const isSoldOut = selectedVariant.stock === 0;
+  const categoryName =
+    categories.find((category) => category.slug === product.category)?.name ??
+    product.category;
 
   return (
     <div className="space-y-6">
-      {/* Product Name */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">{name}</h1>
-        {isOutOfStock && (
-          <Badge variant="destructive" className="w-fit">
-            Out of Stock
-          </Badge>
-        )}
-        {activeVariant &&
-          activeVariant.stock > 0 &&
-          activeVariant.stock <= 5 && (
-            <Badge variant="secondary" className="w-fit">
-              Only  left in stock
-            </Badge>
-          )}
+        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          {product.brand}
+        </p>
+        <h1 className="font-serif text-3xl">{product.name}</h1>
+        <p className="text-lg font-medium">
+          {formatter.format(selectedVariant.price)}
+        </p>
+        <p className="leading-6 text-muted-foreground">
+          {product.description}
+        </p>
       </div>
-
-      {/* Price Section */}
-      <div className="flex items-center gap-4">
-        <span className="text-4xl font-bold">
-          {formatter.format(finalPrice)}
-        </span>
-        {hasDiscount && (
-          <div className="flex flex-col">
-            <span className="text-xl text-muted-foreground line-through">
-              {}
-            </span>
-            <Badge
-              variant="secondary"
-              className="bg-green-100 text-green-700 hover:bg-green-100"
-            >
-              Save {}
-            </Badge>
-          </div>
-        )}
-      </div>
-
-      {/* Description */}
-      <div className="space-y-2">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Description
-        </h3>
-        <p className="text-base leading-relaxed">{description}</p>
-      </div>
-
-      {/* Size Selection */}
-      {!isStandalone && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Select Size
-          </h3>
-          <Select value={}>
-            <SelectTrigger className="w-full max-w-xs">
-              <SelectValue placeholder="Choose a size" />
-            </SelectTrigger>
-            <SelectContent>
-
-            </SelectContent>
-          </Select>
-        </div>
-      )}
-
 
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Select Color
-          </h3>
-          <span className="text-sm text-muted-foreground">
+        <p className="text-sm font-medium">Size</p>
+        <div className="flex flex-wrap gap-2">
+          {product.variants.map((variant) => (
+            <Button
+              key={variant.size}
+              type="button"
+              variant={
+                selectedVariant.size === variant.size ? "default" : "outline"
+              }
+              size="sm"
+              disabled={variant.stock === 0}
+              onClick={() => selectSize(variant.size)}
+            >
+              {variant.size}
+            </Button>
+          ))}
+        </div>
+      </div>
 
+      <div className="space-y-3">
+        <p className="text-sm font-medium">Quantity</p>
+        <div className="flex w-fit items-center rounded-md border">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            disabled={isSoldOut || quantity <= 1}
+            onClick={() => changeQuantity(quantity - 1)}
+            aria-label="Decrease quantity"
+          >
+            <Minus />
+          </Button>
+          <span className="w-10 text-center text-sm">{quantity}</span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            disabled={isSoldOut || quantity >= maxQuantity}
+            onClick={() => changeQuantity(quantity + 1)}
+            aria-label="Increase quantity"
+          >
+            <Plus />
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {isSoldOut
+            ? "Sold out"
+            : selectedVariant.stock <= 5
+              ? `Only ${selectedVariant.stock} left`
+              : `${selectedVariant.stock} available`}
+        </p>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <Button
+          type="button"
+          size="lg"
+          variant={inCart ? "outline" : "default"}
+          disabled={isSoldOut}
+          onClick={addSelectedToCart}
+        >
+          <ShoppingCart />
+          {isSoldOut
+            ? "Out of Stock"
+            : inCart
+              ? "Remove from cart"
+              : "Add to cart"}
+        </Button>
+
+        <Button
+          type="button"
+          size="lg"
+          variant="outline"
+          disabled={isSoldOut}
+          onClick={buyNow}
+        >
+          Buy it now
+        </Button>
+      </div>
+
+      <div className="divide-y rounded-lg border text-sm">
+        <div className="flex justify-between gap-4 p-3">
+          <span className="text-muted-foreground">Size</span>
+          <span>{selectedVariant.size}</span>
+        </div>
+        <div className="flex justify-between gap-4 p-3">
+          <span className="text-muted-foreground">SKU</span>
+          <span>{`${product.id}-${selectedVariant.size}`.toUpperCase()}</span>
+        </div>
+        <div className="flex justify-between gap-4 p-3">
+          <span className="text-muted-foreground">Availability</span>
+          <span>
+            {isSoldOut
+              ? "Sold out"
+              : selectedVariant.stock <= 5
+                ? `Only ${selectedVariant.stock} left`
+                : "In stock"}
           </span>
         </div>
-        <RadioGroup
-          value={|| ""}
-          onValueChange={handleColorChange}
-          className="flex flex-wrap gap-3"
-        >
-          {((variant, index) => (
-            <div key={index} className="relative">
-              <RadioGroupItem
-                value={variant.color}
-                id={`${id}-${selectedSize}-${variant.color}`}
-                className="h-10 w-10 rounded-full border-2 border-gray-300
-                           data-[state=checked]:border-black data-[state=checked]:ring-2 
-                           data-[state=checked]:ring-offset-2 data-[state=checked]:ring-black
-                           disabled:opacity-30 disabled:cursor-not-allowed
-                           hover:border-gray-400 transition-all cursor-pointer"
-                style={{ backgroundColor: variant.colorCode }}
-                title={`${variant.color}${
-                  variant.stock === 0 ? " (Out of Stock)" : ""
-                }`}
-                disabled={variant.stock === 0}
-              />
-              {variant.stock === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-12 h-0.5 bg-red-500 rotate-45" />
-                </div>
-              )}
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
-
-      {/* Add to Cart / Quantity Controls */}
-      <div className="space-y-4">
-        {isInCart ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">
-                Quantity in cart
-              </span>
-              <div className="flex items-center border rounded-lg">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleQuantityChange(itemCountInCart - 1)}
-                  disabled={itemCountInCart <= 1}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="px-6 font-semibold">{itemCountInCart}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleQuantityChange(itemCountInCart + 1)}
-                  disabled={isOutOfStock}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <Button
-              variant="destructive"
-              className="w-full"
-              size="lg"
-              onClick={handleRemoveFromCart}
-            >
-              Remove from Cart
-            </Button>
-          </div>
-        ) : (
-          <Button
-            className="w-full"
-            size="lg"
-            onClick={handleAddToCart}
-            disabled={isOutOfStock}
-          >
-            <ShoppingCart className="h-5 w-5 mr-2" />
-            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
-          </Button>
-        )}
-      </div>
-
-      {/* Product Info */}
-      <div className="space-y-2 pt-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">Product ID:</span>
-          <span>{id}</span>
+        <div className="flex justify-between gap-4 p-3">
+          <span className="text-muted-foreground">Category</span>
+          <span className="text-right">{categoryName}</span>
         </div>
-        {activeVariant && activeVariant.stock > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="font-medium">Availability:</span>
-            <span className="text-green-600">In Stock</span>
-          </div>
-        )}
       </div>
     </div>
   );
