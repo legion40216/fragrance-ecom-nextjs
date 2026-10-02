@@ -4,8 +4,8 @@ import ProductCard from "@/components/global-ui/product-card";
 
 // Colored strip shown at the top of each collection card
 const NOTE_ACCENTS: Record<string, string> = {
-  "mens-fragrances": "#5B4636",
-  "womens-fragrances": "#8C4B4A",
+  "mens-fragrances": "#feebeb",
+  "womens-fragrances": "#feebeb",
   "unisex-fragrances": "#7C7263",
   "oud-collection": "#21121B",
   attars: "#A9834C",
