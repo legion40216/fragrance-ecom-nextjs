@@ -1,28 +1,35 @@
 "use client";
 
 import { Minus, Plus, ShoppingCart } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import ShareButton from "@/components/global-ui/share-button";
 import { Button } from "@/components/ui/button";
 import { categories } from "@/data/categories";
 import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
+import { getInitialSize, getProductPath } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
 export default function ProductDetails({ product }: { product: ProductType }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const hydrated = useHydrated();
   const { addItem, removeItem, updateItemCount } = useCart();
 
-  const [selectedSize, setSelectedSize] = useState<ProductSize>(
-    () =>
-      product.variants.find((variant) => variant.stock > 0)?.size ??
-      product.variants[0].size,
+  const [selectedSize, setSelectedSize] = useState<ProductSize>(() =>
+    getInitialSize(product, searchParams.get("size") ?? undefined),
   );
   const [quantity, setQuantity] = useState(1);
+
+  const sizeParam = searchParams.get("size") ?? undefined;
+
+  useEffect(() => {
+    setSelectedSize(getInitialSize(product, sizeParam));
+  }, [product.id, sizeParam]);
 
   const selectedVariant = useMemo(
     () =>
@@ -46,6 +53,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
   const selectSize = (size: ProductSize) => {
     setSelectedSize(size);
     setQuantity(1);
+    window.history.replaceState(null, "", getProductPath(product.slug, size));
   };
 
   const changeQuantity = (next: number) => {
@@ -113,7 +121,16 @@ export default function ProductDetails({ product }: { product: ProductType }) {
         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
           {product.brand}
         </p>
-        <h1 className="font-serif text-3xl">{product.name}</h1>
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="font-serif text-3xl">{product.name}</h1>
+          <ShareButton
+            title={product.name}
+            text={`${product.name} by ${product.brand}`}
+            path={getProductPath(product.slug, selectedVariant.size)}
+            showLabel
+            className="shrink-0"
+          />
+        </div>
         <p className="text-lg font-medium">
           {formatter.format(selectedVariant.price)}
         </p>

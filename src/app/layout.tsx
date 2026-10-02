@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
+import { getSiteUrl } from "@/utils/site-url";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,6 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Fragrance Store",
   description: "Fragrance e-commerce store",
 };
