@@ -7,6 +7,7 @@ import { CircleAlert } from "lucide-react";
 import useCart from "@/hooks/useCartStore";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
+import ProductImageExpand from "@/components/global-ui/product-image-expand";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ProductSize, ProductType } from "@/types/types";
@@ -84,8 +85,8 @@ export default function ProductCard({
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
-      <Link href={getProductPath(slug, selectedSize)} className="block">
-        <div className="relative aspect-square bg-neutral-100">
+      <div className="relative aspect-square bg-neutral-100">
+        <Link href={getProductPath(slug, selectedSize)} className="absolute inset-0 block">
           <Image src={image} alt={name} fill sizes={sizes}
             className="object-cover transition-transform duration-300 group-hover:scale-105" />
 
@@ -100,8 +101,15 @@ export default function ProductCard({
               <span className="text-sm font-medium">Out of stock</span>
             </div>
           )}
+        </Link>
+        <div className="absolute bottom-2 right-2 z-10">
+          <ProductImageExpand
+            product={{ id, slug, image, name, brand, description, category, variants }}
+          />
         </div>
+      </div>
 
+      <Link href={getProductPath(slug, selectedSize)} className="block">
         <div className="space-y-1 p-2.5 sm:p-3">
           <p className="text-[11px] text-muted-foreground sm:text-xs">{brand}</p>
           <h3 className="font-serif text-base leading-tight sm:text-lg">{name}</h3>
