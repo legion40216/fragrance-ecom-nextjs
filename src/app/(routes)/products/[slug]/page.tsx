@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { products } from "@/data/data";
 import { getProductBySlug } from "@/utils/get-product-by-slug";
+import { getInitialSize } from "@/utils/product-url";
 import ProductView from "./_modules/views/product-view";
 
 // The catalogue is static, so pre-render every product page at build time and
@@ -16,8 +17,8 @@ export function generateStaticParams() {
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ size?: string | string[] }>;
 }
-
 
 export async function generateMetadata({
   params,
@@ -52,12 +53,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: ProductPageProps) {
   const { slug } = await params;
+  const { size } = await searchParams;
   const product = getProductBySlug(slug);
 
   // Kept as a guard in case `dynamicParams` is ever turned back on
   if (!product) notFound();
 
-  return <ProductView product={product} />;
+  const initialSize = getInitialSize(product, size);
+
+  return <ProductView product={product} initialSize={initialSize} />;
 }
