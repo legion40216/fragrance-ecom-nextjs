@@ -12,7 +12,7 @@ export type CategoriesType = CategoryType[];
 
 export type ProductSize = "50ml" | "100ml";
 
-// Every product is sold in each size, with its own price and stock
+// Products can have one or more size variants, each with its own price and stock
 export type ProductVariant = {
   size: ProductSize;
   price: number;
