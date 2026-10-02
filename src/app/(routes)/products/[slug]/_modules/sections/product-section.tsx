@@ -37,7 +37,7 @@ export default function ProductSection({
         {isSoldOut && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/70">
             <span className="rounded-md bg-background px-3 py-2 text-sm font-medium shadow">
-              {selectedVariant.size} — Out of stock
+              Out of stock
             </span>
           </div>
         )}
