@@ -24,6 +24,7 @@ export default function ProductSection({ product }: ProductSectionProps) {
           className="object-contain p-8"
           priority
         />
+        <ProductZoomButton product={product} />
         <Suspense fallback={null}>
           <ProductSoldOutOverlay product={product} />
         </Suspense>
