@@ -45,7 +45,7 @@ export default function ProductZoomButton({ product }: ProductZoomButtonProps) {
       </DialogTrigger>
 
       <DialogContent
-        className="w-[min(100%-2rem,64rem)] gap-3 p-4 sm:max-w-none"
+        className="w-[calc(100%-2rem)] max-w-4xl gap-3 p-4"
         showCloseButton
       >
         <DialogTitle>{product.name}</DialogTitle>
