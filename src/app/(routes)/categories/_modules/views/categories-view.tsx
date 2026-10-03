@@ -31,6 +31,7 @@ export default function CategoriesView({
         maxPrice={maxPrice}
         brandParam={brandParam}
         inStockParam={inStockParam}
+      listingSource="categories"
         showCategoryFilter={false}
         headingTitle="Categories"
       />
