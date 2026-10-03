@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
-import { products } from "@/data/data";
-import { getPriceBounds } from "@/data/constants";
 import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
-import { filterProducts } from "@/utils/filter-products";
-import { sortProducts } from "@/utils/sort-products";
-import { clampPriceRange } from "@/utils/clamp-price-range";
+import {
+  getListingProducts,
+  serializeListingContext,
+  type ListingSource,
+} from "@/utils/listing-context";
 
 import ProductList from "./product-list";
 import HeadingState from "@/components/global-ui/heading-state";
@@ -23,6 +23,7 @@ export default async function ProductSection({
   inStockParam,
   showCategoryFilter = true,
   headingTitle = "Collections",
+  listingSource = "products",
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
@@ -33,6 +34,7 @@ export default async function ProductSection({
   inStockParam: boolean;
   showCategoryFilter?: boolean;
   headingTitle?: string;
+  listingSource?: ListingSource;
 }) {
   // Read on the server so the first paint already uses the saved layout.
   const cookieStore = await cookies();
@@ -40,24 +42,28 @@ export default async function ProductSection({
     cookieStore.get(GRID_COLUMNS_COOKIE)?.value,
   );
 
-  const priceBounds = getPriceBounds({ category: categoryParam, size: sizeParam });
-  const priceRange = clampPriceRange({ minPrice, maxPrice }, priceBounds);
+  const listingContext = {
+    source: listingSource,
+    category: categoryParam,
+    filter: filterParam,
+    size: sizeParam,
+    minPrice,
+    maxPrice,
+    brand: brandParam,
+    inStock: inStockParam,
+  } as const;
+
+  const filteredAndSorted = getListingProducts(listingContext);
+  const serializedListingContext = serializeListingContext(listingContext);
 
   const filterProps = {
     categoryParam,
-    minPrice: priceRange.minPrice,
-    maxPrice: priceRange.maxPrice,
+    minPrice,
+    maxPrice,
     brandParam,
     inStockParam,
     showCategoryFilter,
-    priceBounds,
   };
-
-  const filteredAndSorted = sortProducts(
-    filterProducts(products, { ...filterProps, sizeParam }),
-    filterParam,
-    sizeParam,
-  );
 
   return (
     <section className="space-y-6">
@@ -84,6 +90,7 @@ export default async function ProductSection({
             initialData={filteredAndSorted}
             initialColumns={initialColumns}
             selectedSize={sizeParam}
+            listingContext={serializedListingContext}
           />
         </div>
       </div>
