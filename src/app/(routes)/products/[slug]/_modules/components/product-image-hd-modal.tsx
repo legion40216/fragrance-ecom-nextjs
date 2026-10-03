@@ -23,8 +23,7 @@ export default function ProductImageHdModal({
 }: ProductImageHdModalProps) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button
+      <DialogTrigger render={<Button
           type="button"
           variant="secondary"
           size="sm"
@@ -32,8 +31,8 @@ export default function ProductImageHdModal({
         >
           <ZoomIn className="size-4" />
           View larger
-        </Button>
-      </DialogTrigger>
+        </Button>}
+      />
 
       <DialogContent className="max-w-5xl overflow-hidden p-2 sm:p-4">
         <DialogTitle className="sr-only">Larger view of {name}</DialogTitle>
