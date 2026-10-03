@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import { getPriceBounds } from "@/data/constants";
+import { clampPriceRange } from "@/utils/clamp-price-range";
 import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import {
   getListingProducts,
@@ -42,6 +44,9 @@ export default async function ProductSection({
     cookieStore.get(GRID_COLUMNS_COOKIE)?.value,
   );
 
+  const priceBounds = getPriceBounds({ category: categoryParam, size: sizeParam });
+  const priceRange = clampPriceRange({ minPrice, maxPrice }, priceBounds);
+
   const listingContext = {
     source: listingSource,
     category: categoryParam,
@@ -58,11 +63,12 @@ export default async function ProductSection({
 
   const filterProps = {
     categoryParam,
-    minPrice,
-    maxPrice,
+    minPrice: priceRange.minPrice,
+    maxPrice: priceRange.maxPrice,
     brandParam,
     inStockParam,
     showCategoryFilter,
+    priceBounds,
   };
 
   return (
