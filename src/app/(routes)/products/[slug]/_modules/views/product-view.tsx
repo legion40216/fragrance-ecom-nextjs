@@ -11,6 +11,7 @@ import {
 import { categories } from "@/data/categories";
 import type { ProductType } from "@/types/types";
 
+import ProductNavigation from "../components/product-navigation";
 import ProductSection from "../sections/product-section";
 
 interface ProductViewProps {
@@ -50,6 +51,8 @@ export default function ProductView({ product }: ProductViewProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      <ProductNavigation product={product} />
 
       <ProductSection product={product} />
     </div>
