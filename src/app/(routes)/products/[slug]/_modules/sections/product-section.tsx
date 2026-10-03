@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { ProductType } from "@/types/types";
 
 import ProductDetails from "../components/product-details";
+import ProductImageZoom from "../components/product-image-zoom";
 import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
 
 interface ProductSectionProps {
@@ -15,14 +16,18 @@ export default function ProductSection({ product }: ProductSectionProps) {
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-neutral-100">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(min-width: 768px) 50vw, 100vw"
-          className="object-contain p-8"
-          priority
-        />
+        <ProductImageZoom alt={product.name}>
+          <Image
+            src={product.image}
+            alt=""
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-contain"
+            priority
+            draggable={false}
+          />
+        </ProductImageZoom>
+
         <Suspense fallback={null}>
           <ProductSoldOutOverlay product={product} />
         </Suspense>
