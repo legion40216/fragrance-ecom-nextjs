@@ -6,6 +6,7 @@ import type { ProductType } from "@/types/types";
 
 import ProductDetails from "../components/product-details";
 import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
+import ProductZoomButton from "../components/product-zoom-button";
 
 interface ProductSectionProps {
   product: ProductType;
@@ -23,6 +24,7 @@ export default function ProductSection({ product }: ProductSectionProps) {
           className="object-contain p-8"
           priority
         />
+        <ProductZoomButton product={product} />
         <Suspense fallback={null}>
           <ProductSoldOutOverlay product={product} />
         </Suspense>
