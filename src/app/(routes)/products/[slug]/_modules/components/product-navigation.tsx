@@ -49,47 +49,35 @@ export default function ProductNavigation({ currentSlug }: { currentSlug: string
 
       <div className="flex items-center justify-between gap-4 border-y py-3">
         {previous ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="min-w-0 max-w-[45%] justify-start px-1 sm:px-2"
+          <Link
+            href={getProductPathWithListingContext(
+              previous.slug,
+              selectedSize,
+              serializedContext,
+            )}
+            className="inline-flex min-w-0 max-w-[45%] items-center justify-start gap-1 rounded-lg px-1 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground sm:px-2"
           >
-            <Link
-              href={getProductPathWithListingContext(
-                previous.slug,
-                selectedSize,
-                serializedContext,
-              )}
-            >
-              <ArrowLeft className="size-4 shrink-0" aria-hidden="true" />
-              <span className="hidden truncate sm:inline">{previous.name}</span>
-              <span className="sm:hidden">Previous</span>
-            </Link>
-          </Button>
+            <ArrowLeft className="size-4 shrink-0" aria-hidden="true" />
+            <span className="hidden truncate sm:inline">{previous.name}</span>
+            <span className="sm:hidden">Previous</span>
+          </Link>
         ) : (
           <span />
         )}
 
         {next ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="min-w-0 max-w-[45%] justify-end px-1 sm:px-2"
+          <Link
+            href={getProductPathWithListingContext(
+              next.slug,
+              selectedSize,
+              serializedContext,
+            )}
+            className="inline-flex min-w-0 max-w-[45%] items-center justify-end gap-1 rounded-lg px-1 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground sm:px-2"
           >
-            <Link
-              href={getProductPathWithListingContext(
-                next.slug,
-                selectedSize,
-                serializedContext,
-              )}
-            >
-              <span className="hidden truncate sm:inline">{next.name}</span>
-              <span className="sm:hidden">Next</span>
-              <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
-            </Link>
-          </Button>
+            <span className="hidden truncate sm:inline">{next.name}</span>
+            <span className="sm:hidden">Next</span>
+            <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
+          </Link>
         ) : (
           <span />
         )}
