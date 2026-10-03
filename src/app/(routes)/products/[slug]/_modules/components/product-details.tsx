@@ -1,7 +1,7 @@
 "use client";
 
 import { Minus, Plus, ShoppingCart } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import ShareButton from "@/components/global-ui/share-button";
@@ -11,25 +11,24 @@ import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
-import { getInitialSize, getProductPath } from "@/utils/product-url";
+import { getProductPath } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
-export default function ProductDetails({ product }: { product: ProductType }) {
+interface ProductDetailsProps {
+  product: ProductType;
+  selectedSize: ProductSize;
+  onSizeChange: (size: ProductSize) => void;
+}
+
+export default function ProductDetails({
+  product,
+  selectedSize,
+  onSizeChange,
+}: ProductDetailsProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const hydrated = useHydrated();
   const { addItem, removeItem, updateItemCount } = useCart();
-
-  const [selectedSize, setSelectedSize] = useState<ProductSize>(() =>
-    getInitialSize(product, searchParams.get("size") ?? undefined),
-  );
   const [quantity, setQuantity] = useState(1);
-
-  const sizeParam = searchParams.get("size") ?? undefined;
-
-  useEffect(() => {
-    setSelectedSize(getInitialSize(product, sizeParam));
-  }, [product.id, sizeParam]);
 
   const selectedVariant = useMemo(
     () =>
@@ -51,7 +50,10 @@ export default function ProductDetails({ product }: { product: ProductType }) {
   }, [cartItem]);
 
   const selectSize = (size: ProductSize) => {
-    setSelectedSize(size);
+    const variant = product.variants.find((item) => item.size === size);
+    if (!variant || variant.stock === 0) return;
+
+    onSizeChange(size);
     setQuantity(1);
     window.history.replaceState(null, "", getProductPath(product.slug, size));
   };
@@ -125,7 +127,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
           <h1 className="font-serif text-3xl">{product.name}</h1>
           <ShareButton
             title={product.name}
-            text={`${product.name} by ${product.brand}`}
+            text={product.name + " by " + product.brand}
             path={getProductPath(product.slug, selectedVariant.size)}
             showLabel
             className="shrink-0"
@@ -151,12 +153,21 @@ export default function ProductDetails({ product }: { product: ProductType }) {
               }
               size="sm"
               disabled={variant.stock === 0}
+              title={variant.stock === 0 ? "Out of stock" : undefined}
               onClick={() => selectSize(variant.size)}
             >
               {variant.size}
             </Button>
           ))}
         </div>
+        {product.variants.some((variant) => variant.stock === 0) && (
+          <p className="text-xs text-muted-foreground">
+            {product.variants
+              .filter((variant) => variant.stock === 0)
+              .map((variant) => variant.size + " out of stock")
+              .join(" • ")}
+          </p>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -188,8 +199,8 @@ export default function ProductDetails({ product }: { product: ProductType }) {
           {isSoldOut
             ? "Sold out"
             : selectedVariant.stock <= 5
-              ? `Only ${selectedVariant.stock} left`
-              : `${selectedVariant.stock} available`}
+              ? "Only " + selectedVariant.stock + " left"
+              : selectedVariant.stock + " available"}
         </p>
       </div>
 
@@ -227,7 +238,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
         </div>
         <div className="flex justify-between gap-4 p-3">
           <span className="text-muted-foreground">SKU</span>
-          <span>{`${product.id}-${selectedVariant.size}`.toUpperCase()}</span>
+          <span>{(product.id + "-" + selectedVariant.size).toUpperCase()}</span>
         </div>
         <div className="flex justify-between gap-4 p-3">
           <span className="text-muted-foreground">Availability</span>
@@ -235,7 +246,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
             {isSoldOut
               ? "Sold out"
               : selectedVariant.stock <= 5
-                ? `Only ${selectedVariant.stock} left`
+                ? "Only " + selectedVariant.stock + " left"
                 : "In stock"}
           </span>
         </div>
