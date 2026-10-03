@@ -29,6 +29,7 @@ const cardClasses = [
 
 export default function NotesSection() {
   const featured = products.filter((p) => p.isFeatured).slice(0, 4);
+  const listingContext = serializeListingContext({ source: "featured" });
 
   return (
     <section id="heart" className={sectionClasses}>
@@ -78,14 +79,14 @@ export default function NotesSection() {
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {featured.map((product) => (
             <ProductCard
-            key={product.id}
-            {...product}
-            href={getProductPathWithListingContext(
-              product.slug,
-              undefined,
-              listingContext,
-            )}
-          />
+              key={product.id}
+              {...product}
+              href={getProductPathWithListingContext(
+                product.slug,
+                undefined,
+                listingContext,
+              )}
+            />
           ))}
         </div>
       </div>
