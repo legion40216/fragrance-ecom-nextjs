@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { categories, products } from "@/data/data";
 import ProductCard from "@/components/global-ui/product-card";
+import {
+  getProductPathWithListingContext,
+  serializeListingContext,
+} from "@/utils/listing-context";
 
 // Colored strip shown at the top of each collection card
 const NOTE_ACCENTS: Record<string, string> = {
@@ -73,7 +77,15 @@ export default function NotesSection() {
 
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {featured.map((product) => (
-            <ProductCard key={product.id} {...product} />
+            <ProductCard
+            key={product.id}
+            {...product}
+            href={getProductPathWithListingContext(
+              product.slug,
+              undefined,
+              listingContext,
+            )}
+          />
           ))}
         </div>
       </div>
