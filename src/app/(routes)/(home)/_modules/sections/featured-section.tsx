@@ -2,9 +2,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { products } from "@/data/data";
 import ProductCard from "@/components/global-ui/product-card";
+import {
+  getProductPathWithListingContext,
+  serializeListingContext,
+} from "@/utils/listing-context";
 
 export default function FeaturedSection() {
   const featured = products.filter((product) => product.isFeatured).slice(0, 4);
+  const listingContext = serializeListingContext({ source: "featured" });
   return (
     <section>
       <div className="mb-8 flex items-end justify-between gap-4">
@@ -35,7 +40,15 @@ export default function FeaturedSection() {
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
         {featured.map((product) => (
-          <ProductCard key={product.id} {...product} />
+          <ProductCard
+            key={product.id}
+            {...product}
+            href={getProductPathWithListingContext(
+              product.slug,
+              undefined,
+              listingContext,
+            )}
+          />
         ))}
       </div>
 
