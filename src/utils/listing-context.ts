@@ -10,6 +10,7 @@ import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
 
 export type ListingSource = "products" | "categories" | "featured";
+export type CatalogListingSource = Exclude<ListingSource, "featured">;
 
 export type ListingContext =
   | {
