@@ -1,28 +1,17 @@
-"use client";
-
 import Image from "next/image";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import type { ProductSize, ProductType } from "@/types/types";
+import type { ProductType } from "@/types/types";
 
 import ProductDetails from "../components/product-details";
+import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
 
 interface ProductSectionProps {
   product: ProductType;
-  initialSize: ProductSize;
 }
 
-export default function ProductSection({
-  product,
-  initialSize,
-}: ProductSectionProps) {
-  const [selectedSize, setSelectedSize] = useState<ProductSize>(initialSize);
-  const selectedVariant =
-    product.variants.find((variant) => variant.size === selectedSize) ??
-    product.variants[0];
-  const isSoldOut = selectedVariant.stock === 0;
-
+export default function ProductSection({ product }: ProductSectionProps) {
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-neutral-100">
@@ -34,13 +23,9 @@ export default function ProductSection({
           className="object-contain p-8"
           priority
         />
-        {isSoldOut && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/70">
-            <span className="rounded-md bg-background px-3 py-2 text-sm font-medium shadow">
-              Out of stock
-            </span>
-          </div>
-        )}
+        <Suspense fallback={null}>
+          <ProductSoldOutOverlay product={product} />
+        </Suspense>
       </div>
 
       <Suspense
@@ -57,11 +42,7 @@ export default function ProductSection({
           </div>
         }
       >
-        <ProductDetails
-          product={product}
-          selectedSize={selectedSize}
-          onSizeChange={setSelectedSize}
-        />
+        <ProductDetails product={product} />
       </Suspense>
     </div>
   );

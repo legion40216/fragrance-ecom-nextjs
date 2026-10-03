@@ -1,7 +1,7 @@
 "use client";
 
 import { Minus, Plus, ShoppingCart } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import ShareButton from "@/components/global-ui/share-button";
@@ -11,24 +11,27 @@ import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
-import { getProductPath } from "@/utils/product-url";
+import { getProductPath, getInitialSize } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
 interface ProductDetailsProps {
   product: ProductType;
-  selectedSize: ProductSize;
-  onSizeChange: (size: ProductSize) => void;
 }
 
-export default function ProductDetails({
-  product,
-  selectedSize,
-  onSizeChange,
-}: ProductDetailsProps) {
+export default function ProductDetails({ product }: ProductDetailsProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const hydrated = useHydrated();
   const { addItem, removeItem, updateItemCount } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const sizeParam = searchParams.get("size") ?? undefined;
+  const [selectedSize, setSelectedSize] = useState<ProductSize>(() =>
+    getInitialSize(product, sizeParam),
+  );
+
+  useEffect(() => {
+    setSelectedSize(getInitialSize(product, sizeParam));
+  }, [product.id, sizeParam]);
 
   const selectedVariant = useMemo(
     () =>
@@ -53,9 +56,9 @@ export default function ProductDetails({
     const variant = product.variants.find((item) => item.size === size);
     if (!variant || variant.stock === 0) return;
 
-    onSizeChange(size);
+    setSelectedSize(size);
     setQuantity(1);
-    window.history.replaceState(null, "", getProductPath(product.slug, size));
+    router.replace(getProductPath(product.slug, size), { scroll: false });
   };
 
   const changeQuantity = (next: number) => {
