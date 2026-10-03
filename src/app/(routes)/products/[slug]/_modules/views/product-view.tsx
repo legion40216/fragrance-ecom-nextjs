@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import {
   Breadcrumb,
@@ -11,6 +12,7 @@ import {
 import { categories } from "@/data/categories";
 import type { ProductType } from "@/types/types";
 
+import ProductNavigation from "../components/product-navigation";
 import ProductSection from "../sections/product-section";
 
 interface ProductViewProps {
@@ -29,6 +31,10 @@ export default function ProductView({ product }: ProductViewProps) {
 
   return (
     <div>
+      <Suspense fallback={null}>
+        <ProductNavigation currentSlug={product.slug} />
+      </Suspense>
+
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>

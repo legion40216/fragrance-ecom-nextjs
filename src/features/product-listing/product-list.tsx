@@ -6,6 +6,7 @@ import ProductCard from "@/components/global-ui/product-card";
 import EmptyState from "@/components/global-ui/empty-state";
 import { Button } from "@/components/ui/button";
 import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
+import { getProductPathWithListingContext } from "@/utils/listing-context";
 import { GRID_COLUMNS_COOKIE, type GridColumns } from "./grid-columns";
 
 const gridClasses: Record<GridColumns, string> = {
@@ -71,10 +72,12 @@ export default function ProductList({
   initialData,
   initialColumns,
   selectedSize,
+  listingContext,
 }: {
   initialData: ProductsType;
   initialColumns: GridColumns;
   selectedSize: ProductSize | undefined;
+  listingContext: string;
 }) {
   const [columns, setColumns] = useState<GridColumns>(initialColumns);
   const { update, isPending } = useUpdateSearchParams();
@@ -174,6 +177,11 @@ export default function ProductList({
               key={product.id}
               {...product}
               selectedSize={selectedSize}
+              href={getProductPathWithListingContext(
+                product.slug,
+                selectedSize,
+                listingContext,
+              )}
               sizes={cardSizes[activeColumns]}
             />
           ))}
