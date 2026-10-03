@@ -19,7 +19,15 @@ interface ProductZoomButtonProps {
 }
 
 export default function ProductZoomButton({ product }: ProductZoomButtonProps) {
-  const { isZoomed, imageStyle, toggle, pan, reset } = useImageZoom();
+  const {
+    isZoomed,
+    imageStyle,
+    toggle,
+    pointerDown,
+    pan,
+    pointerUp,
+    reset,
+  } = useImageZoom();
 
   return (
     <Dialog onOpenChange={reset}>
@@ -50,9 +58,11 @@ export default function ProductZoomButton({ product }: ProductZoomButtonProps) {
           type="button"
           aria-label={isZoomed ? "Zoom out" : "Zoom in"}
           onClick={toggle}
+          onPointerDown={pointerDown}
           onPointerMove={pan}
+          onPointerUp={pointerUp}
           className={`relative aspect-square w-full overflow-hidden rounded-md bg-neutral-100 ${
-            isZoomed ? "cursor-zoom-out touch-none" : "cursor-zoom-in"
+            isZoomed ? "cursor-grab touch-none" : "cursor-zoom-in"
           }`}
         >
           <Image
