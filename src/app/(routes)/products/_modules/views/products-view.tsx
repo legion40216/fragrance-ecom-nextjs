@@ -28,6 +28,7 @@ export default function ProductsView({
       maxPrice={maxPrice}
       brandParam={brandParam}
       inStockParam={inStockParam}
+      listingSource="products"
     />
   );
 }
