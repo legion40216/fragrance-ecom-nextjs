@@ -5,8 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { ProductType } from "@/types/types";
 
 import ProductDetails from "../components/product-details";
-import ProductImageHdModal from "../components/product-image-hd-modal";
 import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
+import ProductZoomButton from "../components/product-zoom-button";
 
 interface ProductSectionProps {
   product: ProductType;
@@ -24,9 +24,7 @@ export default function ProductSection({ product }: ProductSectionProps) {
           className="object-contain p-8"
           priority
         />
-
-        <ProductImageHdModal image={product.image} name={product.name} />
-
+        <ProductZoomButton product={product} />
         <Suspense fallback={null}>
           <ProductSoldOutOverlay product={product} />
         </Suspense>
