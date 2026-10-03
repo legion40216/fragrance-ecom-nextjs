@@ -12,6 +12,7 @@ import useHydrated from "@/hooks/useHydrated";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath, getInitialSize } from "@/utils/product-url";
+import { getProductPathWithListingContext } from "@/utils/listing-context";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
 interface ProductDetailsProps {
@@ -58,7 +59,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     setSelectedSize(size);
     setQuantity(1);
-    router.replace(getProductPath(product.slug, size), { scroll: false });
+
+    const from = searchParams.get("from");
+    const nextPath = from
+      ? getProductPathWithListingContext(product.slug, size, from)
+      : getProductPath(product.slug, size);
+
+    router.replace(nextPath, { scroll: false });
   };
 
   const changeQuantity = (next: number) => {
