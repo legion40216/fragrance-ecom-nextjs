@@ -5,7 +5,7 @@ import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import {
   getListingProducts,
   serializeListingContext,
-  type ListingSource,
+  type CatalogListingSource,
 } from "@/utils/listing-context";
 
 import ProductList from "./product-list";
@@ -36,7 +36,7 @@ export default async function ProductSection({
   inStockParam: boolean;
   showCategoryFilter?: boolean;
   headingTitle?: string;
-  listingSource?: ListingSource;
+  listingSource?: CatalogListingSource;
 }) {
   // Read on the server so the first paint already uses the saved layout.
   const cookieStore = await cookies();
