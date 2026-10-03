@@ -29,7 +29,7 @@ export function useImageZoom(scale = 2.5) {
   const [origin, setOrigin] = useState<ZoomOrigin>(CENTER);
 
   const toggle = useCallback((event: MouseEvent<HTMLElement>) => {
-    setOrigin(getOrigin(event));
+    setOrigin(event.detail === 0 ? CENTER : getOrigin(event));
     setIsZoomed((current) => !current);
   }, []);
 
