@@ -23,12 +23,13 @@ import {
 interface ProductCardProps
   extends Pick<ProductType, "id" | "slug" | "name" | "brand" | "variants" | "image" | "isNew" | "isBestSeller" | "description" | "category"> {
   selectedSize?: ProductSize;
+  href?: string;
   sizes?: string;
 }
 
 export default function ProductCard({
   id, slug, name, brand, variants, image, isNew, isBestSeller,
-  description, category, selectedSize,
+  description, category, selectedSize, href,
   sizes = "(min-width: 768px) 25vw, 50vw",
 }: ProductCardProps) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -84,7 +85,7 @@ export default function ProductCard({
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
-      <Link href={getProductPath(slug, selectedSize)} className="block">
+      <Link href={href ?? getProductPath(slug, selectedSize)} className="block">
         <div className="relative aspect-square bg-neutral-100">
           <Image src={image} alt={name} fill sizes={sizes}
             className="object-cover transition-transform duration-300 group-hover:scale-105" />
