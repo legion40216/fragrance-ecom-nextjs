@@ -11,7 +11,7 @@ export default function FeaturedSection() {
   const featured = products.filter((product) => product.isFeatured).slice(0, 4);
   const listingContext = serializeListingContext({ source: "featured" });
   return (
-    <section>
+    <section id="featured">
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.25em] 
