@@ -15,6 +15,7 @@ const validFilterValues = sortOptions.map((option) => option.value) as [
 ];
 
 const baseSearchParamsSchema = z.object({
+  q: z.string().trim().max(80).optional().catch(""),
   category: z.enum(validCategorySlugs).optional().catch(undefined),
 
   filter: z
