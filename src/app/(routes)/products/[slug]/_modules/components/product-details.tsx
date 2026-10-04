@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -14,6 +14,8 @@ import { formatter } from "@/utils/formatters";
 import { getProductPath, getInitialSize } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
 
+const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
+
 interface ProductDetailsProps {
   product: ProductType;
 }
@@ -24,6 +26,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const hydrated = useHydrated();
   const { addItem, removeItem, updateItemCount } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const sizeParam = searchParams.get("size") ?? undefined;
   const [selectedSize, setSelectedSize] = useState<ProductSize>(() =>
     getInitialSize(product, sizeParam),
@@ -32,6 +35,49 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   useEffect(() => {
     setSelectedSize(getInitialSize(product, sizeParam));
   }, [product.id, sizeParam]);
+
+  useEffect(() => {
+    try {
+      const wishlist = JSON.parse(
+        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
+      );
+      setIsWishlisted(
+        Array.isArray(wishlist) && wishlist.some((item) => item.id === product.id),
+      );
+    } catch {
+      setIsWishlisted(false);
+    }
+  }, [product.id]);
+
+  const toggleWishlist = () => {
+    try {
+      const storedWishlist = JSON.parse(
+        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
+      );
+      const wishlist = Array.isArray(storedWishlist) ? storedWishlist : [];
+      const alreadyWishlisted = wishlist.some((item) => item.id === product.id);
+      const updatedWishlist = alreadyWishlisted
+        ? wishlist.filter((item) => item.id !== product.id)
+        : [...wishlist, {
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            brand: product.brand,
+            image: product.image,
+            description: product.description,
+            category: product.category,
+            variants: product.variants,
+          }];
+
+      window.localStorage.setItem(
+        WISHLIST_STORAGE_KEY,
+        JSON.stringify(updatedWishlist),
+      );
+      setIsWishlisted(!alreadyWishlisted);
+    } catch {
+      // Leave the current state unchanged if browser storage is unavailable.
+    }
+  };
 
   const selectedVariant = useMemo(
     () =>
@@ -128,13 +174,33 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </p>
         <div className="flex items-start justify-between gap-3">
           <h1 className="font-serif text-3xl">{product.name}</h1>
-          <ShareButton
-            title={product.name}
-            text={product.name + " by " + product.brand}
-            path={getProductPath(product.slug, selectedVariant.size)}
-            showLabel
-            className="shrink-0"
-          />
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label={
+                isWishlisted
+                  ? `Remove ${product.name} from wishlist`
+                  : `Add ${product.name} to wishlist`
+              }
+              aria-pressed={isWishlisted}
+              title={isWishlisted ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST"}
+              onClick={toggleWishlist}
+            >
+              <Heart
+                className={isWishlisted ? "fill-rose-600 text-rose-600" : ""}
+                aria-hidden="true"
+              />
+            </Button>
+            <ShareButton
+              title={product.name}
+              text={product.name + " by " + product.brand}
+              path={getProductPath(product.slug, selectedVariant.size)}
+              showLabel
+              className="shrink-0"
+            />
+          </div>
         </div>
         <p className="text-lg font-medium">
           {formatter.format(selectedVariant.price)}
