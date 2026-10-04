@@ -18,6 +18,7 @@ export default async function Products(props: {
         sizeParam={validatedParams.size}
         minPrice={validatedParams.minPrice}
         maxPrice={validatedParams.maxPrice}
+        featuredParam={validatedParams.featured}
         brandParam={validatedParams.brand}
         inStockParam={validatedParams.inStock}
         queryParam={validatedParams.q ?? ""}
