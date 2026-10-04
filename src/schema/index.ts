@@ -56,6 +56,12 @@ const baseSearchParamsSchema = z.object({
     .optional()
     .catch(undefined)
     .transform((value) => value === "true"),
+
+  featured: z
+    .enum(["true"])
+    .optional()
+    .catch(undefined)
+    .transform((value) => value === "true"),
 });
 
 // ?minPrice=9000&maxPrice=1000 would match nothing, so swap an inverted range.
