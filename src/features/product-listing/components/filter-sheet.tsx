@@ -1,27 +1,29 @@
 "use client";
 
-import { Filter } from "lucide-react";
 import { useState } from "react";
+import { Filter } from "lucide-react";
+import FilterControls, { FilterControlsProps } from "./filter-controls";
+import { PRICE_BOUNDS } from "@/data/constants";
 
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetTitle,
   SheetTrigger,
+  SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
-import FilterControls, { type FilterControlsProps } from "./filter-controls";
 
 export default function FilterSheet(props: FilterControlsProps) {
   const [isOpen, setIsOpen] = useState(false);
+
   const {
     categoryParam,
     minPrice,
     maxPrice,
     brandParam,
-    inStockParam,
     featuredParam,
+    inStockParam,
     showCategoryFilter = true,
     priceBounds,
   } = props;
@@ -31,7 +33,7 @@ export default function FilterSheet(props: FilterControlsProps) {
     (minPrice !== priceBounds.min || maxPrice !== priceBounds.max ? 1 : 0) +
     brandParam.length +
     (inStockParam ? 1 : 0) +
-    (featuredParam ? 1 : 0);
+    ;
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -48,11 +50,13 @@ export default function FilterSheet(props: FilterControlsProps) {
           </Button>
         }
       />
+
       <SheetContent side="left" className="overflow-y-auto p-4">
         <SheetTitle className="sr-only">Filter products</SheetTitle>
         <SheetDescription className="sr-only">
           Filter fragrances by category, price, brand, and availability
         </SheetDescription>
+
         <FilterControls {...props} />
       </SheetContent>
     </Sheet>
