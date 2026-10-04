@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Filter } from "lucide-react";
 import FilterControls, { FilterControlsProps } from "./filter-controls";
-import { PRICE_BOUNDS } from "@/data/constants";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +22,7 @@ export default function FilterSheet(props: FilterControlsProps) {
     maxPrice,
     brandParam,
     inStockParam,
+    featuredParam,
     showCategoryFilter = true,
     priceBounds,
   } = props;
@@ -31,7 +31,8 @@ export default function FilterSheet(props: FilterControlsProps) {
     (showCategoryFilter && categoryParam ? 1 : 0) +
     (minPrice !== priceBounds.min || maxPrice !== priceBounds.max ? 1 : 0) +
     brandParam.length +
-    (inStockParam ? 1 : 0);
+    (inStockParam ? 1 : 0) +
+    (featuredParam ? 1 : 0);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
