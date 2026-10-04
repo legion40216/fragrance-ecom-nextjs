@@ -9,6 +9,7 @@ export default async function Categories(props: {
     props.searchParams,
     "/categories",
   );
+
   return (
     <CategoriesView
       categoryParam={validatedParams.category}
