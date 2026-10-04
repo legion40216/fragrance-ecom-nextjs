@@ -33,7 +33,7 @@ export default function FilterSheet(props: FilterControlsProps) {
     (minPrice !== priceBounds.min || maxPrice !== priceBounds.max ? 1 : 0) +
     brandParam.length +
     (inStockParam ? 1 : 0) +
-    ;
+    (featuredParam ? 1 : 0);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
