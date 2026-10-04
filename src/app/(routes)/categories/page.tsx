@@ -1,5 +1,6 @@
 import { resolveListingParams } from "@/utils/resolve-listing-params";
 import CategoriesView from "./_modules/views/categories-view";
+
 export default async function Categories(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
