@@ -15,6 +15,8 @@ const validFilterValues = sortOptions.map((option) => option.value) as [
 ];
 
 const baseSearchParamsSchema = z.object({
+  q: z.string().trim().max(80).optional().catch(""),
+
   category: z.enum(validCategorySlugs).optional().catch(undefined),
 
   filter: z
@@ -41,7 +43,6 @@ const baseSearchParamsSchema = z.object({
     .catch(PRICE_BOUNDS.max)
     .default(PRICE_BOUNDS.max),
 
-  // Comma-separated list of brand names -> string[], unknown brands dropped
   brand: z
     .string()
     .optional()
@@ -57,7 +58,6 @@ const baseSearchParamsSchema = z.object({
     .transform((value) => value === "true"),
 });
 
-// ?minPrice=9000&maxPrice=1000 would match nothing, so swap an inverted range.
 export const searchParamsSchema = baseSearchParamsSchema.transform((params) =>
   params.minPrice > params.maxPrice
     ? { ...params, minPrice: params.maxPrice, maxPrice: params.minPrice }
