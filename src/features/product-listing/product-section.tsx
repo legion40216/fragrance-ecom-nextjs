@@ -23,6 +23,7 @@ export default async function ProductSection({
   inStockParam,
   showCategoryFilter = true,
   headingTitle = "Collections",
+  queryParam = "",
 }: {
   categoryParam: CategorySlug;
   filterParam: FilterValue;
@@ -33,6 +34,7 @@ export default async function ProductSection({
   inStockParam: boolean;
   showCategoryFilter?: boolean;
   headingTitle?: string;
+  queryParam?: string;
 }) {
   // Read on the server so the first paint already uses the saved layout.
   const cookieStore = await cookies();
@@ -54,7 +56,7 @@ export default async function ProductSection({
   };
 
   const filteredAndSorted = sortProducts(
-    filterProducts(products, { ...filterProps, sizeParam }),
+    filterProducts(products, { ...filterProps, sizeParam, queryParam }),
     filterParam,
     sizeParam,
   );
@@ -62,8 +64,8 @@ export default async function ProductSection({
   return (
     <section className="space-y-6">
       <HeadingState
-        title={headingTitle}
-        subtitle="Discover your next signature scent."
+        title={queryParam ? "Search" : headingTitle}
+        subtitle={queryParam ? `Fragrances matching “${queryParam}”.` : "Discover your next signature scent."}
       />
 
       <div className="flex flex-col gap-6 md:flex-row">
