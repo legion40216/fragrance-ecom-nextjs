@@ -74,7 +74,7 @@ export default function SearchDialog({
         <Search className="size-5" />
       </DialogTrigger>
 
-      <DialogContent className="w-[calc(100%-1rem)] max-w-lg overflow-hidden p-4 sm:w-full">
+      <DialogContent className="w-[calc(100%-1rem)] min-w-0 max-w-lg overflow-hidden p-4 sm:w-full">
         <DialogHeader>
           <DialogTitle>Search fragrances</DialogTitle>
           <DialogDescription>
@@ -87,7 +87,7 @@ export default function SearchDialog({
             event.preventDefault();
             goToSearch();
           }}
-          className="flex gap-2"
+          className="flex w-full min-w-0 gap-2"
         >
           <Input
             autoFocus
@@ -96,14 +96,20 @@ export default function SearchDialog({
             placeholder="Search fragrances..."
             maxLength={80}
             aria-label="Search fragrances"
+            className="min-w-0 flex-1"
           />
-          <Button type="submit" size="icon" aria-label="Search">
+          <Button
+            type="submit"
+            size="icon"
+            aria-label="Search"
+            className="shrink-0"
+          >
             <Search className="size-4" />
           </Button>
         </form>
 
         {trimmedQuery && (
-          <div className="max-h-[60vh] space-y-3 overflow-y-auto">
+          <div className="max-h-[60vh] min-w-0 space-y-3 overflow-y-auto">
             {results.length > 0 ? (
               <>
                 <div className="space-y-2">
