@@ -20,6 +20,7 @@ export default async function ProductSection({
   minPrice,
   maxPrice,
   brandParam,
+  featuredParam,
   inStockParam,
   showCategoryFilter = true,
   headingTitle = "Collections",
@@ -31,6 +32,7 @@ export default async function ProductSection({
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
+  featuredParam: boolean;
   inStockParam: boolean;
   showCategoryFilter?: boolean;
   headingTitle?: string;
@@ -50,6 +52,7 @@ export default async function ProductSection({
     minPrice: priceRange.minPrice,
     maxPrice: priceRange.maxPrice,
     brandParam,
+    featuredParam,
     inStockParam,
     showCategoryFilter,
     priceBounds,
