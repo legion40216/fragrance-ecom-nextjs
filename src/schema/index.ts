@@ -2,11 +2,7 @@
 import { z } from "zod";
 import { categories, brands } from "@/data/data";
 import type { ProductCategorySlug } from "@/data/categories";
-import {
-  sortOptions,
-  PRICE_BOUNDS,
-  type SortValue,
-} from "@/data/constants";
+import { sortOptions, PRICE_BOUNDS, type SortValue } from "@/data/constants";
 
 const validCategorySlugs = categories.map((category) => category.slug) as [
   ProductCategorySlug,
