@@ -19,6 +19,7 @@ export interface FilterControlsProps {
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
+  featuredParam: boolean;
   inStockParam: boolean;
   showCategoryFilter?: boolean;
   onChange?: () => void;
@@ -30,6 +31,7 @@ export default function FilterControls({
   minPrice,
   maxPrice,
   brandParam,
+  featuredParam,
   inStockParam,
   showCategoryFilter = true,
   onChange,
@@ -77,6 +79,10 @@ export default function FilterControls({
     updateParams({ inStock: checked ? "true" : null });
   };
 
+  const handleFeaturedToggle = (checked: boolean) => {
+    updateParams({ featured: checked ? "true" : null });
+  };
+
   const handleClearAll = () => {
     clear();
     onChange?.();
@@ -87,6 +93,7 @@ export default function FilterControls({
     minPrice !== priceBounds.min ||
     maxPrice !== priceBounds.max ||
     brandParam.length > 0 ||
+    featuredParam ||
     inStockParam;
 
   return (
@@ -173,6 +180,17 @@ export default function FilterControls({
         />
         <Label htmlFor="in-stock" className="font-normal cursor-pointer">
           In stock only
+        </Label>
+      </div>
+
+      <div className="flex items-center space-x-3">
+        <Checkbox
+          id="featured"
+          checked={featuredParam}
+          onCheckedChange={(checked) => handleFeaturedToggle(!!checked)}
+        />
+        <Label htmlFor="featured" className="font-normal cursor-pointer">
+          Featured & Best Sellers
         </Label>
       </div>
 
