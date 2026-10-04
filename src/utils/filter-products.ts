@@ -30,7 +30,6 @@ export function filterProducts(
     if (categoryParam && product.category !== categoryParam) return false;
 
     const query = queryParam.toLowerCase().trim();
-
     if (
       query &&
       ![product.name, product.brand, product.description].some((value) =>
