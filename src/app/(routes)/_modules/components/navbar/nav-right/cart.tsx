@@ -40,14 +40,15 @@ export default function Cart({ mobile = false }: CartProps) {
   );
 
   useEffect(() => {
-    if (previousCount.current !== null && previousCount.current !== totalCount) {
+    const previous = previousCount.current;
+    previousCount.current = totalCount;
+
+    if (previous !== null && previous !== totalCount) {
       setIsBumping(true);
       const timeout = window.setTimeout(() => setIsBumping(false), 450);
 
       return () => window.clearTimeout(timeout);
     }
-
-    previousCount.current = totalCount;
   }, [totalCount]);
 
   return (
@@ -73,7 +74,11 @@ export default function Cart({ mobile = false }: CartProps) {
         {mobile && <span>Cart</span>}
 
         {totalCount > 0 && (
-          <span className="absolute right-1/4 top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+          <span className={
+              mobile
+                ? "absolute right-1/2 top-1 flex size-4 translate-x-3 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white"
+                : "absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white"
+            }>
             {totalCount > 9 ? "9+" : totalCount}
           </span>
         )}
