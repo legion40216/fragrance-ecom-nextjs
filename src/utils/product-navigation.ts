@@ -16,13 +16,12 @@ export function getNeighbors(
 ): Pick<NavigationData, "previous" | "next"> {
   const currentIndex = items.findIndex((item) => item.slug === currentSlug);
 
-  if (currentIndex === -1) {
+  if (currentIndex === -1 || items.length < 2) {
     return {};
   }
 
   return {
-    previous: currentIndex > 0 ? items[currentIndex - 1] : undefined,
-    next:
-      currentIndex < items.length - 1 ? items[currentIndex + 1] : undefined,
+    previous: items[currentIndex - 1] ?? items[items.length - 1],
+    next: items[currentIndex + 1] ?? items[0],
   };
 }
