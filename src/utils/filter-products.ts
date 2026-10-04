@@ -21,6 +21,7 @@ export function filterProducts(
     maxPrice,
     brandParam,
     inStockParam,
+    queryParam = "",
   }: ProductFilters,
 ): ProductType[] {
   return products.filter((product) => {
