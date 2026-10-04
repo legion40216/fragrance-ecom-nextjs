@@ -1,6 +1,7 @@
 import type { CategorySlug, SizeFilter } from "@/schema";
 import type { ProductType } from "@/types/types";
 import { getLowestPrice } from "@/utils/product-variants";
+import { matchesQuery } from "@/utils/search-products";
 
 export interface ProductFilters {
   categoryParam: CategorySlug;
@@ -9,6 +10,7 @@ export interface ProductFilters {
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  queryParam?: string;
 }
 
 export function filterProducts(
@@ -20,10 +22,13 @@ export function filterProducts(
     maxPrice,
     brandParam,
     inStockParam,
+    queryParam = "",
   }: ProductFilters,
 ): ProductType[] {
   return products.filter((product) => {
     if (categoryParam && product.category !== categoryParam) return false;
+
+    if (queryParam && !matchesQuery(product, queryParam)) return false;
 
     const variants = sizeParam
       ? product.variants.filter((variant) => variant.size === sizeParam)
