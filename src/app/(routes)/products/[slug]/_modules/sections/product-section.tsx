@@ -4,8 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { ProductType } from "@/types/types";
 
 import ProductDetails from "../components/product-details";
-import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
 import ProductImageZoom from "../components/product-image-zoom";
+import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
 
 interface ProductSectionProps {
   product: ProductType;
