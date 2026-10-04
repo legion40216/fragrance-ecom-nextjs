@@ -21,7 +21,8 @@ export function filterProducts(
     minPrice,
     maxPrice,
     brandParam,
-      inStockParam,
+    featuredParam,
+    inStockParam,
     queryParam = "",
   }: ProductFilters,
 ): ProductType[] {
@@ -29,7 +30,6 @@ export function filterProducts(
     if (categoryParam && product.category !== categoryParam) return false;
 
     const query = queryParam.toLowerCase().trim();
-
     if (
       query &&
       ![product.name, product.brand, product.description].some((value) =>
@@ -52,14 +52,6 @@ export function filterProducts(
     if (priceToFilter < minPrice || priceToFilter > maxPrice) return false;
 
     if (brandParam.length > 0 && !brandParam.includes(product.brand)) {
-      return false;
-    }
-
-    if (
-      featuredParam &&
-      !product.isFeatured &&
-      !product.isBestSeller
-    ) {
       return false;
     }
 
