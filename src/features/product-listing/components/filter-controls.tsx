@@ -1,22 +1,26 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
+
+import { categories, brands } from "@/data/data";
 import { PRICE_STEP } from "@/data/constants";
-import { brands, categories } from "@/data/data";
 import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import type { CategorySlug } from "@/schema";
 import { formatter } from "@/utils/formatters";
+
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+
 export interface FilterControlsProps {
   categoryParam: CategorySlug;
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
-  inStockParam: boolean;
   featuredParam: boolean;
+  inStockParam: boolean;
   showCategoryFilter?: boolean;
   onChange?: () => void;
   priceBounds: { min: number; max: number };
@@ -26,8 +30,8 @@ export default function FilterControls({
   minPrice,
   maxPrice,
   brandParam,
-  inStockParam,
   featuredParam,
+  inStockParam,
   showCategoryFilter = true,
   onChange,
   priceBounds,
@@ -63,6 +67,10 @@ export default function FilterControls({
   };
   const handleInStockToggle = (checked: boolean) => {
     updateParams({ inStock: checked ? "true" : null });
+  };
+
+  const handleFeaturedToggle = (checked: boolean) => {
+    updateParams({ featured: checked ? "true" : null });
   };
   const handleFeaturedToggle = (checked: boolean) => {
     updateParams({ featured: checked ? "true" : null });
@@ -136,16 +144,15 @@ export default function FilterControls({
         <Label className="text-sm font-medium">Brand</Label>
         <div className="space-y-2">
           {brands.map((brand) => (
-            <div key={brand} className="flex items-center gap-2.5">
+            <div key={brand} className="flex items-center space-x-3">
               <Checkbox
                 id={`brand-${brand}`}
                 checked={brandParam.includes(brand)}
                 onCheckedChange={() => handleBrandToggle(brand)}
-                className="size-4 shrink-0"
-              />
+                    />
               <Label
                 htmlFor={`brand-${brand}`}
-                className="font-normal leading-none cursor-pointer"
+                className="font-normal cursor-pointer"
               >
                 {brand}
               </Label>
@@ -162,22 +169,18 @@ export default function FilterControls({
         />
         <Label
           htmlFor="in-stock"
-          className="font-normal leading-none cursor-pointer"
+          className="font-normal cursor-pointer"
         >
           In stock only
         </Label>
       </div>
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center space-x-3">
         <Checkbox
           id="featured"
           checked={featuredParam}
           onCheckedChange={(checked) => handleFeaturedToggle(!!checked)}
-          className="size-4 shrink-0"
         />
-        <Label
-          htmlFor="featured"
-          className="font-normal leading-none cursor-pointer"
-        >
+        <Label htmlFor="featured" className="font-normal cursor-pointer">
           Featured & Best Sellers
         </Label>
       </div>
