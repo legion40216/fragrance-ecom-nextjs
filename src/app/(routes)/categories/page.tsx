@@ -18,6 +18,7 @@ export default async function Categories(props: {
       minPrice={validatedParams.minPrice}
       maxPrice={validatedParams.maxPrice}
       brandParam={validatedParams.brand}
+      featuredParam={validatedParams.featured}
       inStockParam={validatedParams.inStock}
     />
   );
