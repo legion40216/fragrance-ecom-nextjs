@@ -1,16 +1,17 @@
 import { cookies } from "next/headers";
-import HeadingState from "@/components/global-ui/heading-state";
-import { getPriceBounds } from "@/data/constants";
 import { products } from "@/data/data";
-import type { CategorySlug, FilterValue, SizeFilter } from "@/schema";
-import { clampPriceRange } from "@/utils/clamp-price-range";
+import { getPriceBounds } from "@/data/constants";
+import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
-import FilterSheet from "./components/filter-sheet";
-import FilterSidebar from "./components/filter-sidebar";
-import ProductListFilter from "./components/product-list-filter";
-import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
+import { clampPriceRange } from "@/utils/clamp-price-range";
+
 import ProductList from "./product-list";
+import HeadingState from "@/components/global-ui/heading-state";
+import ProductListFilter from "./components/product-list-filter";
+import FilterSidebar from "./components/filter-sidebar";
+import FilterSheet from "./components/filter-sheet";
+import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
 
 export default async function ProductSection({
   categoryParam,
@@ -19,8 +20,8 @@ export default async function ProductSection({
   minPrice,
   maxPrice,
   brandParam,
-  inStockParam,
   featuredParam,
+  inStockParam,
   showCategoryFilter = true,
   headingTitle = "Collections",
   queryParam = "",
@@ -31,8 +32,8 @@ export default async function ProductSection({
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
-  inStockParam: boolean;
   featuredParam: boolean;
+  inStockParam: boolean;
   showCategoryFilter?: boolean;
   headingTitle?: string;
   queryParam?: string;
@@ -43,11 +44,7 @@ export default async function ProductSection({
     cookieStore.get(GRID_COLUMNS_COOKIE)?.value,
   );
 
-  const priceBounds = getPriceBounds({
-    category: categoryParam,
-    size: sizeParam,
-  });
-
+  const priceBounds = getPriceBounds({ category: categoryParam, size: sizeParam });
   const priceRange = clampPriceRange({ minPrice, maxPrice }, priceBounds);
 
   const filterProps = {
@@ -55,18 +52,14 @@ export default async function ProductSection({
     minPrice: priceRange.minPrice,
     maxPrice: priceRange.maxPrice,
     brandParam,
-    inStockParam,
     featuredParam,
+    inStockParam,
     showCategoryFilter,
     priceBounds,
   };
 
   const filteredAndSorted = sortProducts(
-    filterProducts(products, {
-      ...filterProps,
-      sizeParam,
-      queryParam,
-    }),
+    filterProducts(products, { ...filterProps, sizeParam, queryParam }),
     filterParam,
     sizeParam,
   );
