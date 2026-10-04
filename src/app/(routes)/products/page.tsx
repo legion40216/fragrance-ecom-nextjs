@@ -20,7 +20,7 @@ export default async function Products(props: {
         maxPrice={validatedParams.maxPrice}
         brandParam={validatedParams.brand}
         inStockParam={validatedParams.inStock}
-        queryParam={validatedParams.q}
+        queryParam={validatedParams.q ?? ""}
       />
     </div>
   );
