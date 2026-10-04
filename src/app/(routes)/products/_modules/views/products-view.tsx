@@ -1,5 +1,5 @@
-import type { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import ProductSection from "@/features/product-listing/product-section";
+import type { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 
 export default function ProductsView({
   categoryParam,

@@ -1,16 +1,16 @@
 import { cookies } from "next/headers";
-import { products } from "@/data/data";
+import HeadingState from "@/components/global-ui/heading-state";
 import { getPriceBounds } from "@/data/constants";
-import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
+import { products } from "@/data/data";
+import type { CategorySlug, FilterValue, SizeFilter } from "@/schema";
+import { clampPriceRange } from "@/utils/clamp-price-range";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
-import { clampPriceRange } from "@/utils/clamp-price-range";
-import ProductList from "./product-list";
-import HeadingState from "@/components/global-ui/heading-state";
-import ProductListFilter from "./components/product-list-filter";
-import FilterSidebar from "./components/filter-sidebar";
 import FilterSheet from "./components/filter-sheet";
+import FilterSidebar from "./components/filter-sidebar";
+import ProductListFilter from "./components/product-list-filter";
 import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
+import ProductList from "./product-list";
 
 export default async function ProductSection({
   categoryParam,
@@ -48,10 +48,7 @@ export default async function ProductSection({
     size: sizeParam,
   });
 
-  const priceRange = clampPriceRange(
-    { minPrice, maxPrice },
-    priceBounds,
-  );
+  const priceRange = clampPriceRange({ minPrice, maxPrice }, priceBounds);
 
   const filterProps = {
     categoryParam,
