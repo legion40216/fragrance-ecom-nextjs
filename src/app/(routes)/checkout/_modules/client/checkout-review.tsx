@@ -1,60 +1,46 @@
-"use client"
-import React from 'react';
+"use client";
 
-import OrderSummary from './checkout-review/order-summary';
-import CheckoutItem from './checkout-review/checkout-Item';
+import type { CartItemType } from "@/types/cart";
 
-import { CartItemProps } from '@/types';
+import CheckoutItem from "./checkout-review/checkout-Item";
+import OrderSummary from "./checkout-review/order-summary";
 
 type CheckoutReviewProps = {
-  items: CartItemProps[]
+  items: CartItemType[];
   totalPrice: number;
-  itemsLenghtZero: boolean
+  isPlacingOrder: boolean;
+  onPlaceOrder: () => void;
 };
 
-export default function CheckoutReview({ 
-  items, 
+export default function CheckoutReview({
+  items,
   totalPrice,
-  itemsLenghtZero
+  isPlacingOrder,
+  onPlaceOrder,
 }: CheckoutReviewProps) {
-  
   return (
-    <div>
-      {/* PARENT CONTAINER */}
-      <div className="grid lg:grid-cols-12 gap-8">
-        {/* ITEMS CONTAINER */}
-        <div className="lg:col-span-8 space-y-2">
-          <div>
-          {items.length === 0 ? (
+    <div className="grid gap-8 lg:grid-cols-12">
+      {/* ITEMS CONTAINER */}
+      <div className="space-y-2 lg:col-span-8">
+        {items.length === 0 ? (
           <p className="text-muted-foreground">Your cart is empty</p>
-          ) : (
-            <ul className="space-y-6">
-              {items.map((item, index) => (
-                <CheckoutItem 
-                key={index} 
-                id={item.id}
-                title={item.title}
-                description={item.description}
-                price={item.price}
-                image={item.image}
-                count={item.count}
-                selectedSize={item.selectedSize}
-                selectedColor={item.selectedColor}
-                discount={item.discount}
-                />
-              ))}
-            </ul>
-          )}
-          </div>
-        </div>
+        ) : (
+          <ul className="space-y-6">
+            {items.map((item) => (
+              <CheckoutItem key={item.id} item={item} />
+            ))}
+          </ul>
+        )}
+      </div>
 
-        {/* PAYMENT CONTAINER */}
-        <div className="lg:col-span-4">
-          <OrderSummary
-            totalPrice={totalPrice}
-            itemsLenghtZero={itemsLenghtZero}
-          />
-        </div>
+      {/* PAYMENT CONTAINER */}
+      <div className="lg:col-span-4">
+        <OrderSummary
+          totalPrice={totalPrice}
+          isEmpty={items.length === 0}
+          isPlacingOrder={isPlacingOrder}
+          onPlaceOrder={onPlaceOrder}
+        />
       </div>
     </div>
   );
