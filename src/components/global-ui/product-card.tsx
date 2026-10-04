@@ -1,14 +1,14 @@
 "use client";
 
+import { CircleAlert, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { CircleAlert } from "lucide-react";
-import useCart from "@/hooks/useCartStore";
+import { useEffect, useState } from "react";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import useCart from "@/hooks/useCartStore";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath } from "@/utils/product-url";
@@ -19,6 +19,31 @@ import {
   isProductInStock,
   toCartProduct,
 } from "@/utils/product-variants";
+
+const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
+type WishlistProduct = Pick<
+  ProductType,
+  | "id"
+  | "slug"
+  | "name"
+  | "brand"
+  | "image"
+  | "description"
+  | "category"
+  | "variants"
+>;
+
+function readWishlist(): WishlistProduct[] {
+  try {
+    const storedWishlist = JSON.parse(
+      window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
+    );
+
+    return Array.isArray(storedWishlist) ? storedWishlist : [];
+  } catch {
+    return [];
+  }
+}
 
 interface ProductCardProps
   extends Pick<ProductType, "id" | "slug" | "name" | "brand" | "variants" | "image" | "isNew" | "isBestSeller" | "description" | "category"> {
@@ -33,10 +58,43 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [stockTooltipOpen, setStockTooltipOpen] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const cartHasProduct = useCart((state) =>
     state.items.some((item) => item.productId === id),
   );
   const removeProduct = useCart((state) => state.removeProduct);
+
+  useEffect(() => {
+    setIsWishlisted(readWishlist().some((item) => item.id === id));
+  }, [id]);
+
+  const toggleWishlist = () => {
+    const wishlist = readWishlist();
+    const alreadyWishlisted = wishlist.some((item) => item.id === id);
+    const product: WishlistProduct = {
+      id,
+      slug,
+      name,
+      brand,
+      image,
+      description,
+      category,
+      variants,
+    };
+    const updatedWishlist = alreadyWishlisted
+      ? wishlist.filter((item) => item.id !== id)
+      : [...wishlist, product];
+
+    try {
+      window.localStorage.setItem(
+        WISHLIST_STORAGE_KEY,
+        JSON.stringify(updatedWishlist),
+      );
+      setIsWishlisted(!alreadyWishlisted);
+    } catch {
+      // Leave the current state unchanged if browser storage is unavailable.
+    }
+  };
 
   const defaultVariant = getDefaultVariant({ variants });
   const selectedVariant =
@@ -153,6 +211,35 @@ export default function ProductCard({
           }
           isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <button
+                type="button"
+                className="flex size-7 items-center justify-center rounded-full bg-background/90 shadow"
+                aria-label={
+                  isWishlisted
+                    ? `Remove ${name} from wishlist`
+                    : `Add ${name} to wishlist`
+                }
+                aria-pressed={isWishlisted}
+                onClick={toggleWishlist}
+              />
+            }
+          >
+            <Heart
+              className={
+                isWishlisted
+                  ? "size-3.5 fill-rose-600 text-rose-600"
+                  : "size-3.5"
+              }
+              aria-hidden="true"
+            />
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {isWishlisted ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST"}
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
