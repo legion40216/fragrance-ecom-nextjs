@@ -9,6 +9,7 @@ export interface ProductFilters {
   maxPrice: number;
   brandParam: string[];
   inStockParam: boolean;
+  queryParam?: string;
 }
 
 export function filterProducts(
@@ -20,10 +21,21 @@ export function filterProducts(
     maxPrice,
     brandParam,
     inStockParam,
+    queryParam = "",
   }: ProductFilters,
 ): ProductType[] {
   return products.filter((product) => {
     if (categoryParam && product.category !== categoryParam) return false;
+
+    const query = queryParam.toLowerCase().trim();
+    if (
+      query &&
+      ![product.name, product.brand, product.description].some((value) =>
+        value.toLowerCase().includes(query),
+      )
+    ) {
+      return false;
+    }
 
     const variants = sizeParam
       ? product.variants.filter((variant) => variant.size === sizeParam)
