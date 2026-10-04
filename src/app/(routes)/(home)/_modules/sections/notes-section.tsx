@@ -4,12 +4,15 @@ import ProductCard from "@/components/global-ui/product-card";
 
 // Colored strip shown at the top of each collection card
 const NOTE_ACCENTS: Record<string, string> = {
-  "mens-fragrances": "#5B4636",
-  "womens-fragrances": "#8C4B4A",
-  "unisex-fragrances": "#7C7263",
-  "oud-collection": "#21121B",
+  "mens-fragrances": "#A9834C",
+  "womens-fragrances": "#A9834C",
+  "unisex-fragrances": "#A9834C",
+  "oud-collection": "#A9834C",
   attars: "#A9834C",
 };
+
+const CARD_BACKGROUND =
+  "/assets/product/images/Warm%20Brown%20Gradient%20with%20Soft%20Circles.png";
 
 // Section wrapper styles
 const sectionClasses = [
@@ -20,7 +23,8 @@ const sectionClasses = [
 // Collection card styles (same height + width for every card)
 const cardClasses = [
   "group relative h-72 w-44 shrink-0 overflow-hidden",
-  "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5",
+  "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5 shadow-md",
+  "transition-all duration-300 hover:-translate-y-2 hover:shadow-xl",
 ].join(" ");
 
 export default function NotesSection() {
@@ -47,19 +51,31 @@ export default function NotesSection() {
             href={`/products?category=${category.slug}`}
             className={`${cardClasses} lg:w-full lg:shrink`}
           >
+            <img
+              src={CARD_BACKGROUND}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-0 h-full w-full
+                object-cover"
+            />
             {/* Accent strip */}
             <span
               className="absolute inset-x-0 top-0 h-1.5"
               style={{ backgroundColor: NOTE_ACCENTS[category.slug] }}
             />
 
-            <div className="flex h-full flex-col justify-between pt-4">
-              <h3 className="font-serif text-xl leading-tight">
+            <span
+              className="absolute inset-x-0 bottom-0 h-1.5"
+              style={{ backgroundColor: NOTE_ACCENTS[category.slug] }}
+            />
+
+            <div className="relative z-10 flex h-full flex-col justify-between pt-4">
+              <h3 className="font-serif text-xl leading-tight text-white">
                 {category.name}
               </h3>
 
               {/* min-h keeps 2-line and 3-line descriptions aligned */}
-              <p className="min-h-15 text-xs leading-5 text-[#241A16]/60">
+              <p className="min-h-15 text-xs leading-5 text-white">
                 {category.description}
               </p>
             </div>
