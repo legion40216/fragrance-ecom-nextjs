@@ -74,7 +74,7 @@ export default function SearchDialog({
         <Search className="size-5" />
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="w-[calc(100%-1rem)] max-w-lg overflow-hidden p-4 sm:w-full">
         <DialogHeader>
           <DialogTitle>Search fragrances</DialogTitle>
           <DialogDescription>
@@ -103,7 +103,7 @@ export default function SearchDialog({
         </form>
 
         {trimmedQuery && (
-          <div className="space-y-3">
+          <div className="max-h-[60vh] space-y-3 overflow-y-auto">
             {results.length > 0 ? (
               <>
                 <div className="space-y-2">
@@ -112,7 +112,7 @@ export default function SearchDialog({
                       key={product.id}
                       type="button"
                       onClick={() => goToProduct(product.slug)}
-                      className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-muted"
+                      className="flex w-full min-w-0 items-center gap-3 rounded-lg p-2 text-left hover:bg-muted"
                     >
                       <div className="relative size-12 shrink-0 overflow-hidden rounded-md bg-muted">
                         <Image
@@ -123,7 +123,7 @@ export default function SearchDialog({
                           className="object-cover"
                         />
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="truncate font-medium">{product.name}</p>
                         <p className="truncate text-sm text-muted-foreground">
                           {product.brand}
