@@ -8,7 +8,9 @@ export default function NavRight() {
     <div className="flex items-center gap-1">
       <SearchDialog products={products} />
       <UserMenu />
-      <Cart />
+      <div className="hidden md:block">
+        <Cart />
+      </div>
     </div>
   );
 }
