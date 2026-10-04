@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -6,7 +5,7 @@ import type { ProductType } from "@/types/types";
 
 import ProductDetails from "../components/product-details";
 import ProductSoldOutOverlay from "../components/product-sold-out-overlay";
-import ProductZoomButton from "../components/product-zoom-button";
+import ProductImageZoom from "../components/product-image-zoom";
 
 interface ProductSectionProps {
   product: ProductType;
@@ -15,20 +14,11 @@ interface ProductSectionProps {
 export default function ProductSection({ product }: ProductSectionProps) {
   return (
     <div className="grid gap-8 md:grid-cols-2">
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-neutral-100">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(min-width: 768px) 50vw, 100vw"
-          className="object-contain p-8"
-          priority
-        />
-        <ProductZoomButton product={product} />
+      <ProductImageZoom src={product.image} alt={product.name}>
         <Suspense fallback={null}>
           <ProductSoldOutOverlay product={product} />
         </Suspense>
-      </div>
+      </ProductImageZoom>
 
       <Suspense
         fallback={
