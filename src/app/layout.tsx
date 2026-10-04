@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: "Fragrance Store",
   description: "Fragrance e-commerce store",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({
