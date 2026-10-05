@@ -37,7 +37,7 @@ export default function ScentRail() {
             <li key={step.id}>
               <a href={`#${step.id}`} className="group flex items-center gap-3">
                 <span className={`h-px transition-all duration-300 ${isActive ? "w-8 bg-[#feebeb]" : isDark ? "w-4 bg-[#feebeb]/100" : "w-4 bg-[#241A16]/25"}`} />
-                <span className={`text-xs transition-colors duration-300 ${isActive ? (isDark ? "text-[#F3ECE2]" : "text-[#241A16]") : isDark ? "text-[#F3ECE2]/40 group-hover:text-[#F3ECE2]/70" : "text-[#241A16]/40 group-hover:text-[#241A16]/70"}`}>
+                <span className={`text-[18px] font-semibold transition-colors duration-300 ${isActive ? (isDark ? "text-[#7e562e]" : "text-[#7e562e]") : isDark ? "text-[#7C7263]/70 group-hover:text-[#5C3D1D]/70" : "text-[#241A16]/40 group-hover:text-[#241A16]/70"} font-size uppercase tracking-[0.55em]`}>
                   {step.label}
                 </span>
               </a>
