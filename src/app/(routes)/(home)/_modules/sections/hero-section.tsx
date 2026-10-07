@@ -37,7 +37,7 @@ export default function HeroSection() {
         </div>
 
         <div className="relative">
-          <div className="aspect-[3/4] w-full max-w-sm overflow-hidden rounded-t-full border border-[#241A16]/15 bg-[#EAE1D3] lg:ml-auto">
+          <div className="aspect-3/4 w-full max-w-sm overflow-hidden rounded-t-full border border-[#241A16]/15 bg-[#EAE1D3] lg:ml-auto">
             {heroProduct && (
               <Image
                 src={heroProduct.image}
