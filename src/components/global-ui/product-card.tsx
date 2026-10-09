@@ -139,7 +139,7 @@ export default function ProductCard({
 
   const sizeLabel = selectedSize
     ? selectedVariant.size
-    : sortedVariants.map((variant) => variant.size).join("/");
+    : variants.map((variant) => variant.size).join("/");
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
