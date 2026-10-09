@@ -1,10 +1,20 @@
 "use client";
 
-import { Heart, X } from "lucide-react";
+import { Heart, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,6 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { toast } from "@/components/ui/toast";
 import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
 import type { ProductSize, ProductVariant } from "@/types/types";
@@ -33,6 +44,7 @@ interface WishlistProps {
 
 export default function Wishlist({ mobile = false }: WishlistProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
   const [items, setItems] = useState<WishlistProduct[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<
     Record<string, ProductSize>
@@ -54,6 +66,13 @@ export default function Wishlist({ mobile = false }: WishlistProps) {
   const removeProduct = (id: string) => {
     const updated = items.filter((item) => item.id !== id);
     if (writeWishlist(updated)) setItems(updated);
+  };
+
+  const clearWishlist = () => {
+    if (!writeWishlist([])) return false;
+    setItems([]);
+    setSelectedSizes({});
+    return true;
   };
 
   const selectedVariant = (product: WishlistProduct): ProductVariant => {
@@ -103,6 +122,19 @@ export default function Wishlist({ mobile = false }: WishlistProps) {
             Products you have saved for later.
           </SheetDescription>
         </SheetHeader>
+
+        {hydrated && items.length > 0 && (
+          <div className="-mt-2 flex justify-end px-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsClearDialogOpen(true)}
+            >
+              <Trash2 />
+              CLEAR WISHLIST
+            </Button>
+          </div>
+        )}
 
         {!hydrated || items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
@@ -216,6 +248,31 @@ export default function Wishlist({ mobile = false }: WishlistProps) {
           </div>
         )}
       </SheetContent>
+
+      <AlertDialog open={isClearDialogOpen} onOpenChange={setIsClearDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove all products from your wishlist.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>NO</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={() => {
+                if (clearWishlist()) {
+                  toast.add({ title: "Wishlist Cleared", type: "success" });
+                }
+                setIsClearDialogOpen(false);
+              }}
+            >
+              CONFIRM
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Sheet>
   );
 }

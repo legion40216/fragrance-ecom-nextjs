@@ -19,7 +19,7 @@ export default function MobileBottomNav() {
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-4px_16px_-12px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-4px_16px_-12px_rgba(0,0,0,0.35)] backdrop-blur supports-backdrop-filter:bg-background/80 md:hidden"
     >
       <div className="mx-auto flex max-w-md items-center justify-around gap-1">
         {navItems.map(({ href, label, icon: Icon }) => {
