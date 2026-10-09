@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/components/ui/toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useCart from "@/hooks/useCartStore";
 import type { ProductSize, ProductType } from "@/types/types";
@@ -138,7 +139,7 @@ export default function ProductCard({
 
   const sizeLabel = selectedSize
     ? selectedVariant.size
-    : sortedVariants.map((variant) => variant.size).join("/");
+    : variants.map((variant) => variant.size).join("/");
 
   return (
     <div className="group relative overflow-hidden rounded-lg border">
@@ -207,7 +208,20 @@ export default function ProductCard({
           onClick={
             selectedSize
               ? undefined
-              : () => cartHasProduct ? removeProduct(id) : setQuickViewOpen(true)
+              : () => {
+                if (cartHasProduct) {
+                  removeProduct(id);
+                  return;
+                }
+
+                if (variants.length > 1) {
+                  toast.add({
+                    title: "Please choose a size to add this product to your cart.",
+                    type: "info",
+                  });
+                }
+                setQuickViewOpen(true);
+              }
           }
           isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
