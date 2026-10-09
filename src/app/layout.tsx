@@ -6,13 +6,13 @@ import { getSiteUrl } from "@/utils/site-url";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-dm-sans",
   weight: ["400", "500", "600", "700"],
 });
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-josefin-slab",
+  variable: "--font-cormorant-garamond",
   weight: ["400", "500", "600", "700"],
 });
 
