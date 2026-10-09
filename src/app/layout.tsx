@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
 import { getSiteUrl } from "@/utils/site-url";
 
-const poppins = Poppins({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
 });
 
-const josefinSlab = Josefin_Slab({
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-josefin-slab",
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -38,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${josefinSlab.variable} ${geistMono.variable}`}
+      className={`${dmSans.variable} ${cormorantGaramond.variable} ${geistMono.variable}`}
     >
       <body>
         <Toaster />
