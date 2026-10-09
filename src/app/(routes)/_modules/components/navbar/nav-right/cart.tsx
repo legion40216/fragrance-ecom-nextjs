@@ -60,7 +60,7 @@ export default function Cart({ mobile = false }: CartProps) {
             size="icon"
             className={
               mobile
-                ? "relative h-14 w-full min-w-0 flex-1 flex-col gap-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                ? "relative min-h-14 w-full min-w-0 flex-1 flex-col gap-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground"
                 : "relative"
             }
             aria-label={`Open cart, ${totalCount} items`}

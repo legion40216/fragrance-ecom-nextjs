@@ -13,8 +13,11 @@ import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath, getInitialSize } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
-
-const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
+import {
+  readWishlist,
+  WISHLIST_CHANGE_EVENT,
+  writeWishlist,
+} from "@/utils/wishlist";
 
 interface ProductDetailsProps {
   product: ProductType;
@@ -37,28 +40,24 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   }, [product.id, sizeParam]);
 
   useEffect(() => {
-    try {
-      const wishlist = JSON.parse(
-        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-      );
-      setIsWishlisted(
-        Array.isArray(wishlist) && wishlist.some((item) => item.id === product.id),
-      );
-    } catch {
-      setIsWishlisted(false);
-    }
+    const syncWishlist = () => {
+      setIsWishlisted(readWishlist().some((item) => item.id === product.id));
+    };
+    syncWishlist();
+    window.addEventListener(WISHLIST_CHANGE_EVENT, syncWishlist);
+    window.addEventListener("storage", syncWishlist);
+    return () => {
+      window.removeEventListener(WISHLIST_CHANGE_EVENT, syncWishlist);
+      window.removeEventListener("storage", syncWishlist);
+    };
   }, [product.id]);
 
   const toggleWishlist = () => {
-    try {
-      const storedWishlist = JSON.parse(
-        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-      );
-      const wishlist = Array.isArray(storedWishlist) ? storedWishlist : [];
-      const alreadyWishlisted = wishlist.some((item) => item.id === product.id);
-      const updatedWishlist = alreadyWishlisted
-        ? wishlist.filter((item) => item.id !== product.id)
-        : [...wishlist, {
+    const wishlist = readWishlist();
+    const alreadyWishlisted = wishlist.some((item) => item.id === product.id);
+    const updatedWishlist = alreadyWishlisted
+      ? wishlist.filter((item) => item.id !== product.id)
+      : [...wishlist, {
             id: product.id,
             slug: product.slug,
             name: product.name,
@@ -69,14 +68,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             variants: product.variants,
           }];
 
-      window.localStorage.setItem(
-        WISHLIST_STORAGE_KEY,
-        JSON.stringify(updatedWishlist),
-      );
-      setIsWishlisted(!alreadyWishlisted);
-    } catch {
-      // Leave the current state unchanged if browser storage is unavailable.
-    }
+    if (writeWishlist(updatedWishlist)) setIsWishlisted(!alreadyWishlisted);
   };
 
   const selectedVariant = useMemo(

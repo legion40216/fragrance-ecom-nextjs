@@ -20,31 +20,12 @@ import {
   isProductInStock,
   toCartProduct,
 } from "@/utils/product-variants";
-
-const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
-type WishlistProduct = Pick<
-  ProductType,
-  | "id"
-  | "slug"
-  | "name"
-  | "brand"
-  | "image"
-  | "description"
-  | "category"
-  | "variants"
->;
-
-function readWishlist(): WishlistProduct[] {
-  try {
-    const storedWishlist = JSON.parse(
-      window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-    );
-
-    return Array.isArray(storedWishlist) ? storedWishlist : [];
-  } catch {
-    return [];
-  }
-}
+import {
+  readWishlist,
+  WISHLIST_CHANGE_EVENT,
+  writeWishlist,
+  type WishlistProduct,
+} from "@/utils/wishlist";
 
 interface ProductCardProps
   extends Pick<ProductType, "id" | "slug" | "name" | "brand" | "variants" | "image" | "isNew" | "isBestSeller" | "description" | "category"> {
@@ -66,7 +47,16 @@ export default function ProductCard({
   const removeProduct = useCart((state) => state.removeProduct);
 
   useEffect(() => {
-    setIsWishlisted(readWishlist().some((item) => item.id === id));
+    const syncWishlist = () => {
+      setIsWishlisted(readWishlist().some((item) => item.id === id));
+    };
+    syncWishlist();
+    window.addEventListener(WISHLIST_CHANGE_EVENT, syncWishlist);
+    window.addEventListener("storage", syncWishlist);
+    return () => {
+      window.removeEventListener(WISHLIST_CHANGE_EVENT, syncWishlist);
+      window.removeEventListener("storage", syncWishlist);
+    };
   }, [id]);
 
   const toggleWishlist = () => {
@@ -86,14 +76,8 @@ export default function ProductCard({
       ? wishlist.filter((item) => item.id !== id)
       : [...wishlist, product];
 
-    try {
-      window.localStorage.setItem(
-        WISHLIST_STORAGE_KEY,
-        JSON.stringify(updatedWishlist),
-      );
+    if (writeWishlist(updatedWishlist)) {
       setIsWishlisted(!alreadyWishlisted);
-    } catch {
-      // Leave the current state unchanged if browser storage is unavailable.
     }
   };
 
@@ -209,19 +193,19 @@ export default function ProductCard({
             selectedSize
               ? undefined
               : () => {
-                if (cartHasProduct) {
-                  removeProduct(id);
-                  return;
-                }
+                  if (cartHasProduct) {
+                    removeProduct(id);
+                    return;
+                  }
 
-                if (variants.length > 1) {
-                  toast.add({
-                    title: "Please choose a size to add this product to your cart.",
-                    type: "info",
-                  });
+                  if (variants.length > 1) {
+                    toast.add({
+                      title: "Please choose a size to add this product to your cart.",
+                      type: "info",
+                    });
+                  }
+                  setQuickViewOpen(true);
                 }
-                setQuickViewOpen(true);
-              }
           }
           isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
