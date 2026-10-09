@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,6 +20,12 @@ import type { ProductSize, ProductVariant } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
+import {
+  readWishlist,
+  WISHLIST_CHANGE_EVENT,
+  writeWishlist,
+  type WishlistProduct,
+} from "@/utils/wishlist";
 
 export type QuickViewProduct = {
   id: string;
@@ -53,6 +59,7 @@ export default function QuickViewContent({
 
   const [selectedSize, setSelectedSize] = useState<ProductSize>(getInitialSize);
   const [quantity, setQuantity] = useState(1);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const selectedVariant = useMemo(
     () =>
@@ -71,6 +78,43 @@ export default function QuickViewContent({
   useEffect(() => {
     setSelectedSize(getInitialSize());
   }, [initialSize, product.variants]);
+
+  useEffect(() => {
+    const syncWishlist = () => {
+      setIsWishlisted(readWishlist().some((item) => item.id === product.id));
+    };
+    syncWishlist();
+    window.addEventListener(WISHLIST_CHANGE_EVENT, syncWishlist);
+    window.addEventListener("storage", syncWishlist);
+    return () => {
+      window.removeEventListener(WISHLIST_CHANGE_EVENT, syncWishlist);
+      window.removeEventListener("storage", syncWishlist);
+    };
+  }, [product.id]);
+
+  const toggleWishlist = () => {
+    const wishlist = readWishlist();
+    const alreadyWishlisted = wishlist.some((item) => item.id === product.id);
+    const updatedWishlist = alreadyWishlisted
+      ? wishlist.filter((item) => item.id !== product.id)
+      : [
+          ...wishlist,
+          {
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            brand: product.brand,
+            image: product.image,
+            description: product.description,
+            category: product.category as WishlistProduct["category"],
+            variants: product.variants,
+          },
+        ];
+
+    if (writeWishlist(updatedWishlist)) {
+      setIsWishlisted(!alreadyWishlisted);
+    }
+  };
 
   useEffect(() => {
     if (cartItem) {
@@ -170,12 +214,31 @@ export default function QuickViewContent({
                 <DialogTitle className="font-serif text-2xl">
                   {product.name}
                 </DialogTitle>
-                <ShareButton
-                  title={product.name}
-                  text={`${product.name} by ${product.brand}`}
-                  path={getProductPath(product.slug, selectedVariant.size)}
-                  className="shrink-0"
-                />
+                <div className="flex shrink-0 items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon-sm"
+                    aria-label={
+                      isWishlisted
+                        ? `Remove ${product.name} from wishlist`
+                        : `Add ${product.name} to wishlist`
+                    }
+                    aria-pressed={isWishlisted}
+                    onClick={toggleWishlist}
+                  >
+                    <Heart
+                      className={
+                        isWishlisted ? "fill-rose-600 text-rose-600" : ""
+                      }
+                    />
+                  </Button>
+                  <ShareButton
+                    title={product.name}
+                    text={`${product.name} by ${product.brand}`}
+                    path={getProductPath(product.slug, selectedVariant.size)}
+                  />
+                </div>
               </div>
               <p className="text-lg font-medium">
                 {formatter.format(selectedVariant.price)}
