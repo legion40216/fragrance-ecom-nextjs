@@ -8,7 +8,6 @@ import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import useCart from "@/hooks/useCartStore";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath } from "@/utils/product-url";
@@ -40,10 +39,6 @@ export default function ProductCard({
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [stockTooltipOpen, setStockTooltipOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const cartHasProduct = useCart((state) =>
-    state.items.some((item) => item.productId === id),
-  );
-  const removeProduct = useCart((state) => state.removeProduct);
 
   useEffect(() => {
     const syncWishlist = () => {
@@ -188,12 +183,6 @@ export default function ProductCard({
         <AddToCartButton
           product={toCartProduct({ id, slug, name, brand, image }, selectedVariant)}
           disabled={selectedVariant.stock === 0}
-          onClick={
-            selectedSize
-              ? undefined
-              : () => cartHasProduct ? removeProduct(id) : setQuickViewOpen(true)
-          }
-          isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
         />
         <Tooltip>
           <TooltipTrigger

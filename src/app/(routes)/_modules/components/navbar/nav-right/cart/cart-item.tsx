@@ -74,7 +74,7 @@ export default function CartItem({ item, onNavigate }: CartItemProps) {
                       toCartProduct(product, variant),
                     )
                   }
-                  className={`relative rounded border px-2 py-0.5 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${isSelected ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground"}`}
+                  className={`relative min-h-9 min-w-3.5rem rounded border px-2 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-7 sm:min-w-0 sm:py-0.5 ${isSelected ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground"}`}
                 >
                   {variant.size}
                   {variant.stock === 0 && (
