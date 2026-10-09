@@ -1,11 +1,12 @@
 "use client";
 
-import { Heart, House, ShoppingBag } from "lucide-react";
+import { House, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "cn";
 import Cart from "./navbar/nav-right/cart";
+import Wishlist from "./navbar/nav-right/wishlist";
 
 const navItems = [
   { href: "/", label: "Home", icon: House },
@@ -43,15 +44,7 @@ export default function MobileBottomNav() {
           );
         })}
 
-        <button
-          type="button"
-          aria-label="Wishlist (coming soon)"
-          aria-disabled="true"
-          className="flex h-14 min-w-0 flex-1 cursor-default flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-medium text-muted-foreground transition-colors"
-        >
-          <Heart className="size-5" strokeWidth={1.75} />
-          <span>Wishlist</span>
-        </button>
+        <Wishlist mobile />
 
         <Cart mobile />
       </div>
