@@ -93,7 +93,7 @@ export default function Wishlist({ mobile = false }: WishlistProps) {
             size={mobile ? "default" : "icon"}
             className={
               mobile
-                ? "relative h-14 w-full min-w-0 flex-1 flex-col gap-1 rounded-lg px-1 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                ? "relative min-h-14 w-full min-w-0 flex-1 flex-col gap-1 rounded-lg px-1 text-[11px] font-medium text-muted-foreground hover:text-foreground"
                 : "relative"
             }
             aria-label={`Open wishlist, ${items.length} items`}
