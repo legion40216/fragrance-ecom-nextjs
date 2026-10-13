@@ -133,7 +133,7 @@ export default function ProductCard({
     .filter(Boolean)
     .join(" • ");
 
-  const priceLabel = selectedSize
+  const priceLabel = selectedSize || variants.length === 1
     ? formatter.format(selectedVariant.price)
     : formatter.format(getLowestPrice({ variants })) + " - " + formatter.format(getHighestPrice({ variants }));
 
