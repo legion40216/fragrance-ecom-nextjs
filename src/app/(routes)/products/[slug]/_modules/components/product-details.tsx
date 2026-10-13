@@ -100,8 +100,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   const selectSize = (size: ProductSize) => {
     const variant = product.variants.find((item) => item.size === size);
-    if (!variant || variant.stock === 0) return;
+    if (!variant) return;
 
+    // Let customers inspect every size and its price, including sold-out variants.
+    // Purchase controls remain disabled for a sold-out selected variant.
     setSelectedSize(size);
     setQuantity(1);
     router.replace(getProductPath(product.slug, size), { scroll: false });
@@ -221,7 +223,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 selectedVariant.size === variant.size ? "default" : "outline"
               }
               size="sm"
-              disabled={variant.stock === 0}
+              aria-label={
+                variant.stock === 0
+                  ? `${variant.size}, out of stock`
+                  : variant.size
+              }
               title={variant.stock === 0 ? "Out of stock" : undefined}
               onClick={() => selectSize(variant.size)}
             >
