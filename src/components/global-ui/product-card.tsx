@@ -206,7 +206,7 @@ export default function ProductCard({
           product={toCartProduct({ id, slug, name, brand, image }, selectedVariant)}
           disabled={selectedVariant.stock === 0}
           onClick={
-            selectedSize || variants.filter((variant) => variant.stock > 0).length === 1
+            selectedSize || variants.length === 1
               ? undefined
               : () => {
                 if (cartHasProduct) {
