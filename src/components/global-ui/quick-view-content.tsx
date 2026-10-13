@@ -198,7 +198,8 @@ export default function QuickViewContent({
                         : "outline"
                     }
                     size="sm"
-                    disabled={variant.stock === 0}
+                    title={variant.stock === 0 ? "Out of stock" : undefined}
+                    aria-label={`${variant.size}${variant.stock === 0 ? ", out of stock" : ""}`}
                     onClick={() => selectSize(variant.size)}
                   >
                     {variant.size}
