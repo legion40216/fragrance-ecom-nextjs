@@ -133,7 +133,7 @@ export default function ProductCard({
     .filter(Boolean)
     .join(" • ");
 
-  const priceLabel = selectedSize
+  const priceLabel = selectedSize || variants.length === 1
     ? formatter.format(selectedVariant.price)
     : formatter.format(getLowestPrice({ variants })) + " - " + formatter.format(getHighestPrice({ variants }));
 
@@ -206,7 +206,7 @@ export default function ProductCard({
           product={toCartProduct({ id, slug, name, brand, image }, selectedVariant)}
           disabled={selectedVariant.stock === 0}
           onClick={
-            selectedSize
+            selectedSize || variants.length === 1
               ? undefined
               : () => {
                 if (cartHasProduct) {
@@ -214,12 +214,10 @@ export default function ProductCard({
                   return;
                 }
 
-                if (variants.length > 1) {
-                  toast.add({
-                    title: "Please choose a size to add this product to your cart.",
-                    type: "info",
-                  });
-                }
+                toast.add({
+                  title: "Please choose a size to add this product to your cart.",
+                  type: "info",
+                });
                 setQuickViewOpen(true);
               }
           }
