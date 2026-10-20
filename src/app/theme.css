@@ -3,6 +3,7 @@
  * Remove the import of this file from globals.css to restore the original fonts.
  */
 :root {
+  --radius: 0rem;
   --font-body: sans-serif;
   --font-heading: Georgia, serif;
 
@@ -18,4 +19,7 @@
   --font-sans: var(--font-body);
   --font-display: var(--font-heading);
   --font-serif: var(--font-heading);
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
 }
