@@ -12,14 +12,16 @@ export default function HomepageView() {
       <NotesSection />
       <FeaturedSection />
 
-      <section className="grid gap-8 border-y py-10 sm:grid-cols-3 sm:gap-6">
+      <BrandSection />
+
+      <section className="grid gap-8 border-y py-8 sm:grid-cols-3 sm:gap-6">
         {[
           { icon: PackageCheck, title: "Thoughtful delivery", copy: "Carefully packed, delivered to your door." },
           { icon: ShieldCheck, title: "A considered selection", copy: "Distinctive scents for every kind of day." },
           { icon: Sparkles, title: "Find your signature", copy: "Explore notes that feel unmistakably yours." },
         ].map(({ icon: Icon, title, copy }) => (
-          <div key={title} className="flex items-start gap-4 px-1">
-            <Icon aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-muted-foreground" strokeWidth={1.4} />
+          <div key={title} className="flex flex-col items-start gap-3 px-1">
+            <Icon aria-hidden="true" className="size-5 text-muted-foreground" strokeWidth={1.4} />
             <div>
               <h2 className="text-sm font-medium">{title}</h2>
               <p className="mt-1.5 max-w-xs text-sm leading-6 text-muted-foreground">{copy}</p>
@@ -27,8 +29,6 @@ export default function HomepageView() {
           </div>
         ))}
       </section>
-
-      <BrandSection />
 
       <section className="my-10 flex flex-col items-start justify-between gap-6 bg-muted/50 px-6 py-10 sm:px-10 md:flex-row md:items-center md:py-14">
         <div className="max-w-xl">
