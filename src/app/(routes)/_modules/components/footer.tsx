@@ -5,7 +5,7 @@ import { categories } from "@/data/categories";
 export default function Footer() {
   return (
     <footer className="border-t">
-      <div className="grid gap-10 py-10 sm:grid-cols-2 sm:gap-12 sm:py-14 lg:grid-cols-[1.35fr_1fr_1fr_1fr] lg:gap-8">
+      <div className="grid gap-10 px-4 py-10 sm:grid-cols-2 sm:gap-12 sm:px-6 sm:py-14 lg:grid-cols-[1.35fr_1fr_1fr_1fr] lg:gap-8 lg:px-8">
         <div className="max-w-sm">
           <Link href="/" className="inline-block text-2xl tracking-[0.2em]">ATELIER</Link>
           <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">
@@ -49,7 +49,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t py-5 text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t px-4 py-5 text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <p>© {new Date().getFullYear()} Atelier. All rights reserved.</p>
         <p>Made for the moments that stay.</p>
       </div>
