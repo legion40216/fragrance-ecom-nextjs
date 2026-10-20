@@ -208,7 +208,7 @@ export default function ProductCard({
                   render={
                     <button
                       type="button"
-                      className="flex size-8 items-center justify-center rounded-full bg-background/95 text-amber-700 shadow-sm transition-colors hover:bg-background"
+                      className="flex size-7 items-center justify-center rounded-full bg-background/95 text-amber-700 shadow-sm transition-colors hover:bg-background"
                       aria-label={stockTooltip}
                       onClick={() => setStockTooltipOpen((open) => !open)}
                     />
@@ -232,7 +232,7 @@ export default function ProductCard({
               render={
                 <button
                   type="button"
-                  className="flex size-8 items-center justify-center rounded-full bg-background/95 shadow-sm transition-colors hover:bg-background"
+                  className="flex size-7 items-center justify-center rounded-full bg-background/95 shadow-sm transition-colors hover:bg-background"
                   aria-label={
                     isWishlisted
                       ? `Remove ${name} from wishlist`
