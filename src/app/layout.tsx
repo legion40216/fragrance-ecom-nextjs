@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 // Luxury theme fonts — loaded and optimized by Next.js.
 import { Inter, EB_Garamond, Geist_Mono } from "next/font/google";
 
-// Original fonts kept here for easy rollback:
-// import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
+// Original font imports kept here for easy rollback:
+// import { Poppins, Josefin_Slab } from "next/font/google";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
@@ -35,11 +35,6 @@ const geistMono = Geist_Mono({
 // const josefinSlab = Josefin_Slab({
 //   subsets: ["latin"],
 //   variable: "--font-josefin-slab",
-// });
-//
-// const geistMono = Geist_Mono({
-//   subsets: ["latin"],
-//   variable: "--font-geist-mono",
 // });
 
 export const metadata: Metadata = {
