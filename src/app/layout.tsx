@@ -1,24 +1,46 @@
 import type { Metadata } from "next";
-import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
+
+// Luxury theme fonts — loaded and optimized by Next.js.
+import { Inter, EB_Garamond, Geist_Mono } from "next/font/google";
+
+// Original fonts kept here for easy rollback:
+// import { Poppins, Geist_Mono, Josefin_Slab } from "next/font/google";
+
 import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
 import { getSiteUrl } from "@/utils/site-url";
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
 });
 
-const josefinSlab = Josefin_Slab({
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-josefin-slab",
+  variable: "--font-heading",
 });
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
 });
+
+// Original font setup — kept commented out for easy rollback:
+// const poppins = Poppins({
+//   subsets: ["latin"],
+//   variable: "--font-poppins",
+//   weight: ["400", "500", "600", "700"],
+// });
+//
+// const josefinSlab = Josefin_Slab({
+//   subsets: ["latin"],
+//   variable: "--font-josefin-slab",
+// });
+//
+// const geistMono = Geist_Mono({
+//   subsets: ["latin"],
+//   variable: "--font-geist-mono",
+// });
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -38,7 +60,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${josefinSlab.variable} ${geistMono.variable}`}
+      className={`${inter.variable} ${ebGaramond.variable} ${geistMono.variable}`}
     >
       <body>
         <Toaster />
