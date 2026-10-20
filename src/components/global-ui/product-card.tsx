@@ -214,7 +214,7 @@ export default function ProductCard({
                     />
                   }
                 >
-                  <CircleAlert className="size-4" aria-hidden="true" />
+                  <CircleAlert className="size-3.5" aria-hidden="true" />
                 </TooltipTrigger>
                 <TooltipContent>{stockTooltip}</TooltipContent>
               </Tooltip>
@@ -246,8 +246,8 @@ export default function ProductCard({
               <Heart
                 className={
                   isWishlisted
-                    ? "size-4 fill-rose-600 text-rose-600"
-                    : "size-4"
+                    ? "size-3.5 fill-rose-600 text-rose-600"
+                    : "size-3.5"
                 }
                 aria-hidden="true"
               />
