@@ -14,7 +14,7 @@ export default function BrandSection() {
             We believe fragrance should feel personal. Explore expressive florals, modern fresh notes, rich oud, and traditional attars — each with its own character.
           </p>
           <Link href="/products" className="mt-8 inline-flex min-h-11 items-center gap-3 border border-foreground px-5 text-[10px] font-medium uppercase tracking-[0.14em] transition-colors hover:bg-foreground hover:text-background">
-            Find your fragrance <ArrowRight aria-hidden="true" className="size-4" />
+            Explore all fragrances <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
         </div>
         <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden bg-secondary/50 px-8 py-12 sm:min-h-[360px]">
