@@ -168,7 +168,7 @@ export default function ProductCard({
 
   return (
     <article className="group relative min-w-0">
-      <div className="relative isolate aspect-[4/5] overflow-hidden bg-muted">
+      <div className="relative isolate aspect-[4/5] overflow-hidden">
         <Link
           href={getProductPath(slug, selectedSize)}
           className="absolute inset-0 block"
@@ -179,7 +179,7 @@ export default function ProductCard({
             alt={name}
             fill
             sizes={sizes}
-            className="object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-[1.03] sm:p-6"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
         </Link>
 
