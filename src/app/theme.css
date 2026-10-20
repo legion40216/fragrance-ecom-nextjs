@@ -1,17 +1,14 @@
-@import "@fontsource-variable/inter";
-@import "@fontsource/eb-garamond";
-
 /*
  * Luxury typography layer.
  * Remove the import of this file from globals.css to restore the original fonts.
  */
 :root {
-  --font-body: "Inter Variable", sans-serif;
-  --font-heading: "EB Garamond", Georgia, serif;
+  --font-body: sans-serif;
+  --font-heading: Georgia, serif;
 
   /*
-   * Existing shadcn font tokens in globals.css reference these variables.
-   * Aliasing them keeps the typography switch removable without changing layout.tsx.
+   * globals.css maps the app's existing font-sans/font-serif utilities through
+   * these aliases, so components do not need to change.
    */
   --font-poppins: var(--font-body);
   --font-josefin-slab: var(--font-heading);
