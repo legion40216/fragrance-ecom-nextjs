@@ -4,7 +4,7 @@ import { products } from "@/data/data";
 
 // Swap for a real campaign photograph when one is available.
 const HERO_IMAGE =
-  "/assets/product/images/Warm Brown Gradient with Soft Circles.png";
+  "/assets/product/images/Warm%20Brown%20Gradient%20with%20Soft%20Circles.png";
 
 export default function HeroSection() {
   const heroProduct =
