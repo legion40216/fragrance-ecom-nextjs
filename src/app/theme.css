@@ -23,3 +23,15 @@
   --shadow-sm: none;
   --shadow-md: none;
 }
+
+/* Lets sections break out of the 1200px container to span the full viewport. */
+@utility full-bleed {
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+}
+
+@layer base {
+  body {
+    overflow-x: clip;
+  }
+}
