@@ -3,6 +3,8 @@ import { ArrowUpRight } from "lucide-react";
 import { categories, products } from "@/data/data";
 
 export default function NotesSection() {
+  const featuredCategories = categories.slice(0, 3);
+
   return (
     <section id="collections" className="py-16 sm:py-20 lg:py-24">
       <div className="mb-7 flex items-end justify-between gap-5 border-b pb-4 sm:mb-9">
@@ -23,7 +25,7 @@ export default function NotesSection() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((category, index) => {
+        {featuredCategories.map((category, index) => {
           const productCount = products.filter(
             (product) => product.category === category.slug,
           ).length;
