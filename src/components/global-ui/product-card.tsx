@@ -172,7 +172,8 @@ export default function ProductCard({
         <Link
           href={getProductPath(slug, selectedSize)}
           className="absolute inset-0 block"
-          aria-label={`View ${name}`}
+          tabIndex={-1}
+          aria-hidden="true"
         >
           <Image
             src={image}
