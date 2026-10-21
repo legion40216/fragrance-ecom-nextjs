@@ -18,7 +18,7 @@ export default function NotesSection() {
         </div>
         <Link
           href="/categories"
-          className="inline-flex items-center gap-2 pb-1 text-[10px] font-medium uppercase tracking-[0.14em] transition-opacity hover:opacity-60"
+          className="hidden items-center gap-2 pb-1 text-[10px] font-medium uppercase tracking-[0.14em] transition-opacity hover:opacity-60 sm:inline-flex"
         >
           View all <ArrowUpRight aria-hidden="true" className="size-4" />
         </Link>
@@ -77,6 +77,14 @@ export default function NotesSection() {
           );
         })}
       </div>
+
+      <Link
+        href="/categories"
+        className="mt-4 flex w-full items-center justify-between border-t py-4 text-xs font-medium uppercase tracking-[0.14em] transition-opacity hover:opacity-60 sm:hidden"
+      >
+        View all categories
+        <ArrowUpRight aria-hidden="true" className="size-4" />
+      </Link>
     </section>
   );
 }
