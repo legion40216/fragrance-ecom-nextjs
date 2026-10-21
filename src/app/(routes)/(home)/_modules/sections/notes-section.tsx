@@ -7,10 +7,10 @@ export default function NotesSection() {
 
   return (
     <section id="collections" className="py-16 sm:py-20 lg:py-24">
-      <div className="mb-7 flex items-end justify-between gap-5 sm:mb-9">
+      <div className="mb-7 flex items-end justify-between gap-5 border-b pb-4 sm:mb-9">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Explore by character</p>
-          <h2 className="mt-3 font-serif text-3xl leading-tight sm:text-4xl">Collections</h2>
+          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Explore by character</p>
+          <h2 className="font-serif text-3xl leading-tight sm:text-4xl">Collections</h2>
         </div>
         <Link
           href="/categories"
