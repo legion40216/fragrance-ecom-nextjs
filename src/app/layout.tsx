@@ -12,12 +12,12 @@ import { getSiteUrl } from "@/utils/site-url";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-inter",
 });
 
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-garamond",
 });
 
 const geistMono = Geist_Mono({

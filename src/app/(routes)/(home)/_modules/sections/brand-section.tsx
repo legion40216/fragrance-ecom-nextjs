@@ -1,61 +1,29 @@
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import CtaLink from "@/components/global-ui/cta-link";
 
 export default function BrandSection() {
   return (
-    <section className="overflow-hidden rounded-[2rem] border 
-      bg-foreground text-background"
-    >
-      <div className="grid items-center gap-10 p-7 sm:p-10 
-        md:grid-cols-[1.2fr_0.8fr] md:p-14"
-      >
-        <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full
-            border border-background/20 px-3 py-1.5 text-xs 
-            uppercase tracking-[0.2em] text-background/70"
-           >
-            <Sparkles className="size-3.5" /> Your signature, your story
-          </div>
-
-          <h2 className="max-w-2xl font-serif text-4xl leading-tight sm:text-5xl
-            md:text-6xl"
-           >
-            Fragrance is more than a scent.
-          </h2>
-
-          <p className="mt-5 max-w-xl leading-7 text-background/65">
-            It is the detail people remember. Explore warm ouds, fresh everyday
-            scents, elegant florals, and concentrated attars made for moments
-            worth remembering.
-          </p>
-          <Link
-            href="/products"
-            className="mt-8 inline-flex items-center gap-2 rounded-full 
-              bg-background px-6 py-3 text-sm font-medium text-foreground 
-              transition-transform hover:-translate-y-0.5"
-          >
-            Find your fragrance <ArrowRight className="size-4" />
-          </Link>
+    <section className="full-bleed bg-muted">
+      <div className="grid md:grid-cols-2">
+        <div className="relative min-h-[320px] bg-border md:min-h-[520px]">
+          <Image
+            src="/assets/product/images/royal-oud.svg"
+            alt=""
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-cover"
+          />
         </div>
-        
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          {[
-            ["01", "Everyday", "Fresh, clean, effortless"],
-            ["02", "Evening", "Warm, deep, memorable"],
-            ["03", "Luxury", "Rich oud & amber"],
-            ["04", "Traditional", "Classic concentrated attars"],
-          ].map(([number, title, description]) => (
-            <div
-              key={number}
-              className="rounded-2xl border border-background/15 p-5"
-            >
-              <span className="text-xs text-background/45">{number}</span>
-              <p className="mt-8 font-medium">{title}</p>
-              <p className="mt-1 text-xs leading-5 text-background/55">
-                {description}
-              </p>
-            </div>
-          ))}
+        <div className="flex flex-col items-start justify-center gap-5 px-6 py-12 sm:px-10 md:px-14 md:py-16 lg:px-20">
+          <h2 className="max-w-md font-serif text-4xl leading-[1.05] sm:text-[40px]">
+            A little ritual. A lasting impression.
+          </h2>
+          <p className="max-w-md text-[13px] leading-7">
+            We believe fragrance should feel personal. Explore expressive
+            florals, modern fresh notes, rich oud, and traditional attars, each
+            with its own character.
+          </p>
+          <CtaLink href="/products">Explore all fragrances</CtaLink>
         </div>
       </div>
     </section>

@@ -4,8 +4,8 @@
  */
 :root {
   --radius: 0rem;
-  --font-body: sans-serif;
-  --font-heading: Georgia, serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-heading: var(--font-garamond), Georgia, serif;
 
   /*
    * globals.css maps the app's existing font-sans/font-serif utilities through
@@ -22,4 +22,16 @@
   --shadow-xs: none;
   --shadow-sm: none;
   --shadow-md: none;
+}
+
+/* Lets sections break out of the 1200px container to span the full viewport. */
+@utility full-bleed {
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+}
+
+@layer base {
+  body {
+    overflow-x: clip;
+  }
 }

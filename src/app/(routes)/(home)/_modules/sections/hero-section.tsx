@@ -1,58 +1,66 @@
 import Image from "next/image";
-import Link from "next/link";
+import CtaLink from "@/components/global-ui/cta-link";
 import { products } from "@/data/data";
 
+// Swap for a real campaign photograph when one is available.
+const HERO_IMAGE =
+  "/assets/product/images/Warm%20Brown%20Gradient%20with%20Soft%20Circles.png";
+
 export default function HeroSection() {
-  const heroProduct = products.find((p) => p.id === "royal-oud-01");
+  const heroProduct =
+    products.find((product) => product.id === "royal-oud-01") ?? products[0];
 
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-[#F3ECE2] px-6 pb-16 pt-20 text-[#241A16] sm:px-10 lg:px-24 lg:pl-40 lg:pt-28"
+      className="full-bleed relative flex min-h-[520px] items-end overflow-hidden bg-foreground md:min-h-[620px]"
     >
-      <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-        <div>
-          <p className="max-w-md text-sm leading-6 text-[#241A16]/60">
-            Every fragrance opens with a first impression — sharp, bright,
-            unmistakable. This is ours.
-          </p>
+      <Image
+        src={HERO_IMAGE}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/35 to-foreground/10" />
 
-          <h1 className="mt-6 max-w-xl font-serif text-6xl leading-[1.02] tracking-tight sm:text-7xl lg:text-8xl">
-            Scent, composed
-            <br />
-            in three acts.
-          </h1>
-
-          <div className="mt-10 flex flex-wrap items-center gap-6">
-            <Link
-              href="/products"
-              className="inline-flex items-center border-b border-[#241A16] pb-1 text-sm font-medium"
-            >
-              Shop the collection
-            </Link>
-            <span className="text-sm text-[#241A16]/50">
-              {products.length} fragrances, five collections
-            </span>
-          </div>
+      {heroProduct && (
+        <div className="absolute inset-y-0 right-0 hidden w-1/2 md:block">
+          <Image
+            src={heroProduct.image}
+            alt={heroProduct.name}
+            fill
+            sizes="50vw"
+            className="object-contain p-16"
+          />
         </div>
+      )}
 
-        <div className="relative">
-          <div className="aspect-[3/4] w-full max-w-sm overflow-hidden rounded-t-full border border-[#241A16]/15 bg-[#EAE1D3] lg:ml-auto">
-            {heroProduct && (
-              <Image
-                src={heroProduct.image}
-                alt={heroProduct.name}
-                fill
-                priority
-                className="object-cover"
-              />
-            )}
-          </div>
-          {heroProduct && (
-            <p className="mt-4 text-sm text-[#241A16]/60 lg:text-right">
-              Featured — {heroProduct.name}, {heroProduct.brand}
-            </p>
-          )}
+      <div className="relative mx-auto w-full max-w-[1200px] px-6 py-12 text-background sm:px-10 md:px-0 md:py-16">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-background/80">
+          The art of fragrance
+        </p>
+        <h1 className="mt-5 max-w-xl font-serif text-5xl leading-[0.95] sm:text-7xl lg:text-8xl">
+          Scent, composed in three acts.
+        </h1>
+        <p className="mt-6 max-w-md text-sm leading-7 text-background/80">
+          Fragrances with character, chosen to leave an impression long after
+          the moment has passed.
+        </p>
+        <div className="mt-9 flex flex-wrap gap-3">
+          <CtaLink
+            href="/products"
+            className="border-background bg-background text-foreground hover:bg-background/90"
+          >
+            Explore fragrances
+          </CtaLink>
+          <CtaLink
+            href="/products?sort=newest"
+            className="border-background bg-transparent text-background hover:bg-background hover:text-foreground"
+          >
+            Shop new arrivals
+          </CtaLink>
         </div>
       </div>
     </section>
