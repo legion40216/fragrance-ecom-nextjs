@@ -4,8 +4,8 @@
  */
 :root {
   --radius: 0rem;
-  --font-body: sans-serif;
-  --font-heading: Georgia, serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-heading: var(--font-garamond), Georgia, serif;
 
   /*
    * globals.css maps the app's existing font-sans/font-serif utilities through
