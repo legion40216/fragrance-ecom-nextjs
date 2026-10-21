@@ -1,9 +1,9 @@
+import { ArrowRight, PackageCheck, ShieldCheck, Sparkles } from "lucide-react";
+import Link from "next/link";
 import BrandSection from "../sections/brand-section";
 import FeaturedSection from "../sections/featured-section";
 import HeroSection from "../sections/hero-section";
 import NotesSection from "../sections/notes-section";
-import Link from "next/link";
-import { ArrowRight, PackageCheck, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function HomepageView() {
   return (
@@ -38,7 +38,10 @@ export default function HomepageView() {
             From bright everyday blends to deep, lingering oud, find a fragrance worth coming back to.
           </p>
         </div>
-        <Link href="/products" className="inline-flex min-h-11 items-center gap-3 border border-foreground px-5 text-xs font-medium uppercase tracking-[0.12em] transition-colors hover:bg-foreground hover:text-background">
+        <Link
+          href="/products"
+          className="inline-flex min-h-11 items-center gap-3 border border-foreground px-5 text-xs font-medium uppercase tracking-[0.12em] transition-colors hover:bg-foreground hover:text-background"
+        >
           Explore fragrances <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
       </section>
