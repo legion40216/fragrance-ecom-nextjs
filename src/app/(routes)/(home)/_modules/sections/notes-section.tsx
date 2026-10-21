@@ -58,9 +58,15 @@ export default function CollectionsSection() {
               <h3 className="font-serif text-xl leading-tight text-white">
                 {category.name}
               </h3>
-              <p className="min-h-15 text-xs leading-5 text-white/90">
-                {category.description}
-              </p>
+              <div className="flex items-end justify-between gap-2">
+                <p className="min-h-15 text-xs leading-5 text-white/90">
+                  {category.description}
+                </p>
+                <ArrowUpRight
+                  aria-hidden="true"
+                  className="mb-0.5 size-4 shrink-0 text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </div>
             </div>
           </Link>
         ))}
