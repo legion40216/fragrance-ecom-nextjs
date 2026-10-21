@@ -25,21 +25,21 @@ export default function NotesSection() {
           <Link
             key={category.id}
             href={`/categories?category=${category.slug}`}
-            className="group relative flex min-h-64 flex-col justify-between overflow-hidden bg-[#EAE5DD] p-5 text-[#292622] transition-colors hover:bg-[#E1D9CE] sm:min-h-72 sm:p-7 lg:min-h-80 lg:p-8"
+            className="group relative flex min-h-64 flex-col justify-between overflow-hidden bg-muted p-5 text-foreground transition-colors hover:bg-muted/80 sm:min-h-72 sm:p-7 lg:min-h-80 lg:p-8"
           >
             <div className="flex items-start justify-between">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-[#292622]/55">
+              <span className="text-[10px] uppercase tracking-[0.16em] text-foreground/55">
                 0{index + 1} / Collection
               </span>
               <ArrowUpRight
                 aria-hidden="true"
-                className="size-4 -translate-x-1 translate-y-1 text-[#292622]/65 opacity-0 transition-all group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+                className="size-4 -translate-x-1 translate-y-1 text-foreground/65 opacity-0 transition-all group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
               />
             </div>
 
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute right-4 top-5 font-serif text-[8rem] leading-none text-[#292622]/[0.07] transition-transform duration-500 group-hover:scale-110 sm:right-6 sm:top-6 sm:text-[10rem] lg:text-[12rem]"
+              className="pointer-events-none absolute right-4 top-5 font-serif text-[8rem] leading-none text-foreground/[0.07] transition-transform duration-500 group-hover:scale-110 sm:right-6 sm:top-6 sm:text-[10rem] lg:text-[12rem]"
             >
               {category.name.trim().charAt(0).toUpperCase()}
             </span>
