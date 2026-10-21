@@ -12,6 +12,7 @@ export default function BestsellersSection() {
   return (
     <section className="pb-12 sm:pb-16">
       <SectionHeader
+        eyebrow="Loved by fragrance enthusiasts"
         title="Bestsellers"
         href="/products"
         linkLabel="View all"
