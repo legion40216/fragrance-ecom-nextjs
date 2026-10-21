@@ -10,6 +10,7 @@ export default function JustArrivedSection() {
   return (
     <section className="pb-12 sm:pb-16">
       <SectionHeader
+        eyebrow="Freshly discovered"
         title="Just arrived"
         href="/products?sort=newest"
         linkLabel="All new in"
