@@ -279,10 +279,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </p>
       </div>
 
-      <div className="hidden gap-2 md:grid md:grid-cols-2">
+      <div className="grid gap-2 md:grid-cols-2">
         <Button
           type="button"
           size="lg"
+          className="hidden md:inline-flex"
           variant={inCart ? "outline" : "default"}
           disabled={isSoldOut}
           onClick={addSelectedToCart}
