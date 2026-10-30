@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Check, Heart, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -169,7 +169,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     product.category;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 md:pb-0">
       <div className="space-y-2">
         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
           {product.brand}
@@ -245,7 +245,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         )}
       </div>
 
-      <div className="space-y-3">
+      <div className="hidden space-y-3 md:block">
         <p className="text-sm font-medium">Quantity</p>
         <div className="flex w-fit items-center rounded-md border">
           <Button
@@ -279,7 +279,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </p>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="hidden gap-2 md:grid md:grid-cols-2">
         <Button
           type="button"
           size="lg"
@@ -328,6 +328,77 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         <div className="flex justify-between gap-4 p-3">
           <span className="text-muted-foreground">Category</span>
           <span className="text-right">{categoryName}</span>
+        </div>
+      </div>
+
+      <div
+        className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-40 border-t bg-background/95 px-3 py-2 shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/90 md:hidden"
+        aria-label="Quick purchase"
+      >
+        <div className="mx-auto flex max-w-[1200px] items-center gap-2">
+          <div className="min-w-0 shrink-0">
+            <p className="text-[10px] leading-tight text-muted-foreground">
+              {selectedVariant.size}
+              {isSoldOut ? " · Sold out" : " · In stock"}
+            </p>
+            <p className="text-sm font-semibold tabular-nums">
+              {formatter.format(selectedVariant.price)}
+            </p>
+          </div>
+
+          <div className="flex shrink-0 items-center rounded-md border">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="size-8"
+              disabled={isSoldOut || quantity <= 1}
+              onClick={() => changeQuantity(quantity - 1)}
+              aria-label="Decrease quantity"
+            >
+              <Minus className="size-3.5" />
+            </Button>
+            <span
+              className="w-6 text-center text-xs font-medium tabular-nums"
+              aria-live="polite"
+              aria-label={`Quantity: ${quantity}`}
+            >
+              {quantity}
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="size-8"
+              disabled={isSoldOut || quantity >= maxQuantity}
+              onClick={() => changeQuantity(quantity + 1)}
+              aria-label="Increase quantity"
+            >
+              <Plus className="size-3.5" />
+            </Button>
+          </div>
+
+          <Button
+            type="button"
+            size="lg"
+            className="min-w-0 flex-1 gap-1.5 px-2 text-xs sm:text-sm"
+            disabled={isSoldOut || inCart}
+            onClick={addSelectedToCart}
+          >
+            {inCart ? (
+              <>
+                <Check className="size-4 shrink-0" />
+                <span>Added</span>
+              </>
+            ) : isSoldOut ? (
+              "Out of stock"
+            ) : (
+              <>
+                <ShoppingCart className="size-4 shrink-0" />
+                <span>Add to cart</span>
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>
