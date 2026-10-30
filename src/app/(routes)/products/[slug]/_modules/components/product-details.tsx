@@ -333,6 +333,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
       <div
         className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-40 border-t bg-background/95 px-3 py-2 shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/90 md:hidden"
+        role="region"
         aria-label="Quick purchase"
       >
         <div className="mx-auto flex max-w-[1200px] items-center gap-2">
