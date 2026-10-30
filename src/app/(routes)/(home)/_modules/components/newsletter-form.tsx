@@ -2,6 +2,7 @@
 
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 
 export default function NewsletterForm() {
@@ -22,7 +23,7 @@ export default function NewsletterForm() {
       >
         Email address
       </label>
-      <input
+      <Input
         id="newsletter-email"
         type="email"
         required
@@ -30,7 +31,6 @@ export default function NewsletterForm() {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
         placeholder="you@example.com"
-        className="h-11 border-b border-input bg-transparent text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-foreground"
       />
       <Button
         type="submit"
