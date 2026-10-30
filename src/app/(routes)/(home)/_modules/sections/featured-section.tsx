@@ -1,51 +1,30 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { products } from "@/data/data";
 import ProductCard from "@/components/global-ui/product-card";
+import SectionHeader from "@/components/global-ui/section-header";
+import { products } from "@/data/data";
 
-export default function FeaturedSection() {
-  const featured = products.filter((product) => product.isFeatured).slice(0, 4);
+export default function JustArrivedSection() {
+  const arrivals = [...products]
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .slice(0, 8);
+
   return (
-    <section>
-      <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] 
-            text-muted-foreground"
+    <section className="pb-12 sm:pb-16">
+      <SectionHeader
+        eyebrow="Freshly discovered"
+        title="Just arrived"
+        href="/products?sort=newest"
+        linkLabel="All new in"
+      />
+      <div className="-mx-2 flex snap-x gap-3 overflow-x-auto px-2 pb-2 md:mx-0 md:px-0">
+        {arrivals.map((product) => (
+          <div
+            key={product.id}
+            className="w-[44vw] max-w-60 shrink-0 snap-start sm:w-60"
           >
-            Handpicked for you
-          </p>
-
-          <h2 className="mt-2 font-serif text-4xl sm:text-5xl">
-            Signature scents
-          </h2>
-
-          <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-            Our featured fragrances — selected to give your collection a
-            distinctive starting point.
-          </p>
-        </div>
-
-        <Link
-          href="/products"
-          className="hidden items-center gap-2 text-sm font-medium sm:flex"
-        >
-          Shop all <ArrowRight className="size-4" />
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
-        {featured.map((product) => (
-          <ProductCard key={product.id} {...product} />
+            <ProductCard {...product} sizes="240px" />
+          </div>
         ))}
       </div>
-
-      <Link
-        href="/products"
-        className="mt-6 flex items-center justify-center gap-2 text-sm 
-        font-medium sm:hidden"
-      >
-        Shop all fragrances <ArrowRight className="size-4" />
-      </Link>
     </section>
   );
 }
