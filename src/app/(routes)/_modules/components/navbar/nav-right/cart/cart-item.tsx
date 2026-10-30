@@ -47,11 +47,11 @@ export default function CartItem({ item, onNavigate }: CartItemProps) {
 
           <Button
             variant="ghost"
-            size="icon-xs"
+            size="icon-sm"
             aria-label={`Remove ${item.name}`}
             onClick={() => removeItem(item.id)}
           >
-            <X />
+            <X className="size-3.5" />
           </Button>
         </div>
 
@@ -59,24 +59,24 @@ export default function CartItem({ item, onNavigate }: CartItemProps) {
           <div className="flex items-center">
             <Button
               variant="outline"
-              size="icon-xs"
+              size="icon-sm"
               aria-label="Decrease quantity"
               disabled={item.count <= 1}
               onClick={() => updateItemCount(item.id, item.count - 1)}
             >
-              <Minus />
+              <Minus className="size-3.5" />
             </Button>
 
             <span className="w-8 text-center text-sm">{item.count}</span>
 
             <Button
               variant="outline"
-              size="icon-xs"
+              size="icon-sm"
               aria-label="Increase quantity"
               disabled={item.count >= item.stock}
               onClick={() => updateItemCount(item.id, item.count + 1)}
             >
-              <Plus />
+              <Plus className="size-3.5" />
             </Button>
           </div>
 
