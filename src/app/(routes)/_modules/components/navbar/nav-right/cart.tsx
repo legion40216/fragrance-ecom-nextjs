@@ -2,7 +2,7 @@
 
 import { ShoppingBasket, Trash2, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +19,14 @@ import useHydrated from "@/hooks/useHydrated";
 import { formatter } from "@/utils/formatters";
 import CartItem from "./cart/cart-item";
 
-export default function Cart() {
+interface CartProps {
+  mobile?: boolean;
+}
+
+export default function Cart({ mobile = false }: CartProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isBumping, setIsBumping] = useState(false);
+  const previousCount = useRef<number | null>(null);
 
   const items = useCart((state) => state.items);
   const clearCart = useCart((state) => state.clearCart);
@@ -33,6 +39,18 @@ export default function Cart() {
     0,
   );
 
+  useEffect(() => {
+    const previous = previousCount.current;
+    previousCount.current = totalCount;
+
+    if (previous !== null && previous !== totalCount) {
+      setIsBumping(true);
+      const timeout = window.setTimeout(() => setIsBumping(false), 450);
+
+      return () => window.clearTimeout(timeout);
+    }
+  }, [totalCount]);
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger
@@ -40,15 +58,27 @@ export default function Cart() {
           <Button
             variant="ghost"
             size="icon"
-            className="relative"
+            className={
+              mobile
+                ? "relative h-14 w-full min-w-0 flex-1 flex-col gap-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                : "relative"
+            }
             aria-label={`Open cart, ${totalCount} items`}
           />
         }
       >
-        <ShoppingBasket className="size-5" />
+        <ShoppingBasket
+          className={`size-5 ${isBumping ? "animate-bounce" : ""}`}
+        />
+
+        {mobile && <span>Cart</span>}
 
         {totalCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+          <span className={
+              mobile
+                ? "absolute right-1/2 top-1 flex size-4 translate-x-3 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white"
+                : "absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white"
+            }>
             {totalCount > 9 ? "9+" : totalCount}
           </span>
         )}

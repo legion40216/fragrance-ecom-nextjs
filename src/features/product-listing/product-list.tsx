@@ -2,11 +2,15 @@
 
 import { useState, useSyncExternalStore } from "react";
 import type { ProductSize, ProductsType } from "@/types/types";
+import type { FilterControlsProps } from "./components/filter-controls";
 import ProductCard from "@/components/global-ui/product-card";
 import EmptyState from "@/components/global-ui/empty-state";
 import { Button } from "@/components/ui/button";
 import { useUpdateSearchParams } from "@/hooks/use-update-search-params";
 import { GRID_COLUMNS_COOKIE, type GridColumns } from "./grid-columns";
+import FilterSheet from "./components/filter-sheet";
+import ProductListFilter from "./components/product-list-filter";
+import type { FilterValue } from "@/schema";
 
 const gridClasses: Record<GridColumns, string> = {
   1: "grid-cols-1",
@@ -71,10 +75,14 @@ export default function ProductList({
   initialData,
   initialColumns,
   selectedSize,
+  filterProps,
+  currentFilter,
 }: {
   initialData: ProductsType;
   initialColumns: GridColumns;
   selectedSize: ProductSize | undefined;
+  filterProps: FilterControlsProps;
+  currentFilter: FilterValue;
 }) {
   const [columns, setColumns] = useState<GridColumns>(initialColumns);
   const { update, isPending } = useUpdateSearchParams();
@@ -101,36 +109,34 @@ export default function ProductList({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground">
-          {initialData.length}{" "}
-          {initialData.length === 1 ? "product" : "products"}
-        </p>
+      {/* Mobile row 1: filters and grid layout */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="md:hidden">
+          <FilterSheet {...filterProps} />
+        </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1">
-            {columnOptions.map(({ value, label }) => (
-              <Button
-                key={value}
-                type="button"
-                size="icon"
-                variant={activeColumns === value ? "secondary" : "ghost"}
-                aria-pressed={activeColumns === value}
-                aria-label={label}
-                title={label}
-                onClick={() => handleGridChange(value)}
-                className={`h-8 w-8 ${value === 3 ? "hidden md:inline-flex" : ""}`}
-              >
-                <ColumnsIcon columns={value} />
-              </Button>
-            ))}
-          </div>
+        <div className="flex items-center gap-1 rounded-lg border bg-muted/40 p-1 md:ml-auto">
+          {columnOptions.map(({ value, label }) => (
+            <Button
+              key={value}
+              type="button"
+              size="icon"
+              variant={activeColumns === value ? "secondary" : "ghost"}
+              aria-pressed={activeColumns === value}
+              aria-label={label}
+              title={label}
+              onClick={() => handleGridChange(value)}
+              className={`h-8 w-8 ${value === 3 ? "hidden md:inline-flex" : ""}`}
+            >
+              <ColumnsIcon columns={value} />
+            </Button>
+          ))}
         </div>
       </div>
 
+      {/* Mobile row 2: size options */}
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm text-muted-foreground">Size:</span>
-
         <div
           className={`flex items-center gap-1 rounded-lg border bg-muted/40 p-1 transition-opacity ${isPending ? "opacity-60" : ""}`}
           role="group"
@@ -157,6 +163,17 @@ export default function ProductList({
               </Button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Mobile row 3: product count and sorting */}
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          {initialData.length}{" "}
+          {initialData.length === 1 ? "product" : "products"}
+        </p>
+        <div className="min-w-0">
+          <ProductListFilter currentFilter={currentFilter} />
         </div>
       </div>
 

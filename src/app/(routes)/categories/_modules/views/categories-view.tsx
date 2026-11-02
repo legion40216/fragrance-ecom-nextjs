@@ -9,6 +9,7 @@ export default function CategoriesView({
   minPrice,
   maxPrice,
   brandParam,
+  featuredParam,
   inStockParam,
 }: {
   categoryParam: CategorySlug;
@@ -17,6 +18,7 @@ export default function CategoriesView({
   minPrice: number;
   maxPrice: number;
   brandParam: string[];
+  featuredParam: boolean;
   inStockParam: boolean;
 }) {
   return (
@@ -30,6 +32,7 @@ export default function CategoriesView({
         minPrice={minPrice}
         maxPrice={maxPrice}
         brandParam={brandParam}
+        featuredParam={featuredParam}
         inStockParam={inStockParam}
         showCategoryFilter={false}
         headingTitle="Categories"

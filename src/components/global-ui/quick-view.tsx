@@ -39,7 +39,7 @@ export default function QuickView({
           />
         }
       >
-        <Eye />
+        <Eye className="size-3.5" />
       </DialogTrigger>
 
       <QuickViewContent

@@ -1,82 +1,90 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { categories, products } from "@/data/data";
-import ProductCard from "@/components/global-ui/product-card";
-
-// Colored strip shown at the top of each collection card
-const NOTE_ACCENTS: Record<string, string> = {
-  "mens-fragrances": "#5B4636",
-  "womens-fragrances": "#8C4B4A",
-  "unisex-fragrances": "#7C7263",
-  "oud-collection": "#21121B",
-  attars: "#A9834C",
-};
-
-// Section wrapper styles
-const sectionClasses = [
-  "bg-[#F3ECE2] text-[#241A16]",
-  "px-6 py-20 sm:px-10 lg:px-24 lg:pl-40",
-].join(" ");
-
-// Collection card styles (same height + width for every card)
-const cardClasses = [
-  "group relative h-72 w-44 shrink-0 overflow-hidden",
-  "rounded-sm border border-[#241A16]/10 bg-[#EAE1D3] p-5",
-].join(" ");
 
 export default function NotesSection() {
-  const featured = products.filter((p) => p.isFeatured).slice(0, 4);
+  const featuredCategories = categories.slice(0, 3);
 
   return (
-    <section id="heart" className={sectionClasses}>
-      {/* Intro text */}
-      <div className="mb-12 max-w-md">
-        <p className="text-sm leading-6 text-[#241A16]/60">
-          Underneath every top note is the heart — the part that decides
-          whether a fragrance belongs to you.
-        </p>
-        <h2 className="mt-4 font-serif text-4xl sm:text-5xl">
-          Five collections, one shelf.
-        </h2>
-      </div>
-
-      {/* Collection cards: horizontally scrollable on mobile, grid on large screens */}
-      <div className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5">
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={`/products?category=${category.slug}`}
-            className={`${cardClasses} lg:w-full lg:shrink`}
-          >
-            {/* Accent strip */}
-            <span
-              className="absolute inset-x-0 top-0 h-1.5"
-              style={{ backgroundColor: NOTE_ACCENTS[category.slug] }}
-            />
-
-            <div className="flex h-full flex-col justify-between pt-4">
-              <h3 className="font-serif text-xl leading-tight">
-                {category.name}
-              </h3>
-
-              {/* min-h keeps 2-line and 3-line descriptions aligned */}
-              <p className="min-h-15 text-xs leading-5 text-[#241A16]/60">
-                {category.description}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Featured products */}
-      <div className="mt-20">
-        <h3 className="font-serif text-3xl sm:text-4xl">Selected for you</h3>
-
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {featured.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
+    <section id="collections" className="py-16 sm:py-20 lg:py-24">
+      <div className="mb-7 flex items-end justify-between gap-5 border-b pb-4 sm:mb-9">
+        <div>
+          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Explore by character
+          </p>
+          <h2 className="font-serif text-3xl leading-tight sm:text-4xl">
+            Collections
+          </h2>
         </div>
+        <Link
+          href="/categories"
+          className="hidden items-center gap-2 pb-1 text-[10px] font-medium uppercase tracking-[0.14em] transition-opacity hover:opacity-60 sm:inline-flex"
+        >
+          View all <ArrowUpRight aria-hidden="true" className="size-4" />
+        </Link>
       </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {featuredCategories.map((category, index) => {
+          const productCount = products.filter(
+            (product) => product.category === category.slug,
+          ).length;
+
+          return (
+            <Link
+              key={category.id}
+              href={`/categories?category=${category.slug}`}
+              className="group relative flex min-h-64 flex-col justify-between overflow-hidden bg-muted p-5 text-foreground transition-colors hover:bg-muted/80 sm:min-h-72 sm:p-7 lg:min-h-80 lg:p-8"
+            >
+              <div className="flex items-start justify-between">
+                <span className="text-[10px] uppercase tracking-[0.16em] text-foreground/55">
+                  0{index + 1} / Collection
+                </span>
+                <ArrowUpRight
+                  aria-hidden="true"
+                  className="size-4 -translate-x-1 translate-y-1 text-foreground/65 opacity-0 transition-all group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+                />
+              </div>
+
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute right-4 top-5 font-serif text-[8rem] leading-none text-foreground/[0.07] transition-transform duration-500 group-hover:scale-110 sm:right-6 sm:top-6 sm:text-[10rem] lg:text-[12rem]"
+              >
+                {category.name.trim().charAt(0).toUpperCase()}
+              </span>
+
+              <div className="relative mt-12">
+                <h3 className="max-w-[15ch] font-serif text-2xl leading-tight sm:text-3xl">
+                  {category.name}
+                </h3>
+                <p className="mt-3 max-w-xs text-sm leading-6 text-muted-foreground">
+                  {category.description}
+                </p>
+                <div className="mt-5 flex items-center justify-between gap-3 border-t border-foreground/15 pt-4">
+                  <span className="text-[10px] font-medium uppercase tracking-[0.15em]">
+                    {productCount} {productCount === 1 ? "fragrance" : "fragrances"}
+                  </span>
+                  <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.15em]">
+                    Explore
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                    />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      <Link
+        href="/categories"
+        className="mt-4 flex w-full items-center justify-between border-t py-4 text-xs font-medium uppercase tracking-[0.14em] transition-opacity hover:opacity-60 sm:hidden"
+      >
+        View all categories
+        <ArrowUpRight aria-hidden="true" className="size-4" />
+      </Link>
     </section>
   );
 }

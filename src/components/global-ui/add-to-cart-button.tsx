@@ -46,7 +46,11 @@ export default function AddToCartButton({
         (() => (isInCart ? removeItem(product.id) : addItem(product)))
       }
     >
-      {isInCart ? <Check /> : <ShoppingCart />}
+      {isInCart ? (
+        <Check className="size-3.5" />
+      ) : (
+        <ShoppingCart className="size-3.5" />
+      )}
     </Button>
   );
 }
