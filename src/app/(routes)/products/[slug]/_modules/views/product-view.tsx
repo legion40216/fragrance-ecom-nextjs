@@ -52,9 +52,9 @@ export default function ProductView({ product }: ProductViewProps) {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <ProductNavigation product={product} />
-
       <ProductSection product={product} />
+
+      <ProductNavigation product={product} />
     </div>
   );
 }
