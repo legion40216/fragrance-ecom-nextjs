@@ -30,6 +30,8 @@ export default function ProductView({ product }: ProductViewProps) {
 
   return (
     <div>
+      <ProductNavigation product={product} />
+
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -53,8 +55,6 @@ export default function ProductView({ product }: ProductViewProps) {
       </Breadcrumb>
 
       <ProductSection product={product} />
-
-      <ProductNavigation product={product} />
     </div>
   );
 }
