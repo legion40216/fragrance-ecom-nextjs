@@ -14,7 +14,13 @@ const linkClasses =
 export default function ProductNavigationBar({
   navigation,
 }: ProductNavigationBarProps) {
-  const { previous, next, backHref, backLabel } = navigation;
+  const { previous, next, position, total, categoryName } = navigation;
+
+  // Not a link on purpose: it only tells the user what Previous/Next cycle through.
+  const contextLabel =
+    position && total && total > 1
+      ? `${position} of ${total} · ${categoryName}`
+      : categoryName;
 
   return (
     <nav
@@ -24,6 +30,7 @@ export default function ProductNavigationBar({
       {previous ? (
         <Link
           href={getProductPath(previous.slug)}
+          aria-label={`Previous product: ${previous.name}`}
           className={`${linkClasses} justify-self-start`}
         >
           <ArrowLeft className="size-4 shrink-0" aria-hidden="true" />
@@ -34,16 +41,14 @@ export default function ProductNavigationBar({
         <span />
       )}
 
-      <Link
-        href={backHref}
-        className="max-w-[40vw] truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline sm:max-w-xs sm:text-sm"
-      >
-        Back to {backLabel}
-      </Link>
+      <span className="max-w-[40vw] truncate text-xs text-muted-foreground sm:max-w-xs sm:text-sm">
+        {contextLabel}
+      </span>
 
       {next ? (
         <Link
           href={getProductPath(next.slug)}
+          aria-label={`Next product: ${next.name}`}
           className={`${linkClasses} justify-self-end`}
         >
           <span className="truncate sm:hidden">Next</span>
