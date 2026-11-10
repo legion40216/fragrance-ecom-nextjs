@@ -1,39 +1,19 @@
-import type { CategorySlug, FilterValue, SizeFilter } from "@/schema";
 import ProductSection from "@/features/product-listing/product-section";
+import type { SearchParamsValues } from "@/schema";
 import CategoriesBar from "../components/categories-bar";
 
 export default function CategoriesView({
-  categoryParam,
-  filterParam,
-  sizeParam,
-  minPrice,
-  maxPrice,
-  brandParam,
-  featuredParam,
-  inStockParam,
+  params,
 }: {
-  categoryParam: CategorySlug;
-  filterParam: FilterValue;
-  sizeParam: SizeFilter;
-  minPrice: number;
-  maxPrice: number;
-  brandParam: string[];
-  featuredParam: boolean;
-  inStockParam: boolean;
+  params: SearchParamsValues;
 }) {
   return (
     <div className="space-y-6">
-      <CategoriesBar categoryParam={categoryParam} />
+      <CategoriesBar categoryParam={params.category} />
 
+      {/* Search (?q=) only applies on /products, so it is dropped here. */}
       <ProductSection
-        categoryParam={categoryParam}
-        filterParam={filterParam}
-        sizeParam={sizeParam}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        brandParam={brandParam}
-        featuredParam={featuredParam}
-        inStockParam={inStockParam}
+        params={{ ...params, q: undefined }}
         showCategoryFilter={false}
         headingTitle="Categories"
       />

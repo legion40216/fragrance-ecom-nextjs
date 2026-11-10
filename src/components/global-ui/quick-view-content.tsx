@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import ShareButton from "@/components/global-ui/share-button";
-import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -16,13 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import useCart from "@/hooks/useCartStore";
 import useHydrated from "@/hooks/useHydrated";
+import useWishlist from "@/hooks/useWishlist";
 import { categories } from "@/data/categories";
 import type { ProductSize, ProductVariant } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath } from "@/utils/product-url";
 import { getCartLineId, toCartProduct } from "@/utils/product-variants";
-
-const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
 
 export type QuickViewProduct = {
   id: string;
@@ -56,7 +54,8 @@ export default function QuickViewContent({
 
   const [selectedSize, setSelectedSize] = useState<ProductSize>(getInitialSize);
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const wishlist = useWishlist();
+  const isWishlisted = wishlist.has(product.id);
 
   const selectedVariant = useMemo(
     () =>
@@ -77,50 +76,12 @@ export default function QuickViewContent({
   }, [initialSize, product.variants]);
 
   useEffect(() => {
-    try {
-      const wishlist = JSON.parse(
-        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-      );
-      setIsWishlisted(
-        Array.isArray(wishlist) && wishlist.some((item) => item.id === product.id),
-      );
-    } catch {
-      setIsWishlisted(false);
-    }
-  }, [product.id]);
-
-  useEffect(() => {
     if (cartItem) {
       setQuantity(cartItem.count);
     } else {
       setQuantity(1);
     }
   }, [cartItem]);
-
-  const toggleWishlist = () => {
-    try {
-      const storedWishlist = JSON.parse(
-        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-      );
-      const wishlist = Array.isArray(storedWishlist) ? storedWishlist : [];
-      const alreadyWishlisted = wishlist.some((item) => item.id === product.id);
-      const updatedWishlist = alreadyWishlisted
-        ? wishlist.filter((item) => item.id !== product.id)
-        : [...wishlist, product];
-
-      window.localStorage.setItem(
-        WISHLIST_STORAGE_KEY,
-        JSON.stringify(updatedWishlist),
-      );
-      setIsWishlisted(!alreadyWishlisted);
-      toast.add({
-        title: alreadyWishlisted ? "Removed from wishlist." : "Added to wishlist.",
-        type: "success",
-      });
-    } catch {
-      toast.add({ title: "Couldn\u2019t update your wishlist.", type: "error" });
-    }
-  };
 
   const selectSize = (size: ProductSize) => {
     setSelectedSize(size);
@@ -228,7 +189,7 @@ export default function QuickViewContent({
                         : `Add ${product.name} to wishlist`
                     }
                     aria-pressed={isWishlisted}
-                    onClick={toggleWishlist}
+                    onClick={() => wishlist.toggle(product.id)}
                   >
                     <Heart
                       className={
