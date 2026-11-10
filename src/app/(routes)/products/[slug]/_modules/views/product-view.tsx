@@ -12,15 +12,14 @@ import { categories } from "@/data/categories";
 import type { ProductType } from "@/types/types";
 
 import ProductSection from "../sections/product-section";
+import RelatedProducts from "../sections/related-products";
 
 interface ProductViewProps {
   product: ProductType;
 }
 
 export default function ProductView({ product }: ProductViewProps) {
-  const category = categories.find(
-    (item) => item.slug === product.category,
-  );
+  const category = categories.find((item) => item.slug === product.category);
 
   const categoryName = category?.name ?? product.category;
   const categoryHref = category
@@ -52,6 +51,8 @@ export default function ProductView({ product }: ProductViewProps) {
       </Breadcrumb>
 
       <ProductSection product={product} />
+
+      <RelatedProducts product={product} />
     </div>
   );
 }

@@ -41,3 +41,10 @@ export function toCartProduct(
     stock: variant.stock,
   };
 }
+
+// At or below this many units we tell customers how few are left.
+export const LOW_STOCK_LIMIT = 5;
+
+export function isLowStock(stock: number): boolean {
+  return stock > 0 && stock <= LOW_STOCK_LIMIT;
+}

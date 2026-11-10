@@ -1,408 +1,69 @@
 "use client";
 
-import { Check, Heart, Minus, Plus, ShoppingCart } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-
-import ShareButton from "@/components/global-ui/share-button";
-import { Button } from "@/components/ui/button";
-import { categories } from "@/data/categories";
-import useCart from "@/hooks/useCartStore";
-import useHydrated from "@/hooks/useHydrated";
-import type { ProductSize, ProductType } from "@/types/types";
-import { formatter } from "@/utils/formatters";
-import { getProductPath, getInitialSize } from "@/utils/product-url";
-import { getCartLineId, toCartProduct } from "@/utils/product-variants";
-
-const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
+import type { ProductType } from "@/types/types";
+import { isLowStock } from "@/utils/product-variants";
+import useProductPurchase from "../hooks/use-product-purchase";
+import MobilePurchaseBar from "./mobile-purchase-bar";
+import ProductHeader from "./product-header";
+import ProductSpecs from "./product-specs";
+import PurchaseActions from "./purchase-actions";
+import QuantityStepper from "./quantity-stepper";
+import SizeSelector from "./size-selector";
 
 interface ProductDetailsProps {
   product: ProductType;
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const hydrated = useHydrated();
-  const { addItem, removeItem, updateItemCount } = useCart();
-  const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-  const sizeParam = searchParams.get("size") ?? undefined;
-  const [selectedSize, setSelectedSize] = useState<ProductSize>(() =>
-    getInitialSize(product, sizeParam),
-  );
-
-  useEffect(() => {
-    setSelectedSize(getInitialSize(product, sizeParam));
-  }, [product.id, sizeParam]);
-
-  useEffect(() => {
-    try {
-      const wishlist = JSON.parse(
-        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-      );
-      setIsWishlisted(
-        Array.isArray(wishlist) && wishlist.some((item) => item.id === product.id),
-      );
-    } catch {
-      setIsWishlisted(false);
-    }
-  }, [product.id]);
-
-  const toggleWishlist = () => {
-    try {
-      const storedWishlist = JSON.parse(
-        window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-      );
-      const wishlist = Array.isArray(storedWishlist) ? storedWishlist : [];
-      const alreadyWishlisted = wishlist.some((item) => item.id === product.id);
-      const updatedWishlist = alreadyWishlisted
-        ? wishlist.filter((item) => item.id !== product.id)
-        : [...wishlist, {
-            id: product.id,
-            slug: product.slug,
-            name: product.name,
-            brand: product.brand,
-            image: product.image,
-            description: product.description,
-            category: product.category,
-            variants: product.variants,
-          }];
-
-      window.localStorage.setItem(
-        WISHLIST_STORAGE_KEY,
-        JSON.stringify(updatedWishlist),
-      );
-      setIsWishlisted(!alreadyWishlisted);
-    } catch {
-      // Leave the current state unchanged if browser storage is unavailable.
-    }
-  };
-
-  const selectedVariant = useMemo(
-    () =>
-      product.variants.find((variant) => variant.size === selectedSize) ??
-      product.variants[0],
-    [product.variants, selectedSize],
-  );
-
-  const cartLineId = getCartLineId(product.id, selectedVariant.size);
-  const cartItem = useCart((state) =>
-    state.items.find((item) => item.id === cartLineId),
-  );
-
-  const inCart = hydrated && Boolean(cartItem);
-  const maxQuantity = selectedVariant.stock;
-
-  useEffect(() => {
-    setQuantity(cartItem?.count ?? 1);
-  }, [cartItem]);
-
-  const selectSize = (size: ProductSize) => {
-    const variant = product.variants.find((item) => item.size === size);
-    if (!variant) return;
-
-    // Let customers inspect every size and its price, including sold-out variants.
-    // Purchase controls remain disabled for a sold-out selected variant.
-    setSelectedSize(size);
-    setQuantity(1);
-    router.replace(getProductPath(product.slug, size), { scroll: false });
-  };
-
-  const changeQuantity = (next: number) => {
-    const safeQuantity = Math.min(Math.max(next, 1), maxQuantity);
-    setQuantity(safeQuantity);
-
-    if (cartItem) {
-      updateItemCount(cartLineId, safeQuantity);
-    }
-  };
-
-  const addSelectedToCart = () => {
-    if (selectedVariant.stock === 0) return;
-
-    if (cartItem) {
-      removeItem(cartLineId);
-      return;
-    }
-
-    addItem(
-      toCartProduct(
-        {
-          id: product.id,
-          slug: product.slug,
-          name: product.name,
-          brand: product.brand,
-          image: product.image,
-        },
-        selectedVariant,
-      ),
-      quantity,
-    );
-  };
-
-  const buyNow = () => {
-    if (selectedVariant.stock === 0) return;
-
-    if (!cartItem) {
-      addItem(
-        toCartProduct(
-          {
-            id: product.id,
-            slug: product.slug,
-            name: product.name,
-            brand: product.brand,
-            image: product.image,
-          },
-          selectedVariant,
-        ),
-        quantity,
-      );
-    }
-
-    router.push("/checkout");
-  };
-
-  const isSoldOut = selectedVariant.stock === 0;
-  const categoryName =
-    categories.find((category) => category.slug === product.category)?.name ??
-    product.category;
+  const purchase = useProductPurchase(product);
+  const { selectedVariant, quantity, maxQuantity, isSoldOut, inCart } =
+    purchase;
 
   return (
     <div className="space-y-6 pb-24 md:pb-0">
-      <div className="space-y-2">
-        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-          {product.brand}
-        </p>
-        <div className="flex items-start justify-between gap-3">
-          <h1 className="font-serif text-3xl">{product.name}</h1>
-          <div className="flex shrink-0 items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              aria-label={
-                isWishlisted
-                  ? `Remove ${product.name} from wishlist`
-                  : `Add ${product.name} to wishlist`
-              }
-              aria-pressed={isWishlisted}
-              title={isWishlisted ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST"}
-              onClick={toggleWishlist}
-            >
-              <Heart
-                className={isWishlisted ? "fill-rose-600 text-rose-600" : ""}
-                aria-hidden="true"
-              />
-            </Button>
-            <ShareButton
-              title={product.name}
-              text={product.name + " by " + product.brand}
-              path={getProductPath(product.slug, selectedVariant.size)}
-              showLabel
-              className="h-8 shrink-0"
-            />
-          </div>
-        </div>
-        <p className="text-lg font-medium">
-          {formatter.format(selectedVariant.price)}
-        </p>
-        <p className="leading-6 text-muted-foreground">
-          {product.description}
-        </p>
-      </div>
+      <ProductHeader product={product} selectedVariant={selectedVariant} />
 
-      <div className="space-y-3">
-        <p className="text-sm font-medium">Size</p>
-        <div className="flex flex-wrap gap-2">
-          {product.variants.map((variant) => (
-            <Button
-              key={variant.size}
-              type="button"
-              variant={
-                selectedVariant.size === variant.size ? "default" : "outline"
-              }
-              size="sm"
-              aria-label={
-                variant.stock === 0
-                  ? `${variant.size}, out of stock`
-                  : variant.size
-              }
-              title={variant.stock === 0 ? "Out of stock" : undefined}
-              onClick={() => selectSize(variant.size)}
-            >
-              {variant.size}
-            </Button>
-          ))}
-        </div>
-        {product.variants.some((variant) => variant.stock === 0) && (
-          <p className="text-xs text-muted-foreground">
-            {product.variants
-              .filter((variant) => variant.stock === 0)
-              .map((variant) => variant.size + " out of stock")
-              .join(" • ")}
-          </p>
-        )}
-      </div>
+      <SizeSelector
+        variants={product.variants}
+        selectedSize={selectedVariant.size}
+        onSelect={purchase.selectSize}
+      />
 
       <div className="hidden space-y-3 md:block">
         <p className="text-sm font-medium">Quantity</p>
-        <div className="flex w-fit items-center rounded-md border">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            disabled={isSoldOut || quantity <= 1}
-            onClick={() => changeQuantity(quantity - 1)}
-            aria-label="Decrease quantity"
-          >
-            <Minus />
-          </Button>
-          <span className="w-10 text-center text-sm">{quantity}</span>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            disabled={isSoldOut || quantity >= maxQuantity}
-            onClick={() => changeQuantity(quantity + 1)}
-            aria-label="Increase quantity"
-          >
-            <Plus />
-          </Button>
-        </div>
+        <QuantityStepper
+          quantity={quantity}
+          max={maxQuantity}
+          disabled={isSoldOut}
+          onChange={purchase.changeQuantity}
+        />
         <p className="text-xs text-muted-foreground">
           {isSoldOut
             ? "Sold out"
-            : selectedVariant.stock <= 5
-              ? "Only " + selectedVariant.stock + " left"
-              : selectedVariant.stock + " available"}
+            : isLowStock(selectedVariant.stock)
+              ? `Only ${selectedVariant.stock} left`
+              : `${selectedVariant.stock} available`}
         </p>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-2">
-        <Button
-          type="button"
-          size="lg"
-          className="hidden md:inline-flex"
-          variant={inCart ? "outline" : "default"}
-          disabled={isSoldOut}
-          onClick={addSelectedToCart}
-        >
-          <ShoppingCart />
-          {isSoldOut
-            ? "Out of Stock"
-            : inCart
-              ? "Remove from cart"
-              : "Add to cart"}
-        </Button>
+      <PurchaseActions
+        isSoldOut={isSoldOut}
+        inCart={inCart}
+        onToggleCart={purchase.toggleCart}
+        onBuyNow={purchase.buyNow}
+      />
 
-        <Button
-          type="button"
-          size="lg"
-          variant="outline"
-          disabled={isSoldOut}
-          onClick={buyNow}
-        >
-          Buy it now
-        </Button>
-      </div>
+      <ProductSpecs product={product} selectedVariant={selectedVariant} />
 
-      <div className="divide-y rounded-lg border text-sm">
-        <div className="flex justify-between gap-4 p-3">
-          <span className="text-muted-foreground">Size</span>
-          <span>{selectedVariant.size}</span>
-        </div>
-        <div className="flex justify-between gap-4 p-3">
-          <span className="text-muted-foreground">SKU</span>
-          <span>{(product.id + "-" + selectedVariant.size).toUpperCase()}</span>
-        </div>
-        <div className="flex justify-between gap-4 p-3">
-          <span className="text-muted-foreground">Availability</span>
-          <span>
-            {isSoldOut
-              ? "Sold out"
-              : selectedVariant.stock <= 5
-                ? "Only " + selectedVariant.stock + " left"
-                : "In stock"}
-          </span>
-        </div>
-        <div className="flex justify-between gap-4 p-3">
-          <span className="text-muted-foreground">Category</span>
-          <span className="text-right">{categoryName}</span>
-        </div>
-      </div>
-
-      <div
-        className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-40 border-t bg-background/95 px-3 py-2 shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/90 md:hidden"
-        role="region"
-        aria-label="Quick purchase"
-      >
-        <div className="mx-auto flex max-w-[1200px] items-center gap-2">
-          <div className="min-w-0 shrink-0">
-            <p className="text-[10px] leading-tight text-muted-foreground">
-              {selectedVariant.size}
-              {isSoldOut ? " · Sold out" : " · In stock"}
-            </p>
-            <p className="text-sm font-semibold tabular-nums">
-              {formatter.format(selectedVariant.price)}
-            </p>
-          </div>
-
-          <div className="flex shrink-0 items-center rounded-md border">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="size-8"
-              disabled={isSoldOut || quantity <= 1}
-              onClick={() => changeQuantity(quantity - 1)}
-              aria-label="Decrease quantity"
-            >
-              <Minus className="size-3.5" />
-            </Button>
-            <span
-              className="w-6 text-center text-xs font-medium tabular-nums"
-              aria-live="polite"
-              aria-label={`Quantity: ${quantity}`}
-            >
-              {quantity}
-            </span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="size-8"
-              disabled={isSoldOut || quantity >= maxQuantity}
-              onClick={() => changeQuantity(quantity + 1)}
-              aria-label="Increase quantity"
-            >
-              <Plus className="size-3.5" />
-            </Button>
-          </div>
-
-          <Button
-            type="button"
-            size="lg"
-            className="min-w-0 flex-1 gap-1.5 px-2 text-xs sm:text-sm"
-            disabled={isSoldOut || inCart}
-            onClick={addSelectedToCart}
-          >
-            {inCart ? (
-              <>
-                <Check className="size-4 shrink-0" />
-                <span>Added</span>
-              </>
-            ) : isSoldOut ? (
-              "Out of stock"
-            ) : (
-              <>
-                <ShoppingCart className="size-4 shrink-0" />
-                <span>Add to cart</span>
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
+      <MobilePurchaseBar
+        selectedVariant={selectedVariant}
+        quantity={quantity}
+        maxQuantity={maxQuantity}
+        isSoldOut={isSoldOut}
+        inCart={inCart}
+        onQuantityChange={purchase.changeQuantity}
+        onToggleCart={purchase.toggleCart}
+      />
     </div>
   );
 }

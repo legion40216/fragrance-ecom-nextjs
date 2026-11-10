@@ -1,28 +1,28 @@
+import { Suspense } from "react";
+
+import ListingSkeleton from "@/features/product-listing/listing-skeleton";
+import type { RawSearchParams } from "@/utils/parseSearchParams";
 import { resolveListingParams } from "@/utils/resolve-listing-params";
+
 import ProductsView from "./_modules/views/products-view";
 
-export default async function Products(props: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  // Bad/unknown category in the URL -> redirect to a clean /products
-  const validatedParams = await resolveListingParams(
-    props.searchParams,
-    "/products",
-  );
+interface ProductsPageProps {
+  searchParams: Promise<RawSearchParams>;
+}
 
+export default function Page({ searchParams }: ProductsPageProps) {
+  // The filters live in the URL, which is request-time data, so everything
+  // that reads it sits inside Suspense with a skeleton as the fallback.
   return (
-    <div>
-      <ProductsView
-        categoryParam={validatedParams.category}
-        filterParam={validatedParams.filter}
-        sizeParam={validatedParams.size}
-        minPrice={validatedParams.minPrice}
-        maxPrice={validatedParams.maxPrice}
-        featuredParam={validatedParams.featured}
-        brandParam={validatedParams.brand}
-        inStockParam={validatedParams.inStock}
-        queryParam={validatedParams.q ?? ""}
-      />
-    </div>
+    <Suspense fallback={<ListingSkeleton />}>
+      <Listing searchParams={searchParams} />
+    </Suspense>
   );
+}
+
+async function Listing({ searchParams }: ProductsPageProps) {
+  // Bad/unknown category in the URL -> redirect to a clean /products
+  const params = await resolveListingParams(searchParams, "/products");
+
+  return <ProductsView params={params} />;
 }
