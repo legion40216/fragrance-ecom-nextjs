@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { ReactNode } from "react";
 import { products } from "@/data/data";
 import { getPriceBounds } from "@/data/constants";
 import type { SearchParamsValues } from "@/schema";
@@ -15,10 +16,12 @@ export default async function ProductSection({
   params,
   showCategoryFilter = true,
   headingTitle = "Collections",
+  afterHeading,
 }: {
   params: SearchParamsValues;
   showCategoryFilter?: boolean;
   headingTitle?: string;
+  afterHeading?: ReactNode;
 }) {
   const {
     category: categoryParam,
@@ -68,6 +71,8 @@ export default async function ProductSection({
             : "Discover your next signature scent."
         }
       />
+
+      {afterHeading}
 
       <div className="flex flex-col gap-6 md:flex-row">
         <FilterSidebar {...filterProps} />
