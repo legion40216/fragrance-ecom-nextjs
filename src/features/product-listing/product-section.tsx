@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import type { ReactNode } from "react";
 import { products } from "@/data/data";
 import { getPriceBounds } from "@/data/constants";
 import type { SearchParamsValues } from "@/schema";
@@ -8,20 +7,15 @@ import { sortProducts } from "@/utils/sort-products";
 import { clampPriceRange } from "@/utils/clamp-price-range";
 
 import ProductList from "./product-list";
-import HeadingState from "@/components/global-ui/heading-state";
 import FilterSidebar from "./components/filter-sidebar";
 import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
 
 export default async function ProductSection({
   params,
   showCategoryFilter = true,
-  headingTitle = "Collections",
-  afterHeading,
 }: {
   params: SearchParamsValues;
   showCategoryFilter?: boolean;
-  headingTitle?: string;
-  afterHeading?: ReactNode;
 }) {
   const {
     category: categoryParam,
@@ -63,17 +57,6 @@ export default async function ProductSection({
 
   return (
     <section className="space-y-6">
-      <HeadingState
-        title={queryParam ? "Search" : headingTitle}
-        subtitle={
-          queryParam
-            ? "Fragrances matching your search."
-            : "Discover your next signature scent."
-        }
-      />
-
-      {afterHeading}
-
       <div className="flex flex-col gap-6 md:flex-row">
         <FilterSidebar {...filterProps} />
 
