@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { products } from "@/data/data";
 import { getPriceBounds } from "@/data/constants";
-import { CategorySlug, FilterValue, SizeFilter } from "@/schema";
+import type { SearchParamsValues } from "@/schema";
 import { filterProducts } from "@/utils/filter-products";
 import { sortProducts } from "@/utils/sort-products";
 import { clampPriceRange } from "@/utils/clamp-price-range";
@@ -12,30 +12,26 @@ import FilterSidebar from "./components/filter-sidebar";
 import { GRID_COLUMNS_COOKIE, parseGridColumns } from "./grid-columns";
 
 export default async function ProductSection({
-  categoryParam,
-  filterParam,
-  sizeParam,
-  minPrice,
-  maxPrice,
-  brandParam,
-  featuredParam,
-  inStockParam,
+  params,
   showCategoryFilter = true,
   headingTitle = "Collections",
-  queryParam = "",
 }: {
-  categoryParam: CategorySlug;
-  filterParam: FilterValue;
-  sizeParam: SizeFilter;
-  minPrice: number;
-  maxPrice: number;
-  brandParam: string[];
-  featuredParam: boolean;
-  inStockParam: boolean;
+  params: SearchParamsValues;
   showCategoryFilter?: boolean;
   headingTitle?: string;
-  queryParam?: string;
 }) {
+  const {
+    category: categoryParam,
+    filter: filterParam,
+    size: sizeParam,
+    minPrice,
+    maxPrice,
+    brand: brandParam,
+    featured: featuredParam,
+    inStock: inStockParam,
+  } = params;
+  const queryParam = params.q ?? "";
+
   // Read on the server so the first paint already uses the saved layout.
   const cookieStore = await cookies();
   const initialColumns = parseGridColumns(

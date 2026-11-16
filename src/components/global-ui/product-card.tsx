@@ -3,13 +3,18 @@
 import { CircleAlert, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddToCartButton from "@/components/global-ui/add-to-cart-button";
 import QuickView from "@/components/global-ui/quick-view";
-import { categories } from "@/data/categories";
 import { toast } from "@/components/ui/toast";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { categories } from "@/data/categories";
 import useCart from "@/hooks/useCartStore";
+import useWishlist from "@/hooks/useWishlist";
 import type { ProductSize, ProductType } from "@/types/types";
 import { formatter } from "@/utils/formatters";
 import { getProductPath } from "@/utils/product-url";
@@ -20,31 +25,6 @@ import {
   isProductInStock,
   toCartProduct,
 } from "@/utils/product-variants";
-
-const WISHLIST_STORAGE_KEY = "fragrance-wishlist";
-type WishlistProduct = Pick<
-  ProductType,
-  | "id"
-  | "slug"
-  | "name"
-  | "brand"
-  | "image"
-  | "description"
-  | "category"
-  | "variants"
->;
-
-function readWishlist(): WishlistProduct[] {
-  try {
-    const storedWishlist = JSON.parse(
-      window.localStorage.getItem(WISHLIST_STORAGE_KEY) ?? "[]",
-    );
-
-    return Array.isArray(storedWishlist) ? storedWishlist : [];
-  } catch {
-    return [];
-  }
-}
 
 interface ProductCardProps
   extends Pick<
@@ -80,47 +60,17 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [stockTooltipOpen, setStockTooltipOpen] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const wishlist = useWishlist();
+  const isWishlisted = wishlist.has(id);
   const cartHasProduct = useCart((state) =>
     state.items.some((item) => item.productId === id),
   );
   const removeProduct = useCart((state) => state.removeProduct);
 
-  useEffect(() => {
-    setIsWishlisted(readWishlist().some((item) => item.id === id));
-  }, [id]);
-
-  const toggleWishlist = () => {
-    const wishlist = readWishlist();
-    const alreadyWishlisted = wishlist.some((item) => item.id === id);
-    const product: WishlistProduct = {
-      id,
-      slug,
-      name,
-      brand,
-      image,
-      description,
-      category,
-      variants,
-    };
-    const updatedWishlist = alreadyWishlisted
-      ? wishlist.filter((item) => item.id !== id)
-      : [...wishlist, product];
-
-    try {
-      window.localStorage.setItem(
-        WISHLIST_STORAGE_KEY,
-        JSON.stringify(updatedWishlist),
-      );
-      setIsWishlisted(!alreadyWishlisted);
-    } catch {
-      // Leave the current state unchanged if browser storage is unavailable.
-    }
-  };
-
   const defaultVariant = getDefaultVariant({ variants });
   const selectedVariant =
-    (selectedSize && variants.find((variant) => variant.size === selectedSize)) ??
+    (selectedSize &&
+      variants.find((variant) => variant.size === selectedSize)) ??
     defaultVariant;
   const isOutOfStock = selectedSize
     ? selectedVariant.stock === 0
@@ -222,7 +172,16 @@ export default function ProductCard({
             )}
 
           <QuickView
-            product={{ id, slug, name, brand, image, description, category, variants }}
+            product={{
+              id,
+              slug,
+              name,
+              brand,
+              image,
+              description,
+              category,
+              variants,
+            }}
             selectedSize={selectedSize}
             open={quickViewOpen}
             onOpenChange={setQuickViewOpen}
@@ -240,7 +199,7 @@ export default function ProductCard({
                       : `Add ${name} to wishlist`
                   }
                   aria-pressed={isWishlisted}
-                  onClick={toggleWishlist}
+                  onClick={() => wishlist.toggle(id)}
                 />
               }
             >
@@ -259,7 +218,10 @@ export default function ProductCard({
           </Tooltip>
 
           <AddToCartButton
-            product={toCartProduct({ id, slug, name, brand, image }, selectedVariant)}
+            product={toCartProduct(
+              { id, slug, name, brand, image },
+              selectedVariant,
+            )}
             disabled={selectedVariant.stock === 0}
             onClick={
               selectedSize || variants.length === 1
@@ -271,13 +233,16 @@ export default function ProductCard({
                     }
 
                     toast.add({
-                      title: "Please choose a size to add this product to your cart.",
+                      title:
+                        "Please choose a size to add this product to your cart.",
                       type: "info",
                     });
                     setQuickViewOpen(true);
                   }
             }
-            isInCartOverride={!selectedSize && cartHasProduct ? true : undefined}
+            isInCartOverride={
+              !selectedSize && cartHasProduct ? true : undefined
+            }
           />
         </div>
       </div>
