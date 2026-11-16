@@ -4,7 +4,6 @@ import { useCallback, useMemo, useSyncExternalStore } from "react";
 
 import { toast } from "@/components/ui/toast";
 
-// Same key the wishlist has always used, so saved items survive this change.
 const STORAGE_KEY = "fragrance-wishlist";
 const EMPTY = "[]";
 
@@ -30,22 +29,13 @@ function getSnapshot(): string {
   }
 }
 
-// Older versions stored whole product objects; newer ones store plain ids.
-// Accept both so nobody loses their saved items.
+// The wishlist stores product IDs only.
 function parse(raw: string): string[] {
   try {
     const value: unknown = JSON.parse(raw);
     if (!Array.isArray(value)) return [];
 
-    return value
-      .map((entry) =>
-        typeof entry === "string"
-          ? entry
-          : typeof entry?.id === "string"
-            ? entry.id
-            : null,
-      )
-      .filter((id): id is string => id !== null);
+    return value.filter((entry): entry is string => typeof entry === "string");
   } catch {
     return [];
   }
