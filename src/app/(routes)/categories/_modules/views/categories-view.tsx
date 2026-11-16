@@ -1,3 +1,4 @@
+import HeadingState from "@/components/global-ui/heading-state";
 import ProductSection from "@/features/product-listing/product-section";
 import type { SearchParamsValues } from "@/schema";
 import CategoriesBar from "../components/categories-bar";
@@ -9,13 +10,16 @@ export default function CategoriesView({
 }) {
   return (
     <div className="space-y-6">
+      <HeadingState
+        title="Categories"
+        subtitle="Discover your next signature scent."
+      />
+
       <CategoriesBar categoryParam={params.category} />
 
-      {/* Search (?q=) only applies on /products, so it is dropped here. */}
       <ProductSection
         params={{ ...params, q: undefined }}
         showCategoryFilter={false}
-        headingTitle="Categories"
       />
     </div>
   );
