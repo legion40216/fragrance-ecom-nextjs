@@ -8,15 +8,11 @@ export default function CategoriesView({
   params: SearchParamsValues;
 }) {
   return (
-    <div className="space-y-6">
-      <CategoriesBar categoryParam={params.category} />
-
-      {/* Search (?q=) only applies on /products, so it is dropped here. */}
-      <ProductSection
-        params={{ ...params, q: undefined }}
-        showCategoryFilter={false}
-        headingTitle="Categories"
-      />
-    </div>
+    <ProductSection
+      params={{ ...params, q: undefined }}
+      showCategoryFilter={false}
+      headingTitle="Categories"
+      afterHeading={<CategoriesBar categoryParam={params.category} />}
+    />
   );
 }
