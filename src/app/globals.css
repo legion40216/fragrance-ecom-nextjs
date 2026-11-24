@@ -30,6 +30,11 @@
     "Courier New",
     monospace;
 
+  /* Keep the existing minimal shadow treatment. */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+
   /* =========================
      Breakpoints
      ========================= */
@@ -128,6 +133,9 @@
 }
 
 :root {
+  /* Preserve the existing square-corner design. */
+  --radius: 0rem;
+
   /* =========================
      Text rendering
      ========================= */
@@ -253,6 +261,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Lets sections break out of the 1200px container to span the full viewport. */
+@utility full-bleed {
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -260,6 +274,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
+    overflow-x: clip;
   }
 
   h1,
