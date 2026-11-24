@@ -5,10 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { products } from "@/data/data";
 import { getProductPath } from "@/utils/product-url";
 import useCart from "@/hooks/useCartStore";
 import type { CartItemType } from "@/types/cart";
 import { formatter } from "@/utils/formatters";
+import { toCartProduct } from "@/utils/product-variants";
 
 interface CartItemProps {
   item: CartItemType;
@@ -17,6 +19,8 @@ interface CartItemProps {
 
 export default function CartItem({ item, onNavigate }: CartItemProps) {
   const { removeItem, updateItemCount } = useCart();
+  const changeItemVariant = useCart((state) => state.changeItemVariant);
+  const product = products.find((currentProduct) => currentProduct.id === item.productId);
 
   return (
     <div className="grid grid-cols-[72px_1fr] gap-3 border-b py-4">
@@ -55,7 +59,19 @@ export default function CartItem({ item, onNavigate }: CartItemProps) {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between">
+        {product && (
+          <fieldset className="flex flex-wrap items-center gap-1.5 pt-1">
+            <legend className="sr-only">Choose size for {item.name}</legend>
+            {product.variants.map((variant) => {
+              const selected = item.size === variant.size;
+              return <button key={variant.size} type="button" aria-pressed={selected} disabled={variant.stock === 0} onClick={() => changeItemVariant(item.id, toCartProduct(product, variant))} className={`min-h-7 min-w-16 rounded-lg border px-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${selected ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground"}`}>
+                {variant.size}{variant.stock === 0 && <span className="ml-1 text-red-600">×</span>}
+              </button>;
+            })}
+          </fieldset>
+        )}
+
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-1">
           <div className="flex items-center">
             <Button
               variant="outline"
