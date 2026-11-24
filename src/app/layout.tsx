@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 // Luxury theme fonts — loaded and optimized by Next.js.
-import { Inter, EB_Garamond, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, Geist_Mono } from "next/font/google";
 
 // Original font imports kept here for easy rollback:
 // import { Poppins, Josefin_Slab } from "next/font/google";
@@ -10,14 +10,16 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
 import { getSiteUrl } from "@/utils/site-url";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
+  weight: ["400", "500", "600", "700"],
 });
 
-const ebGaramond = EB_Garamond({
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-garamond",
+  variable: "--font-cormorant-garamond",
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -55,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${ebGaramond.variable} ${geistMono.variable}`}
+      className={`${dmSans.variable} ${cormorantGaramond.variable} ${geistMono.variable}`}
     >
       <body>
         <Toaster />
